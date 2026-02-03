@@ -1,4 +1,4 @@
-<h1 align="center">NodeJS - Template project</h1>
+<h1 align="center">TrueChance - Vizsgaremek</h1>
 
 ## readme.md preview megnyitása:<br>
 
