@@ -1,36 +1,32 @@
 document.addEventListener("DOMContentLoaded", function () {
-  let kezpar = false;
 
-  let szamok = [
-    "2",
-    "3",
-    "4",
-    "5",
-    "6",
-    "7",
-    "8",
-    "9",
-    "10",
-    "J",
-    "Q",
-    "K",
-    "A",
-  ];
-  let szimbolumok = ["Pikk", "Káró", "Treff", "Kör"];
-  let ertekek = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
+  var kezpar = false;
 
-  let osszlap = [];
-  let kez = [];
-  let oszto = [];
-  let jatszolapok = [];
+  var szamok = ["2", "3", "4", "5", "6", "7", "8"];
+  var szimbolumok = ["Pikk"];
+  var ertekek = [2,3,4,5,6,7,8,9,10,11,12,13,14];
 
-  let kez_1_db, kez_2_db;
-  let kez_1_szimb, kez_2_szimb;
+  var osszlap = [];
+  var kez = [];
+  var oszto = [];
+  let sorlapok = [];
+  let flosslapok = [];
+  let vanefloss = false;
+  let vanesor = false;
 
-  let Felforditott_db = 0; // Mennyi asztali lap van felfordítva
+  var kez_1_db = 1;
+  var kez_2_db = 1;
+  var kez_1_szimb = 0;
+  var kez_2_szimb = 0;
 
-  //=============================  Legerősebb kéz eltárolása  =============================
-  let legerosebbKez = { ertek: 0, nev: "Magas lap" };
+  var Felforditott_db = 0;
+
+  var legerosebbKez = {
+    ertek: 0,
+    nev: "Magas lap"
+  };
+
+  // Értékelés
   function ertekeles(szint, nev) {
     if (szint > legerosebbKez.ertek) {
       legerosebbKez.ertek = szint;
@@ -38,170 +34,216 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  //=============================  Kártyák átalakítása, képként használata  =============================
-  //Előlap kép
+  // Kártya megjelenítés
   function kartyakep(lap) {
-    return `<img src="../Actual kártyák/${lap.szimbolum}/${lap.szam}.png"
-      alt="${lap.szimbolum} ${lap.szam}"
-      class="kartya">`;
+    return `<img src="Kártyák/${lap.szimbolum}/${lap.szam}.png" class="kartya">`;
   }
 
-  //Hátlap kép
   function hatlap() {
-    return `<img src="../Actual kártyák/Backside.png" class="kartya">`;
+    return '<img src="Kártyák/Backside.png" class="kartya">';
   }
 
-  //=============================  Pakli létrehozása =============================
+  // Pakli létrehozása és keverése
   function Pakliletrehozas() {
     osszlap = [];
-    for (let i = 0; i < szimbolumok.length; i++) {
-      for (let j = 0; j < szamok.length; j++) {
+    for (var i = 0; i < szimbolumok.length; i++) {
+      for (var j = 0; j < szamok.length; j++) {
         osszlap.push({
           szimbolum: szimbolumok[i],
           szam: szamok[j],
-          ertek: ertekek[j],
+          ertek: ertekek[j]
         });
       }
     }
-    // ===== ÚJ: összekeverés =====
-    for (let i = osszlap.length - 1; i > 0; i--) {
-      const rand = Math.floor(Math.random() * (i + 1));
-      [osszlap[i], osszlap[rand]] = [osszlap[rand], osszlap[i]];
+    // Összekeverés
+    for (var k = osszlap.length - 1; k > 0; k--) {
+      var rand = Math.floor(Math.random() * (k + 1));
+      var temp = osszlap[k];
+      osszlap[k] = osszlap[rand];
+      osszlap[rand] = temp;
     }
   }
 
-  //=============================  Új leosztás / Reset =============================
+  // Új leosztás
   function reset() {
     kez = [];
     oszto = [];
     jatszolapok = [];
+
     kez_1_db = 1;
     kez_2_db = 1;
     kez_1_szimb = 0;
     kez_2_szimb = 0;
-    Felforditott_db = 0;
-    legerosebbKez = { ertek: 0, nev: "Magas lap" };
 
+    Felforditott_db = 0;
+
+    legerosebbKez.ertek = 0;
+    legerosebbKez.nev = "Magas lap";
+
+    // Teljes pakli létrehozása minden resetnél
     Pakliletrehozas();
 
-    // ===== Kéz kiosztása =====
+    // Kéz kiosztása
     kez.push(osszlap.pop());
     kez.push(osszlap.pop());
-    jatszolapok.push(kez[0], kez[1]);
 
-    // ===== Asztali lapok előkészítése (de még nem mutatjuk) =====
-    for (let i = 0; i < 5; i++) {
-      let lap = osszlap.pop();
-      oszto.push(lap);
-      jatszolapok.push(lap);
+    // Asztal kiosztása (5 lap)
+    for (var i = 0; i < 5; i++) {
+      oszto.push(osszlap.pop());
     }
 
     megjelenit();
   }
 
-  //=============================  Megjelenítés =============================
+  // Megjelenítés
   function megjelenit() {
-    // ===== Kéz =====
-    document.getElementById("kez").innerHTML = "";
-    for (let lap of kez) {
-      document.getElementById("kez").innerHTML += kartyakep(lap);
+    var kezDiv = document.getElementById("kez");
+    kezDiv.innerHTML = "";
+    for (var i = 0; i < kez.length; i++) {
+      kezDiv.innerHTML += kartyakep(kez[i]);
     }
 
-    // ===== Asztal =====
-    document.getElementById("oszto").innerHTML = "";
-    for (let i = 0; i < 5; i++) {
-      if (i < Felforditott_db)
-        document.getElementById("oszto").innerHTML += kartyakep(oszto[i]);
-      else document.getElementById("oszto").innerHTML += hatlap();
+    var osztoDiv = document.getElementById("oszto");
+    osztoDiv.innerHTML = "";
+    for (var j = 0; j < 5; j++) {
+      if (j < Felforditott_db && oszto[j]) {
+        osztoDiv.innerHTML += kartyakep(oszto[j]);
+      } else {
+        osztoDiv.innerHTML += hatlap();
+      }
     }
-
-    kiert(); //Minden fordításnál kiértékelés
+    kiert();
   }
 
-  //=============================  Kiértékelés =============================
+  // Kiértékelés (egyszerűbb)
   function kiert() {
     kez_1_db = 1;
     kez_2_db = 1;
     kez_1_szimb = 0;
     kez_2_szimb = 0;
-    legerosebbKez = { ertek: 0, nev: "Magas lap" };
+
+    legerosebbKez.ertek = 0;
+    legerosebbKez.nev = "Magas lap";
+
     kezpar = kez[0].szam === kez[1].szam;
 
-    // ===== Számoljuk a párokat és flösst a kijött lapok alapján =====
-    for (let i = 0; i < Felforditott_db; i++) {
-      let lap = oszto[i];
-      if (kez[0].szam === lap.szam) kez_1_db++;
-      if (kez[1].szam === lap.szam) kez_2_db++;
+    if(kezpar){
+      kez_1_db++;
+      kez_2_db++;
+      ertekeles(2, "Kézpár");
+    } 
 
-      if (kez[0].szimbolum === lap.szimbolum) kez_1_szimb++;
-      if (kez[1].szimbolum === lap.szimbolum) kez_2_szimb++;
+    // Párok és szín számolás
+    for (var i = 0; i < Felforditott_db; i++) {
+      if (kez[0].szam === oszto[i].szam) kez_1_db++;
+      if (kez[1].szam === oszto[i].szam) kez_2_db++;
+      if (kez[0].szimbolum === oszto[i].szimbolum) kez_1_szimb++;
+      if (kez[1].szimbolum === oszto[i].szimbolum) kez_2_szimb++;
     }
 
-    // ===== Párok / drill / póker =====
+    // Párok / drill / póker
     if (kez_1_db === 4 || kez_2_db === 4) ertekeles(8, "Póker");
     else if (kez_1_db === 3 || kez_2_db === 3) ertekeles(4, "Drill");
-    else if (kez_1_db === 2 || kez_2_db === 2) ertekeles(2, "Pár");
-
-    // ===== Sor / színsor / royal =====
-    let oszt_lap_ertekei = [];
-    let osszesLap = [];
-
-    for (let i = 0; i < kez.length; i++) {
-      osszesLap.push(kez[i]);
+    else if (kez_1_db === 2 || kez_2_db === 2) {
+      if (kez_1_db === 2 && kez_2_db === 2 && !kezpar) ertekeles(3, "Két Pár");
+      else ertekeles(2, "Pár");
     }
 
-    for (let i = 0; i < oszto.length; i++) {
-      osszesLap.push(oszto[i]);
+    // Sor
+    var ertekLista = [kez[0].ertek, kez[1].ertek];
+    for (var j = 0; j < Felforditott_db; j++){
+      ertekLista.push(oszto[j].ertek);
+      sorlapok.push(oszto[j]);
+    } 
+    if (ertekLista.indexOf(14) !== -1){
+      ertekLista.push(1);
+    } 
+    ertekLista.sort(function(a,b){return a-b;});
+
+    var sorDb = 0;
+    for (var k = 0; k < ertekLista.length - 1; k++) {
+      if (ertekLista[k] + 1 === ertekLista[k + 1]) sorDb++;
+      else if (ertekLista[k] !== ertekLista[k + 1]) sorDb = 0;
+    }
+    if (sorDb >= 4){
+      vanesor = true;
+      ertekeles(5, "Sor");
     }
 
-    for (let i = 0; i < 2 + Felforditott_db; i++) {
-      oszt_lap_ertekei.push(osszesLap[i].ertek);
-    }
-
-    if (oszt_lap_ertekei.includes(14)) {
-      oszt_lap_ertekei.push(1);
-    }
-
-    oszt_lap_ertekei.sort((a, b) => a - b); //A>B akkor A-B pozitiv -> Felcsereli oket, a kisebb B kerül előrébb
-
-    let db = 0;
-    for (let i = 0; i < oszt_lap_ertekei.length - 1; i++) {
-      if (oszt_lap_ertekei[i] + 1 === oszt_lap_ertekei[i + 1]) db++;
-      else if (oszt_lap_ertekei[i] !== oszt_lap_ertekei[i + 1]) db = 0;
-    }
-    if (db >= 4) ertekeles(5, "Sor");
-
-    let vanFloss =
-      (kez[0].szimbolum === kez[1].szimbolum &&
-        kez_1_szimb + 2 === Felforditott_db + 2) ||
-      kez_1_szimb === Felforditott_db + 2 ||
-      kez_2_szimb === Felforditott_db + 2;
-    if (vanFloss) ertekeles(6, "Flöss");
-
-    if (db >= 4 && vanFloss) {
-      let royal = [10, 11, 12, 13, 14];
-      let talalat = 0;
-
-      for (let i = 0; i < royal.length; i++) {
-        if (oszt_lap_ertekei.includes(royal[i])) {
-          talalat++;
+    // Flöss
+    let szimbolum_db_1 = 1;
+    let szimbolum_db_2 = 1;
+    if(kez[0].szimbolum != kez[1].szimbolum){
+      oszto.forEach((osztottlap, i) => {
+        if(i < Felforditott_db){
+          if(osztottlap.szimbolum == kez[0].szimbolum){
+            szimbolum_db_1++;
+          }
+          else if(osztottlap.szimbolum == kez[1].szimbolum){
+            szimbolum_db_2++;
+          }
         }
+      });
+    }
+    else{
+      szimbolum_db_1 = 2
+      oszto.forEach((osztottlap, i) => {
+        if(i < Felforditott_db){
+          if(osztottlap.szimbolum == kez[0].szimbolum){
+            szimbolum_db_1++;
+          }
+        }
+      });
+    }
+    
+    if (szimbolum_db_1 >= 5 || szimbolum_db_2 >= 5){
+      let floss_szimbolum;
+      if(szimbolum_db_1 >= 5){
+        floss_szimbolum = kez[0].szimbolum
       }
-
-      if (talalat === 5) {
-        ertekeles(10, "Royal Flöss");
-      } else {
-        ertekeles(9, "Színsor");
+      else{
+        floss_szimbolum = kez[1].szimbolum
       }
+      oszto.forEach(lap => {
+        if(lap.szimbolum == floss_szimbolum){
+          flosslapok.push(lap);
+        }
+      });
+      vanefloss = true;
+      ertekeles(6, "Flöss");
     }
 
     if (Felforditott_db > 0) {
-      document.getElementById("tet").textContent =
-        "Pontjaid: " + legerosebbKez.nev;
+      document.getElementById("pontjaid").innerHTML = "Pontjaid: " + legerosebbKez.nev;
+    }
+
+    //Színsor
+    if(vanefloss && vanesor){
+      let flosslapstring = flosslapok.splice(flosslapok.length-5, 5).map((lap) => {
+      return JSON.stringify(lap)
+      }) 
+      console.log(`${flosslapstring},`)
+
+      let sorlapstring = sorlapok.splice(sorlapok.length-5, 5).map((lap) => {
+        return JSON.stringify(lap)
+      }) 
+      console.log(`${sorlapstring},`)
+
+
+      console.log(sorlapstring ==  flosslapstring ? "Egyenlő" : "Nem egyenlő")
+
+      if(`A${sorlapstring}` == `A${flosslapstring}`){
+        ertekeles(10, "Színsor");
+      }
     }
   }
 
-  //=============================  Next lap =============================
+
+    
+    
+
+
+  // Next lap
   function nextLap() {
     if (Felforditott_db < 5) {
       Felforditott_db++;
@@ -209,10 +251,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  //=============================  Események =============================
+  // Események
   document.getElementById("nextBtn").addEventListener("click", nextLap);
   document.getElementById("resetBtn").addEventListener("click", reset);
 
-  //=============================  Kezdés =============================
+  // Start
   reset();
+
 });
