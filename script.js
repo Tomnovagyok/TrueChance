@@ -2,8 +2,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   var kezpar = false;
 
-  var szamok = ["2", "3", "4", "5", "6", "7", "8"];
-  var szimbolumok = ["Pikk"];
+  var szamok = ["2", "3", "4", "5", "6"];
+  var szimbolumok = ["Pikk", "Treff", "Káró", "Kör"];
   var ertekek = [2,3,4,5,6,7,8,9,10,11,12,13,14];
 
   var osszlap = [];
@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
   var oszto = [];
   let sorlapok = [];
   let flosslapok = [];
+  let jatszolapok = [];
   let vanefloss = false;
   let vanesor = false;
 
@@ -69,6 +70,8 @@ document.addEventListener("DOMContentLoaded", function () {
     kez = [];
     oszto = [];
     jatszolapok = [];
+    sorlapok = [];
+    flosslapok = [];
 
     kez_1_db = 1;
     kez_2_db = 1;
@@ -117,6 +120,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Kiértékelés (egyszerűbb)
   function kiert() {
+    vanefloss = false;
+    vanesor = false;
+    sorlapok = [];
+    flosslapok = [];
     kez_1_db = 1;
     kez_2_db = 1;
     kez_1_szimb = 0;
@@ -149,6 +156,11 @@ document.addEventListener("DOMContentLoaded", function () {
       else ertekeles(2, "Pár");
     }
 
+    //Full house
+    if((kez_1_db === 3 && kez_2_db >= 2 || kez_2_db === 3 && kez_1_db >= 2) && !kezpar){
+      ertekeles(7, "Full House"); 
+    }
+
     // Sor
     var ertekLista = [kez[0].ertek, kez[1].ertek];
     for (var j = 0; j < Felforditott_db; j++){
@@ -158,7 +170,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (ertekLista.indexOf(14) !== -1){
       ertekLista.push(1);
     } 
-    ertekLista.sort(function(a,b){return a-b;});
+    ertekLista.sort((a, b) => a - b);
 
     var sorDb = 0;
     for (var k = 0; k < ertekLista.length - 1; k++) {
@@ -213,35 +225,63 @@ document.addEventListener("DOMContentLoaded", function () {
       ertekeles(6, "Flöss");
     }
 
-    if (Felforditott_db > 0) {
-      document.getElementById("pontjaid").innerHTML = "Pontjaid: " + legerosebbKez.nev;
-    }
+    // Pont kiírásának
+    document.getElementById("pontjaid").innerHTML = "Pontjaid: " + legerosebbKez.nev;
 
-    //Színsor
-    if(vanefloss && vanesor){
-      let flosslapstring = flosslapok.splice(flosslapok.length-5, 5).map((lap) => {
-      return JSON.stringify(lap)
-      }) 
-      console.log(`${flosslapstring},`)
+    // Színsor
+    if (vanefloss && flosslapok.length > 0) {
+      let flushErtekek = [];
 
-      let sorlapstring = sorlapok.splice(sorlapok.length-5, 5).map((lap) => {
-        return JSON.stringify(lap)
-      }) 
-      console.log(`${sorlapstring},`)
+      // Kéz lapok
+      if (kez[0].szimbolum === flosslapok[0].szimbolum && !flushertekek.includes(kez[0].ertek)) {
+        flushErtekek.push(kez[0].ertek);
+      }
+      if (kez[1].szimbolum === flosslapok[0].szimbolum && !flushertekek.includes(kez[1].ertek)) {
+        flushErtekek.push(kez[1].ertek);
+      }
 
+      // Asztal lapok
+      oszto.forEach((lap, i) => {
+        if (i < Felforditott_db && lap.szimbolum === flosslapok[0].szimbolum) {
+          if (!flushErtekek.includes(lap.ertek)) {
+            flushErtekek.push(lap.ertek);
+          }
+        }
+      });
 
-      console.log(sorlapstring ==  flosslapstring ? "Egyenlő" : "Nem egyenlő")
+      if (flushErtekek.includes(14)) {
+        flushErtekek.push(1);
+      }
 
-      if(`A${sorlapstring}` == `A${flosslapstring}`){
-        ertekeles(10, "Színsor");
+      flushErtekek.sort((a, b) => a - b); //Sort (Ha a-b > 0 => a b elé kerül, fordított esetben marad a helyzete)
+
+      // Sor ellenőrzés csak flöss színen belül
+      let sorDb = 0;
+
+      for (let i = 0; i < flushErtekek.length - 1; i++) {
+        if (flushErtekek[i] + 1 === flushErtekek[i + 1]) {
+          sorDb++;
+          if (sorDb >= 4) {
+            if (
+              flushErtekek.includes(10) &&
+              flushErtekek.includes(11) &&
+              flushErtekek.includes(12) &&
+              flushErtekek.includes(13) &&
+              flushErtekek.includes(14)
+            ) {
+              ertekeles(10, "Royal flöss");
+            } else {
+              ertekeles(9, "Színsor");
+            }
+            break; // <-- FONTOS
+          }
+        } 
+        else if (flushErtekek[i] !== flushErtekek[i + 1]) {
+          sorDb = 0;
+        }
       }
     }
   }
-
-
-    
-    
-
 
   // Next lap
   function nextLap() {
