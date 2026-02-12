@@ -1,0 +1,301 @@
+/* főoldal stílusa */
+
+.btn-register {
+  padding: 0.5rem 1.5rem;
+  background: #8c5cff;
+  border: 1px solid #8c5cff;
+  color: #f0f0f0;
+  border-radius: 50px;
+  font-weight: 500;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.btn-register:hover {
+  background: #9d75ff;
+  box-shadow: 0 0 20px rgba(140, 92, 255, 0.4);
+  color: #f0f0f0;
+}
+
+/* Hero szekció */
+
+.hero-section {
+  min-height: 100vh;
+  padding: 120px 0 4rem;
+} 
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(ellipse at 50% 50%, rgba(140, 92, 255, 0.15) 0%, transparent 50%); /*radial-gradient azt csinálja, hogy egy kör alakú színátmenetet hoz létre, ami a megadott koordinátáknál kezdődik */
+  pointer-events: none;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-logo-container {
+  max-width: 400px;
+}
+
+.hero-logo-front {
+  filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.5));
+}
+
+.hero-tagline {
+  color: #8c5cff;
+}
+
+.hero-description {
+  color: #a0a0a0;
+  max-width: 600px;
+  font-size: 1.125rem;
+  line-height: 1.8;
+}
+
+/* Gombok */
+
+.btn-glass {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 2rem;
+  background: #8c5cff;
+  border: 1px solid #8c5cff;
+  border-radius: 50px;
+  color: #f0f0f0;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.btn-glass:hover {
+  background: #9d75ff;
+  box-shadow: 0 0 20px rgba(140, 92, 255, 0.4);
+  color: #f0f0f0;
+}
+
+.btn-glass-secondary {
+  background: rgba(42, 44, 51, 0.5);
+  border: 1px solid #33353a;
+}
+
+.btn-glass-secondary:hover {
+  background: rgba(42, 44, 51, 0.8);
+  border-color: #8c5cff;
+}
+
+/* Szekciók */
+
+.section-title {
+  font-size: 2.5rem;
+  color: #f0f0f0;
+}
+
+.section-subtitle {
+  color: #a0a0a0;
+  max-width: 700px;
+  font-size: 1.1rem;
+}
+
+/* Játék kártyák */
+
+.game-card-icon {
+  color: #8c5cff;
+}
+
+.game-card-image {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: rgba(42, 44, 51, 0.5);
+  border: 1px solid #33353a;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(240, 240, 240, 0.5);
+  font-size: 0.9rem;
+}
+
+.game-card h3 {
+  color: #f0f0f0;
+}
+
+.game-card p {
+  color: #a0a0a0;
+}
+
+.game-odd {
+  color: rgba(240, 240, 240, 0.5);
+}
+
+/* Toggle kapcsoló */
+
+.toggle-switch {
+  position: relative;
+  width: 60px;
+  height: 34px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(42, 44, 51, 0.5);
+  border: 1px solid #33353a;
+  border-radius: 34px;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 3px;
+  background-color: #f0f0f0;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+
+input:checked + .toggle-slider {
+  background: #8c5cff;
+  border-color: #8c5cff;
+}
+
+input:checked + .toggle-slider:before {
+  transform: translateX(26px);
+}
+
+/* Statisztika tartalom */
+
+.stats-content {
+  display: none;
+}
+
+.stats-content.active {
+  display: block;
+}
+
+.stat-card {
+  background: #222327;
+  border: 1px solid #33353a;
+}
+
+.stat-value {
+  color: #8c5cff;
+}
+
+.chart-placeholder {
+  background: rgba(42, 44, 51, 0.5);
+  border: 1px solid #33353a;
+  aspect-ratio: 16 / 10;
+  color: rgba(240, 240, 240, 0.5);
+}
+
+.stats-info-item {
+  background: rgba(42, 44, 51, 0.5);
+}
+
+.stats-info-item:hover {
+  background: rgba(42, 44, 51, 0.8);
+}
+
+.stats-info-item i {
+  color: #8c5cff;
+}
+
+.stats-info-item h4 {
+  color: #f0f0f0;
+}
+
+.stats-info-item p {
+  color: #a0a0a0;
+}
+
+/* Rólunk szekció */
+
+.about-content {
+  max-width: 800px;
+}
+
+.about-intro {
+  font-size: 1.125rem;
+  color: #a0a0a0;
+  line-height: 1.8;
+}
+
+.about-point {
+  background: rgba(42, 44, 51, 0.5);
+  border: 1px solid #33353a;
+}
+
+.about-point:hover {
+  background: rgba(42, 44, 51, 0.8);
+}
+
+.about-point-icon {
+  width: 50px;
+  height: 50px;
+  background: rgba(140, 92, 255, 0.25);
+  color: #8c5cff;
+  font-size: 1.25rem;
+}
+
+/* Reszponzív */
+
+@media (max-width: 991px) {
+  .navbar-auth-buttons {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #33353a;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    padding: 100px 0 2rem;
+  }
+
+  .hero-logo-container {
+    max-width: 300px;
+  }
+
+  .section-title {
+    font-size: 2rem;
+  }
+
+  .about-point {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .about-point-icon {
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 576px) {
+  .hero-logo-container {
+    max-width: 250px;
+  }
+
+  .btn-glass {
+    width: 100%;
+    justify-content: center;
+  }
+}
