@@ -1,0 +1,142 @@
+/* Bejelentkezés oldal */
+
+/* navbar */
+.navbar-gombok {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-vissza {
+    padding: 0.5rem 1.5rem;
+    background: transparent;
+    border: 1px solid #33353a;
+    color: #f0f0f0;
+    border-radius: 50px;
+    font-weight: 500;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.btn-vissza:hover {
+    background: rgba(42, 44, 51, 0.5);
+    border-color: #8c5cff;
+    color: #f0f0f0;
+}
+
+/* bejelentkezés */
+.bejelentkezes-oldal {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 7rem 0 5rem 0;
+}
+
+.bejelentkezes-kartya {
+    background: #222327;
+    border: 1px solid #33353a;
+    backdrop-filter: blur(12px);
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.5);
+}
+
+/* log/reg váltás */
+.valto-gombok {
+    display: flex;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4rem;
+    padding: 0.5rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid #33353a;
+}
+
+.valto-gomb {
+    flex: 1; /* ez azért kell, hogy a gombok egyenlő szélességűek legyenek */
+    background: transparent;
+    border: none;
+    color: #a0a0a0;
+    padding: 0.6rem;
+    border-radius: 4rem;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.valto-gomb:hover {
+    color: #f0f0f0;
+}
+
+.valto-gomb.active {
+    background: #8c5cff;
+    color: #f0f0f0;
+    border: 1px solid #8c5cff;
+}
+
+/* form elemek */
+.form-control.bevitel-mezo {
+    background: #33353a;
+    border: 1px solid #33353a;
+    color: #f0f0f0;
+}
+
+.form-control.bevitel-mezo:focus {
+    background: #33353a;
+    border-color: #8c5cff;
+    box-shadow: 0 0 1rem rgba(140, 92, 255, 0.4);
+}
+
+.bevitel-mezo::placeholder {
+    color: rgba(240, 240, 240, 0.5);
+}
+
+.bevitel-ikon {
+    background: rgba(255, 255, 255, 0.05);
+    border: none;
+    color: #a0a0a0;
+}
+
+.form-label {
+    color: #f0f0f0;
+}
+
+.emlekezes-szoveg {
+    font-size: 0.9rem;
+    color: #a0a0a0;
+}
+
+.elfelejtett-jelszo {
+    color: #a0a0a0;
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+
+.elfelejtett-jelszo:hover {
+    color: #8c5cff;
+    text-decoration: underline;
+}
+
+.kuldes-gomb {
+    background: #8c5cff;
+    color: #f0f0f0;
+    font-weight: 500;
+    box-shadow: 0 0 1.5rem rgba(140, 92, 255, 0.4);
+}
+
+.kuldes-gomb:hover {
+    background: #9d75ff;
+    color: #f0f0f0;
+    box-shadow: 0 0 2rem rgba(138, 43, 226, 0.5);
+}
+
+@media (max-width: 991px) {
+    .navbar-gombok {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid #33353a;
+    }
+}
+
+@media (max-width: 576px) {
+    .bejelentkezes-kartya {
+        padding: 1.5rem;
+    }
+}

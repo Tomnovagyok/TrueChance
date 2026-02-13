@@ -1,304 +1,267 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="hu">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="TrueChance - Casino szimulátor a valódi esélyek bemutatására.">
-  <title>TrueChance - Casino Szimulátor</title>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>TrueChance - Casino Szimulátor</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"> <!--a jatekok ikonjaihoz-->
-  <link rel="stylesheet" href="../css/shared.css">
-  <link rel="stylesheet" href="../css/index.css">
-</head>
-<body>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+        <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" /> <!--a jatekok ikonjaihoz-->
+        <link rel="stylesheet" href="../css/shared.css" />
+        <link rel="stylesheet" href="../css/index.css" />
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-truechance fixed-top">
+            <div class="container">
+                <a class="navbar-brand" href="#">
+                    <img src="../img/logo.png" alt="TrueChance logo" class="navbar-logo-img" />
+                </a>
 
-  <nav class="navbar navbar-expand-lg navbar-truechance fixed-top">
-    <div class="container">
-      <a class="navbar-brand" href="#">
-        <img src="../img/logo.png" alt="TrueChance logo" class="navbar-logo-img">
-      </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon" style="filter: invert(1)"></span>
+                </button>
 
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
-      </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav mx-auto">
+                        <li class="nav-item">
+                            <a class="nav-elem" href="#rolunk">Rólunk</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-elem" href="#statisztika">Statisztikai betekintő</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-elem" href="#jatekok">Játékok</a>
+                        </li>
+                    </ul>
 
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav mx-auto">
-          <li class="nav-item">
-            <a class="nav-elem" href="#rolunk">Rólunk</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-elem" href="#statisztika">Statisztikai betekintő</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-elem" href="#jatekok">Játékok</a>
-          </li>
-        </ul>
-
-        <div class="navbar-auth-buttons d-flex gap-2">
-          <a href="login.html" class="btn-register">Belépés</a>
-        </div>
-      </div>
-    </div>
-  </nav>
-
-  <section class="hero-section d-flex align-items-center position-relative">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-lg-10 col-xl-8">
-          <div class="hero-content text-center">
-            <div class="mb-4">
-              <div class="hero-logo-container mx-auto">
-                <img src="../img/logo.png" alt="TrueChance logo" class="hero-logo-front w-100">
-              </div>
+                    <div class="navbar-auth-buttons d-flex gap-2">
+                        <a href="auth.html" class="btn-register">Belépés</a>
+                    </div>
+                </div>
             </div>
-            <p class="hero-tagline fs-5 fw-semibold mb-3">Casino szimulátor - A VALÓDI esélyeidet megmutatja élő időben</p>
-            <p class="hero-description mx-auto mb-3">
-              Fedezd fel a szerencsejáték valódi arcát! A TrueChance bemutatja a BlackJack, 
-              Texas Hold'em Poker és Slot játékok valós nyerési esélyeit. Célunk, hogy 
-              tudatos döntéseket hozz - ne hagyd, hogy a szerencsejáték átvegye az irányítást.
-            </p>
-            <div class="d-flex gap-3 flex-wrap justify-content-center pt-3">
-              <a href="#jatekok" class="btn-glass">
-                <i class="fas fa-play"></i>
-                Próbáld ki
-              </a>
-              <a href="#rolunk" class="btn-glass btn-glass-secondary">
-                <i class="fas fa-info-circle"></i>
-                Tudj meg többet
-              </a>
+        </nav>
+
+        <section class="hero-section d-flex align-items-center position-relative">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-10 col-xl-8">
+                        <div class="hero-content text-center">
+                            <div class="mb-4">
+                                <div class="hero-logo-container mx-auto">
+                                    <img src="../img/logo.png" alt="TrueChance logo" class="hero-logo-front w-100" />
+                                </div>
+                            </div>
+                            <p class="hero-tagline fs-5 fw-semibold mb-3">Casino szimulátor - A VALÓDI esélyeidet megmutatja élő időben</p>
+                            <p class="hero-description mx-auto mb-3">Fedezd fel a szerencsejáték valódi arcát! A TrueChance bemutatja a BlackJack, Texas Hold'em Poker és Slot játékok valós nyerési esélyeit. Célunk, hogy tudatos döntéseket hozz - ne hagyd, hogy a szerencsejáték átvegye az irányítást.</p>
+                            <div class="d-flex gap-3 flex-wrap justify-content-center pt-3">
+                                <a href="#jatekok" class="btn-glass">
+                                    <i class="fas fa-play"></i>
+                                    Próbáld ki
+                                </a>
+                                <a href="#rolunk" class="btn-glass btn-glass-secondary">
+                                    <i class="fas fa-info-circle"></i>
+                                    Tudj meg többet
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+        </section>
 
-  <section id="jatekok" class="section py-5">
-    <div class="container">
-      <h2 class="section-title text-center mb-4">Játékok</h2>
-      <p class="section-subtitle text-center mx-auto mb-4">
-        Próbáld ki a legnépszerűbb casino játékokat szimulált környezetben, 
-        és lásd élőben, milyen alacsonyak a valódi nyerési esélyek.
-      </p>
+        <section id="jatekok" class="section py-5">
+            <div class="container">
+                <h2 class="section-title text-center mb-4">Játékok</h2>
+                <p class="section-subtitle text-center mx-auto mb-4">Próbáld ki a legnépszerűbb casino játékokat szimulált környezetben, és lásd élőben, milyen alacsonyak a valódi nyerési esélyek.</p>
 
-      <div class="row g-4">
-        <div class="col-md-4">
-          <div class="card-glass game-card h-100 text-center p-4">
-            <i class="fas fa-heart game-card-icon fs-1 mb-3 d-block"></i>
-            <div class="game-card-image mb-3">
-              <span>BlackJack<br>Placeholder</span>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="card-glass game-card h-100 text-center p-4">
+                            <i class="fa-solid fa-diamond game-card-icon fs-1 mb-3 d-block"></i>
+                            <div class="game-card-image mb-3">
+                                <span>BlackJack<br />Placeholder</span>
+                            </div>
+                            <h3>BlackJack</h3>
+                            <p>A klasszikus kártyajáték, ahol a 21-hez kell a legközelebb kerülnöd anélkül, hogy túllépnéd.</p>
+                            <p class="game-odd fst-italic small">Átlagos nyerési esély: ~42-49%</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card-glass game-card h-100 text-center p-4">
+                            <i class="fas fa-heart game-card-icon fs-1 mb-3 d-block"></i>
+                            <div class="game-card-image mb-3">
+                                <span>Texas Hold'em<br />Placeholder</span>
+                            </div>
+                            <h3>Texas Hold'em Poker</h3>
+                            <p>Stratégia és szerencse keveréke. Tedd próbára a készségeidet virtuális ellenfelekkel szemben.</p>
+                            <p class="game-odd fst-italic small">Átlagos nyerési esély: ~25-35%</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card-glass game-card h-100 text-center p-4">
+                            <i class="fas fa-dice game-card-icon fs-1 mb-3 d-block"></i>
+                            <div class="game-card-image mb-3">
+                                <span>Slot Machine<br />Placeholder</span>
+                            </div>
+                            <h3>Slot Machine</h3>
+                            <p>A legegyszerűbb, de legkockázatosabb játék. Egy gombnyomás, és a szerencse dönt.</p>
+                            <p class="game-odd fst-italic small">Átlagos nyerési esély: ~5-15%</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <h3>BlackJack</h3>
-            <p>
-              A klasszikus kártyajáték, ahol a 21-hez kell a legközelebb kerülnöd 
-              anélkül, hogy túllépnéd.
-            </p>
-            <p class="game-odd fst-italic small">Átlagos nyerési esély: ~42-49%</p>
-          </div>
-        </div>
+        </section>
 
-        <div class="col-md-4">
-          <div class="card-glass game-card h-100 text-center p-4">
-            <i class="fas fa-heart game-card-icon fs-1 mb-3 d-block"></i>
-            <div class="game-card-image mb-3">
-              <span>Texas Hold'em<br>Placeholder</span>
+        <section id="statisztika" class="section py-5">
+            <div class="container">
+                <h2 class="section-title text-center mb-4">Statisztikai Betekintő</h2>
+                <p class="section-subtitle text-center mx-auto mb-4">Kapcsold be a valós idejű statisztikákat, és lásd élőben, hogyan változnak a nyerési esélyeid és az átlagos veszteséged.</p>
+
+                <div class="d-flex align-items-center justify-content-center gap-3 mb-4">
+                    <label for="statsToggle" class="d-flex align-items-center gap-3 cursor-pointer">
+                        <span class="text-secondary">Statisztikai betekintő bekapcsolása</span>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="statsToggle" />
+                            <span class="toggle-slider"></span>
+                        </div>
+                    </label>
+                </div>
+
+                <div id="statsContent" class="stats-content">
+                    <div class="row g-4 mb-4">
+                        <div class="col-md-4">
+                            <div class="stat-card text-center p-4 rounded-3">
+                                <div class="stat-value fs-2 fw-bold mb-2" id="stat-win-chance">42.5%</div>
+                                <div class="stat-label text-secondary">Átlagos Nyerési Esély</div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="stat-card text-center p-4 rounded-3">
+                                <div class="stat-value fs-2 fw-bold mb-2" id="stat-avg-loss">1,250 Ft</div>
+                                <div class="stat-label text-secondary">Átlagos Veszteség / Játék</div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="stat-card text-center p-4 rounded-3">
+                                <div class="stat-value fs-2 fw-bold mb-2" id="stat-house-edge">3.5%</div>
+                                <div class="stat-label text-secondary">Átlagos Ház Előny</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <h3 class="text-center mb-4">Valószínűségi Grafikonok</h3>
+
+                        <div class="row g-4 mb-4">
+                            <div class="col-md-6">
+                                <div class="chart-placeholder rounded-3 d-flex flex-column align-items-center justify-content-center">
+                                    <i class="fas fa-chart-line fs-1 mb-3 opacity-50"></i>
+                                    <span>Grafikon helye</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="chart-placeholder rounded-3 d-flex flex-column align-items-center justify-content-center">
+                                    <i class="fas fa-chart-bar fs-1 mb-3 opacity-50"></i>
+                                    <span>Grafikon helye</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <div class="stats-info-item d-flex align-items-start gap-3 p-3 rounded-3 mb-3">
+                                <i class="fas fa-chart-line mt-1"></i>
+                                <div>
+                                    <h4 class="fs-6 fw-semibold mb-1">Valós idejű nyerési esélyek</h4>
+                                    <p class="small mb-0">A szimuláció folyamatosan számolja a tényleges nyerési valószínűségeket minden játéktípusnál.</p>
+                                </div>
+                            </div>
+                            <div class="stats-info-item d-flex align-items-start gap-3 p-3 rounded-3 mb-3">
+                                <i class="fas fa-coins mt-1"></i>
+                                <div>
+                                    <h4 class="fs-6 fw-semibold mb-1">Átlagos profit/loss értékek</h4>
+                                    <p class="small mb-0">Láthatod, hogy hosszú távon hogyan alakul az egyenleged - a legtöbb esetben negatív irányban.</p>
+                                </div>
+                            </div>
+                            <div class="stats-info-item d-flex align-items-start gap-3 p-3 rounded-3 mb-3">
+                                <i class="fas fa-exclamation-triangle mt-1"></i>
+                                <div>
+                                    <h4 class="fs-6 fw-semibold mb-1">Kockázati és valószínűségi háttér</h4>
+                                    <p class="small mb-0">Megértheted a matematikai alapokat: miért van mindig a ház előnyben, és miért veszélyes a szerencsejáték.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <h3>Texas Hold'em Poker</h3>
-            <p>
-              Stratégia és szerencse keveréke. Tedd próbára a készségeidet 
-              virtuális ellenfelekkel szemben.
-            </p>
-            <p class="game-odd fst-italic small">Átlagos nyerési esély: ~25-35%</p>
-          </div>
-        </div>
+        </section>
 
-        <div class="col-md-4">
-          <div class="card-glass game-card h-100 text-center p-4">
-            <i class="fas fa-dice game-card-icon fs-1 mb-3 d-block"></i>
-            <div class="game-card-image mb-3">
-              <span>Slot Machine<br>Placeholder</span>
+        <section id="rolunk" class="section py-5">
+            <div class="container">
+                <h2 class="section-title text-center mb-4">Rólunk</h2>
+
+                <div class="about-content mx-auto">
+                    <p class="about-intro text-center mb-4">A TrueChance nem egy hagyományos casino oldal. Célunk, hogy megmutassuk a szerencsejáték valódi arcát - a matematikát, a valószínűségeket és a kockázatokat. Nem ítélkezünk, hanem tájékoztatunk, hogy te magad dönthess a tények ismeretében.</p>
+
+                    <div class="d-grid gap-4">
+                        <div class="about-point d-flex gap-3 p-4 rounded-3">
+                            <div class="about-point-icon d-flex align-items-center justify-content-center rounded-3 flex-shrink-0">
+                                <i class="fas fa-exclamation-circle"></i>
+                            </div>
+                            <div>
+                                <h3 class="fs-5 fw-semibold mb-2">Miért veszélyes a szerencsejáték?</h3>
+                                <p class="mb-0">A szerencsejáték függőséget okozhat, amely súlyos pénzügyi, mentális és kapcsolati problémákhoz vezethet. A "ház mindig nyer" elve matematikailag bizonyított - hosszú távon a játékosok veszítenek.</p>
+                            </div>
+                        </div>
+
+                        <div class="about-point d-flex gap-3 p-4 rounded-3">
+                            <div class="about-point-icon d-flex align-items-center justify-content-center rounded-3 flex-shrink-0">
+                                <i class="fas fa-calculator"></i>
+                            </div>
+                            <div>
+                                <h3 class="fs-5 fw-semibold mb-2">Hogyan számolhatók az esélyek?</h3>
+                                <p class="mb-0">Minden casino játéknak van egy "ház előnye" (house edge), amely megmutatja, hogy a casino átlagosan hány százalékot nyer minden fogadásból. A szimulátoraink ezeket a valós matematikai modelleket használják.</p>
+                            </div>
+                        </div>
+
+                        <div class="about-point d-flex gap-3 p-4 rounded-3">
+                            <div class="about-point-icon d-flex align-items-center justify-content-center rounded-3 flex-shrink-0">
+                                <i class="fas fa-bullseye"></i>
+                            </div>
+                            <div>
+                                <h3 class="fs-5 fw-semibold mb-2">Mi a TrueChance célja?</h3>
+                                <p class="mb-0">Szeretnénk, hogy mindenki megértse a valódi esélyeket, mielőtt valódi pénzt kockáztatna. Az oktatás és a tudatosság a legjobb védelem a függőséggel szemben.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <h3>Slot Machine</h3>
-            <p>
-              A legegyszerűbb, de legkockázatosabb játék. Egy gombnyomás, 
-              és a szerencse dönt.
-            </p>
-            <p class="game-odd fst-italic small">Átlagos nyerési esély: ~5-15%</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+        </section>
 
-  <section id="statisztika" class="section py-5">
-    <div class="container">
-      <h2 class="section-title text-center mb-4">Statisztikai Betekintő</h2>
-      <p class="section-subtitle text-center mx-auto mb-4">
-        Kapcsold be a valós idejű statisztikákat, és lásd élőben, 
-        hogyan változnak a nyerési esélyeid és az átlagos veszteséged.
-      </p>
-
-      <div class="d-flex align-items-center justify-content-center gap-3 mb-4">
-        <label for="statsToggle" class="d-flex align-items-center gap-3 cursor-pointer">
-          <span class="text-secondary">Statisztikai betekintő bekapcsolása</span>
-          <div class="toggle-switch">
-            <input type="checkbox" id="statsToggle">
-            <span class="toggle-slider"></span>
-          </div>
-        </label>
-      </div>
-
-      <div id="statsContent" class="stats-content">
-        <div class="row g-4 mb-4">
-          <div class="col-md-4">
-            <div class="stat-card text-center p-4 rounded-3">
-              <div class="stat-value fs-2 fw-bold mb-2" id="stat-win-chance">42.5%</div>
-              <div class="stat-label text-secondary">Átlagos Nyerési Esély</div>
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-links d-flex gap-3 justify-content-center flex-wrap mb-3">
+                    <a href="#">Adatvédelem</a>
+                    <a href="#">Felhasználási feltételek</a>
+                    <a href="#">Kapcsolat</a>
+                    <a href="#">GYIK</a>
+                </div>
+                <div class="footer-copyright text-center small">
+                    <p>&copy; 2026 TrueChance. Minden jog fenntartva. Ez egy oktatási célú szimulátor.</p>
+                    <p class="mt-2" style="font-size: 0.8rem">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Ha te vagy valaki, akit ismersz, szerencsejáték függőséggel küzd, kérj segítséget:
+                        <a href="https://egeszsegvonal.gov.hu/egeszseg-a-z/s-sz/szerencsejatek-fuggoseg.html" target="_blank" rel="noopener" style="color: #8c5cff">egeszsegvonal.gov.hu</a>
+                    </p>
+                </div>
             </div>
-          </div>
+        </footer>
 
-          <div class="col-md-4">
-            <div class="stat-card text-center p-4 rounded-3">
-              <div class="stat-value fs-2 fw-bold mb-2" id="stat-avg-loss">1,250 Ft</div>
-              <div class="stat-label text-secondary">Átlagos Veszteség / Játék</div>
-            </div>
-          </div>
-
-          <div class="col-md-4">
-            <div class="stat-card text-center p-4 rounded-3">
-              <div class="stat-value fs-2 fw-bold mb-2" id="stat-house-edge">3.5%</div>
-              <div class="stat-label text-secondary">Átlagos Ház Előny</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="mt-4">
-          <h3 class="text-center mb-4">Valószínűségi Grafikonok</h3>
-
-          <div class="row g-4 mb-4">
-            <div class="col-md-6">
-              <div class="chart-placeholder rounded-3 d-flex flex-column align-items-center justify-content-center">
-                <i class="fas fa-chart-line fs-1 mb-3 opacity-50"></i>
-                <span>Grafikon helye</span>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="chart-placeholder rounded-3 d-flex flex-column align-items-center justify-content-center">
-                <i class="fas fa-chart-bar fs-1 mb-3 opacity-50"></i>
-                <span>Grafikon helye</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="mt-4">
-            <div class="stats-info-item d-flex align-items-start gap-3 p-3 rounded-3 mb-3">
-              <i class="fas fa-chart-line mt-1"></i>
-              <div>
-                <h4 class="fs-6 fw-semibold mb-1">Valós idejű nyerési esélyek</h4>
-                <p class="small mb-0">A szimuláció folyamatosan számolja a tényleges nyerési valószínűségeket minden játéktípusnál.</p>
-              </div>
-            </div>
-            <div class="stats-info-item d-flex align-items-start gap-3 p-3 rounded-3 mb-3">
-              <i class="fas fa-coins mt-1"></i>
-              <div>
-                <h4 class="fs-6 fw-semibold mb-1">Átlagos profit/loss értékek</h4>
-                <p class="small mb-0">Láthatod, hogy hosszú távon hogyan alakul az egyenleged - a legtöbb esetben negatív irányban.</p>
-              </div>
-            </div>
-            <div class="stats-info-item d-flex align-items-start gap-3 p-3 rounded-3 mb-3">
-              <i class="fas fa-exclamation-triangle mt-1"></i>
-              <div>
-                <h4 class="fs-6 fw-semibold mb-1">Kockázati és valószínűségi háttér</h4>
-                <p class="small mb-0">Megértheted a matematikai alapokat: miért van mindig a ház előnyben, és miért veszélyes a szerencsejáték.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="rolunk" class="section py-5">
-    <div class="container">
-      <h2 class="section-title text-center mb-4">Rólunk</h2>
-
-      <div class="about-content mx-auto">
-        <p class="about-intro text-center mb-4">
-          A TrueChance nem egy hagyományos casino oldal. Célunk, hogy megmutassuk a szerencsejáték 
-          valódi arcát - a matematikát, a valószínűségeket és a kockázatokat. Nem ítélkezünk, 
-          hanem tájékoztatunk, hogy te magad dönthess a tények ismeretében.
-        </p>
-
-        <div class="d-grid gap-4">
-          <div class="about-point d-flex gap-3 p-4 rounded-3">
-            <div class="about-point-icon d-flex align-items-center justify-content-center rounded-3 flex-shrink-0">
-              <i class="fas fa-exclamation-circle"></i>
-            </div>
-            <div>
-              <h3 class="fs-5 fw-semibold mb-2">Miért veszélyes a szerencsejáték?</h3>
-              <p class="mb-0">
-                A szerencsejáték függőséget okozhat, amely súlyos pénzügyi, mentális és 
-                kapcsolati problémákhoz vezethet. A "ház mindig nyer" elve matematikailag 
-                bizonyított - hosszú távon a játékosok veszítenek.
-              </p>
-            </div>
-          </div>
-
-          <div class="about-point d-flex gap-3 p-4 rounded-3">
-            <div class="about-point-icon d-flex align-items-center justify-content-center rounded-3 flex-shrink-0">
-              <i class="fas fa-calculator"></i>
-            </div>
-            <div>
-              <h3 class="fs-5 fw-semibold mb-2">Hogyan számolhatók az esélyek?</h3>
-              <p class="mb-0">
-                Minden casino játéknak van egy "ház előnye" (house edge), amely megmutatja, 
-                hogy a casino átlagosan hány százalékot nyer minden fogadásból. A szimulátoraink 
-                ezeket a valós matematikai modelleket használják.
-              </p>
-            </div>
-          </div>
-
-          <div class="about-point d-flex gap-3 p-4 rounded-3">
-            <div class="about-point-icon d-flex align-items-center justify-content-center rounded-3 flex-shrink-0">
-              <i class="fas fa-bullseye"></i>
-            </div>
-            <div>
-              <h3 class="fs-5 fw-semibold mb-2">Mi a TrueChance célja?</h3>
-              <p class="mb-0">
-                Szeretnénk, hogy mindenki megértse a valódi esélyeket, mielőtt valódi pénzt 
-                kockáztatna. Az oktatás és a tudatosság a legjobb védelem a függőséggel szemben.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-links d-flex gap-3 justify-content-center flex-wrap mb-3">
-        <a href="#">Adatvédelem</a>
-        <a href="#">Felhasználási feltételek</a>
-        <a href="#">Kapcsolat</a>
-        <a href="#">GYIK</a>
-      </div>
-      <div class="footer-copyright text-center small">
-        <p>&copy; 2026 TrueChance. Minden jog fenntartva. Ez egy oktatási célú szimulátor.</p>
-        <p class="mt-2" style="font-size: 0.8rem;">
-          <i class="fas fa-info-circle me-1"></i>
-          Ha te vagy valaki, akit ismersz, szerencsejáték függőséggel küzd, kérj segítséget: 
-          <a href="https://egeszsegvonal.gov.hu/egeszseg-a-z/s-sz/szerencsejatek-fuggoseg.html" target="_blank" rel="noopener" style="color: #8c5cff;">egeszsegvonal.gov.hu</a>
-        </p>
-      </div>
-    </div>
-  </footer>
-
-  <script src="../bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="../javascript/index.js"></script>
-
-</body>
+        <script src="../bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="../javascript/index.js"></script>
+    </body>
 </html>

@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="hu">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>TrueChance - Bejelentkezés</title>
+
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+        <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" /> <!--kell az ikonokhoz-->
+        <link rel="stylesheet" href="../css/shared.css" />
+        <link rel="stylesheet" href="../css/auth.css" />
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-bejelentkezes fixed-top">
+            <div class="container">
+                <a class="navbar-brand" href="index.html">
+                    <img src="../img/logo.png" alt="TrueChance logo" class="navbar-logo-img" />
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon" style="filter: invert(1)"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav mx-auto">
+                        <li class="nav-item">
+                            <a class="nav-elem" href="index.html#rolunk">Rólunk</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-elem" href="index.html#statisztika">Statisztikai betekintő</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-elem" href="index.html#jatekok">Játékok</a>
+                        </li>
+                    </ul>
+
+                    <div class="navbar-gombok">
+                        <a href="index.html" class="btn-vissza"> <i class="fas fa-arrow-left me-2"></i>Vissza a főoldalra </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <section class="bejelentkezes-oldal">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-5 col-md-8">
+                        <div class="bejelentkezes-kartya">
+                            <div class="valto-gombok">
+                                <button class="valto-gomb active" id="showLoginBtn">Bejelentkezés</button>
+                                <button class="valto-gomb" id="showRegisterBtn">Regisztráció</button>
+                            </div>
+
+                            <div id="loginForm" class="urlap">
+                                <h2 class="text-center mb-4">Üdv újra!</h2>
+                                <form>
+                                    <div class="mb-3">
+                                        <label for="loginEmail" class="form-label">Email cím</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bevitel-ikon"><i class="fas fa-envelope"></i></span>
+                                            <input type="email" class="form-control bevitel-mezo" id="loginEmail" placeholder="pelda@email.com" required />
+                                        </div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="loginPassword" class="form-label">Jelszó</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bevitel-ikon"><i class="fas fa-lock"></i></span>
+                                            <input type="password" class="form-control bevitel-mezo" id="loginPassword" placeholder="********" required />
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between align-items-center mb-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="rememberMe" />
+                                            <label class="form-check-label emlekezes-szoveg" for="rememberMe"> Emlékezz rám </label>
+                                        </div>
+                                        <a href="#" class="elfelejtett-jelszo">Elfelejtett jelszó?</a>
+                                    </div>
+
+                                    <button type="submit" class="btn kuldes-gomb w-100 py-2">Bejelentkezés <i class="fas fa-sign-in-alt ms-2"></i></button>
+                                </form>
+                            </div>
+
+                            <div id="registerForm" class="urlap" style="display: none">
+                                <h2 class="text-center mb-4">Csatlakozz hozzánk!</h2>
+                                <form>
+                                    <div class="mb-3">
+                                        <label for="regName" class="form-label">Teljes név</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bevitel-ikon"><i class="fas fa-user"></i></span>
+                                            <input type="text" class="form-control bevitel-mezo" id="regName" placeholder="Kovács János" required />
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="regEmail" class="form-label">Email cím</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bevitel-ikon"><i class="fas fa-envelope"></i></span>
+                                            <input type="email" class="form-control bevitel-mezo" id="regEmail" placeholder="pelda@email.com" required />
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="regPassword" class="form-label">Jelszó</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bevitel-ikon"><i class="fas fa-lock"></i></span>
+                                            <input type="password" class="form-control bevitel-mezo" id="regPassword" placeholder="Legalább 8 karakter" required />
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label for="regPasswordConfirm" class="form-label">Jelszó megerősítése</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bevitel-ikon"><i class="fas fa-lock"></i></span>
+                                            <input type="password" class="form-control bevitel-mezo" id="regPasswordConfirm" placeholder="********" required />
+                                        </div>
+                                    </div>
+
+                                    <button type="submit" class="btn kuldes-gomb w-100 py-2">Regisztráció <i class="fas fa-user-plus ms-2"></i></button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-links d-flex gap-3 justify-content-center flex-wrap mb-3">
+                    <a href="#">Adatvédelem</a>
+                    <a href="#">Felhasználási feltételek</a>
+                    <a href="#">Kapcsolat</a>
+                    <a href="#">GYIK</a>
+                </div>
+                <div class="footer-copyright text-center small">
+                    <p>&copy; 2026 TrueChance. Minden jog fenntartva. Ez egy oktatási célú szimulátor.</p>
+                    <p class="mt-2" style="font-size: 0.8rem">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Ha te vagy valaki, akit ismersz, szerencsejáték függőséggel küzd, kérj segítséget:
+                        <a href="https://egeszsegvonal.gov.hu/egeszseg-a-z/s-sz/szerencsejatek-fuggoseg.html" target="_blank" rel="noopener" style="color: #8c5cff">egeszsegvonal.gov.hu</a>
+                    </p>
+                </div>
+            </div>
+        </footer>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="../javascript/auth.js"></script>
+    </body>
+</html>
