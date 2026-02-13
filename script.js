@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Változók deklarálása
   var kezpar = false; 
-  var szamok = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
+  var szamok = ["2", "3", "4", "5", "6", "7",];
   var szimbolumok = ["Pikk", "Treff", "Káró", "Kör"];
   var ertekek = [2,3,4,5,6,7,8,9,10,11,12,13,14];
 
@@ -47,7 +47,9 @@ document.addEventListener("DOMContentLoaded", function () {
     // Fisher-Yates keverés
     for (var k = osszlap.length - 1; k > 0; k--) {
       var rand = Math.floor(Math.random() * (k + 1));
-      var temp = osszlap[k]; osszlap[k] = osszlap[rand]; osszlap[rand] = temp;
+      var temp = osszlap[k]; 
+      osszlap[k] = osszlap[rand]; 
+      osszlap[rand] = temp;
     }
   }
 
@@ -113,7 +115,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Full house ellenőrzés
-    if((kez_1_db === 3 && kez_2_db >= 2 || kez_2_db === 3 && kez_1_db >= 2) && !kezpar){
+    if((kez_1_db === 3 && kez_2_db >= 2 || kez_2_db === 3 && kez_1_db >= 2 || kez_1_db === 3 && kez_2_db === 3) && !kezpar){
       ertekeles(7, "Full House"); 
     }
 
@@ -169,4 +171,4 @@ document.addEventListener("DOMContentLoaded", function () {
   // Játék indítása
   reset();
 
-});
+}); 
