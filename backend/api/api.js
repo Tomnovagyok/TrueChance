@@ -19,6 +19,8 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 //!Endpoints:
+
+//?----------------------------------------------------------------------------------------------------
 //?GET /api/test
 router.get('/test', (request, response) => {
     response.status(200).json({
