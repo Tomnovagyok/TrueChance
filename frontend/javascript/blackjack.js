@@ -203,6 +203,20 @@ function updateButtons(state) {
     }
 }
 
+function disableActionButtonsExceptReset() {
+    const nextBtn = document.getElementById('nextBtn');
+    const doubleBtn = document.getElementById('doubleBtn');
+    const splitBtn = document.getElementById('splitBtn');
+    const standBtn = document.getElementById('standBtn');
+    const resetBtn = document.getElementById('resetBtn');
+
+    if (nextBtn) nextBtn.disabled = true;
+    if (doubleBtn) doubleBtn.disabled = true;
+    if (splitBtn) splitBtn.disabled = true;
+    if (standBtn) standBtn.disabled = true;
+    if (resetBtn) resetBtn.disabled = false;
+}
+
 // API hívások
 async function initGame() {
     try {
@@ -219,6 +233,18 @@ async function hit() {
     try {
         const state = await PostMethodFetch.post('/api/game/hit');
         updateUI(state);
+
+        const aktualisKez = state.kezIndex === 1 ? state.jatekosKez : state.jatekosKez2;
+        const normalHit21 =
+            state.status === 'ongoing' &&
+            state.jatekosKez2.length === 0 &&
+            aktualisKez.length > 0 &&
+            kezErtek(aktualisKez) === 21;
+
+        if (normalHit21) {
+            disableActionButtonsExceptReset();
+            setTimeout(() => stand(), 500);
+        }
     } catch (error) {
         console.error('hit sikertelen:', error);
     }

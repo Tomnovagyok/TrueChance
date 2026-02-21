@@ -28,7 +28,8 @@ router.get('/', (request, response) => {
     response.sendFile(path.join(__dirname, '../frontend/html/blackjack.html'));
 });
 
-//?Blackjack oldal:
+//?Blackjack oldal:cd..
+
 router.get('/blackjack', (request, response) => {
     response.sendFile(path.join(__dirname, '../frontend/html/blackjack.html'));
 });
