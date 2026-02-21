@@ -168,42 +168,29 @@ function updateButtons(state) {
 
     // Ha bust, akkor az összes gomb disabled (csak reset engedélyezett)
     if (state.bust) {
-        if (nextBtn) nextBtn.disabled = true;
-        if (doubleBtn) doubleBtn.disabled = true;
-        if (splitBtn) splitBtn.disabled = true;
-        if (standBtn) standBtn.disabled = true;
-        if (resetBtn) resetBtn.disabled = false;
+        disableActionButtonsExceptReset();
         return;
     }
 
     if (state.status === 'ongoing') {
+        disableActionButtonsExceptReset();
         if (nextBtn) nextBtn.disabled = false;
         if (doubleBtn) doubleBtn.disabled = !state.canDouble;
         if (splitBtn) splitBtn.disabled = !state.canSplit;
         if (standBtn) standBtn.disabled = false;
         if (resetBtn) resetBtn.disabled = false;
     } else if (state.status === 'stand_needed') {
-        if (nextBtn) nextBtn.disabled = true;
-        if (doubleBtn) doubleBtn.disabled = true;
-        if (splitBtn) splitBtn.disabled = true;
+        disableActionButtonsExceptReset();
         if (standBtn) standBtn.disabled = false;
         if (resetBtn) resetBtn.disabled = false;
     } else if (state.status === 'gameover') {
-        if (nextBtn) nextBtn.disabled = true;
-        if (doubleBtn) doubleBtn.disabled = true;
-        if (splitBtn) splitBtn.disabled = true;
-        if (standBtn) standBtn.disabled = true;
-        if (resetBtn) resetBtn.disabled = false;
+        disableActionButtonsExceptReset();
     } else {
-        if (nextBtn) nextBtn.disabled = true;
-        if (doubleBtn) doubleBtn.disabled = true;
-        if (splitBtn) splitBtn.disabled = true;
-        if (standBtn) standBtn.disabled = true;
-        if (resetBtn) resetBtn.disabled = false;
+        disableActionButtonsExceptReset();
     }
 }
 
-function disableActionButtonsExceptReset() {
+function disableAllButtons() {
     const nextBtn = document.getElementById('nextBtn');
     const doubleBtn = document.getElementById('doubleBtn');
     const splitBtn = document.getElementById('splitBtn');
@@ -214,6 +201,13 @@ function disableActionButtonsExceptReset() {
     if (doubleBtn) doubleBtn.disabled = true;
     if (splitBtn) splitBtn.disabled = true;
     if (standBtn) standBtn.disabled = true;
+    if (resetBtn) resetBtn.disabled = true;
+}
+
+function disableActionButtonsExceptReset() {
+    disableAllButtons();
+
+    const resetBtn = document.getElementById('resetBtn');
     if (resetBtn) resetBtn.disabled = false;
 }
 
@@ -256,6 +250,7 @@ async function double() {
         updateUI(state);
         // Ha nincs kéz váltás, automatikusan megállunk
         if (!state.switchHand && state.status === 'stand_needed') {
+            disableActionButtonsExceptReset();
             setTimeout(() => stand(), 500);
         }
     } catch (error) {
@@ -316,6 +311,7 @@ async function reset() {
 // Automatikus Stand ha blackjack
 function AutoStand() {
     if (kezErtek(gameState.jatekosKez) === 21) {
+        disableActionButtonsExceptReset();
         setTimeout(() => stand(), 500);
     }
 }
