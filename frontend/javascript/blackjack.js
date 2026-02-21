@@ -117,16 +117,18 @@ function updateUI(state) {
     if (osztoDiv) {
         osztoDiv.innerHTML = '';
         if (state.osztoKez.length > 0) {
-            osztoDiv.innerHTML += kartyakep(state.osztoKez[0]);
+            const osztoKezDiv = document.createElement('div');
+            osztoKezDiv.innerHTML = kartyakep(state.osztoKez[0]);
             if (state.osztoKez.length > 1) {
                 if (state.osztoRejtett) {
-                    osztoDiv.innerHTML += hatlap();
+                    osztoKezDiv.innerHTML += hatlap();
                 } else {
                     for (let j = 1; j < state.osztoKez.length; j++) {
-                        osztoDiv.innerHTML += kartyakep(state.osztoKez[j]);
+                        osztoKezDiv.innerHTML += kartyakep(state.osztoKez[j]);
                     }
                 }
             }
+            osztoDiv.appendChild(osztoKezDiv);
         }
     }
 
@@ -164,9 +166,19 @@ function updateButtons(state) {
     const standBtn = document.getElementById('standBtn');
     const resetBtn = document.getElementById('resetBtn');
 
+    // Ha bust, akkor az összes gomb disabled (csak reset engedélyezett)
+    if (state.bust) {
+        if (nextBtn) nextBtn.disabled = true;
+        if (doubleBtn) doubleBtn.disabled = true;
+        if (splitBtn) splitBtn.disabled = true;
+        if (standBtn) standBtn.disabled = true;
+        if (resetBtn) resetBtn.disabled = false;
+        return;
+    }
+
     if (state.status === 'ongoing') {
         if (nextBtn) nextBtn.disabled = false;
-        if (doubleBtn) doubleBtn.disabled = false;
+        if (doubleBtn) doubleBtn.disabled = !state.canDouble;
         if (splitBtn) splitBtn.disabled = !state.canSplit;
         if (standBtn) standBtn.disabled = false;
         if (resetBtn) resetBtn.disabled = false;

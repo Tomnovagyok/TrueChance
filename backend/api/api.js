@@ -127,14 +127,16 @@ router.post('/game/init', (request, response) => {
 
         response.status(200).json({
             jatekosKez: game.jatekosKez,
-            osztoKez: [game.osztoKez[0]], // Csak az első lapot mutatjuk meg
+            osztoKez: game.osztoKez, // Teljes osztoKez, a frontend dönti el mit mutat
             jatekosKez2: game.jatekosKez2,
             osztoRejtett: true,
             kezIndex: 1,
             pakliMaradek: game.deck.length,
             eredmeny: game.eredmeny,
             status: game.status,
-            canSplit: game.jatekosKez[0].szam === game.jatekosKez[1].szam
+            canSplit: game.jatekosKez[0].szam === game.jatekosKez[1].szam,
+            canDouble: game.jatekosKez.length === 2,
+            bust: false
         });
     } catch (error) {
         response.status(500).json({ error: 'Játék inicializálása sikertelen' });
@@ -167,7 +169,7 @@ router.post('/game/hit', (request, response) => {
                 canContinue = false;
             }
         } else if (ertek > 21) {
-            game.eredmeny = 'Állapot: Bust az aktuális keznél';
+            game.eredmeny = 'Állapot: Az aktuális kézzel besokaltál';
             if (game.jatekosKez2.length > 0 && game.kezIndex === 1) {
                 game.kezIndex = 2;
                 game.eredmeny = 'Állapot: Split - Második kéz';
@@ -181,7 +183,7 @@ router.post('/game/hit', (request, response) => {
 
         response.status(200).json({
             jatekosKez: game.jatekosKez,
-            osztoKez: [game.osztoKez[0]],
+            osztoKez: game.osztoKez,
             jatekosKez2: game.jatekosKez2,
             osztoRejtett: true,
             kezIndex: game.kezIndex,
@@ -189,7 +191,10 @@ router.post('/game/hit', (request, response) => {
             eredmeny: game.eredmeny,
             status: canContinue ? 'ongoing' : 'stand_needed',
             switchHand: switchHand,
-            canSplit: false
+            canSplit: false,
+            canDouble:
+                game.kezIndex === 1 ? game.jatekosKez.length === 2 : game.jatekosKez2.length === 2,
+            bust: ertek > 21 && !switchHand
         });
     } catch (error) {
         response.status(500).json({ error: 'Lap kérés sikertelen' });
@@ -225,7 +230,7 @@ router.post('/game/double', (request, response) => {
                 canContinue = false;
             }
         } else if (ertek > 21) {
-            game.eredmeny = 'Állapot: Bust az aktuális keznél - Double után';
+            game.eredmeny = 'Állapot: Az aktuális kéznél besokaltál';
             if (game.jatekosKez2.length > 0 && game.kezIndex === 1) {
                 game.kezIndex = 2;
                 game.eredmeny = 'Állapot: Split - Második kéz';
@@ -245,7 +250,7 @@ router.post('/game/double', (request, response) => {
 
         response.status(200).json({
             jatekosKez: game.jatekosKez,
-            osztoKez: [game.osztoKez[0]],
+            osztoKez: game.osztoKez,
             jatekosKez2: game.jatekosKez2,
             osztoRejtett: true,
             kezIndex: game.kezIndex,
@@ -253,7 +258,10 @@ router.post('/game/double', (request, response) => {
             eredmeny: game.eredmeny,
             status: canContinue ? 'ongoing' : 'stand_needed',
             switchHand: switchHand,
-            canSplit: false
+            canSplit: false,
+            canDouble:
+                game.kezIndex === 1 ? game.jatekosKez.length === 2 : game.jatekosKez2.length === 2,
+            bust: ertek > 21 && !switchHand
         });
     } catch (error) {
         response.status(500).json({ error: 'Double sikertelen' });
@@ -292,7 +300,7 @@ router.post('/game/split', (request, response) => {
 
         response.status(200).json({
             jatekosKez: game.jatekosKez,
-            osztoKez: [game.osztoKez[0]],
+            osztoKez: game.osztoKez,
             jatekosKez2: game.jatekosKez2,
             osztoRejtett: true,
             kezIndex: 1,
@@ -300,7 +308,9 @@ router.post('/game/split', (request, response) => {
             eredmeny: game.eredmeny,
             status: 'ongoing',
             switchHand: false,
-            canSplit: false
+            canSplit: false,
+            canDouble: game.jatekosKez.length === 2,
+            bust: false
         });
     } catch (error) {
         response.status(500).json({ error: 'Split sikertelen' });
@@ -322,7 +332,7 @@ router.post('/game/stand', (request, response) => {
             request.session.blackjackGame = game;
             return response.status(200).json({
                 jatekosKez: game.jatekosKez,
-                osztoKez: [game.osztoKez[0]],
+                osztoKez: game.osztoKez,
                 jatekosKez2: game.jatekosKez2,
                 osztoRejtett: true,
                 kezIndex: 2,
@@ -330,7 +340,9 @@ router.post('/game/stand', (request, response) => {
                 eredmeny: game.eredmeny,
                 status: 'ongoing',
                 switchHand: true,
-                canSplit: false
+                canSplit: false,
+                canDouble: game.jatekosKez2.length === 2,
+                bust: false
             });
         }
 
@@ -399,7 +411,9 @@ router.post('/game/stand', (request, response) => {
             eredmeny: game.eredmeny,
             status: 'gameover',
             switchHand: false,
-            canSplit: false
+            canSplit: false,
+            canDouble: false,
+            bust: false
         });
     } catch (error) {
         response.status(500).json({ error: 'Stand sikertelen' });
