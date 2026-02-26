@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="hu">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="TrueChance - Válassz játékot és ismerd meg a valódi esélyeket!" />
+        <title>TrueChance - Játékválasztó</title>
+
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+        <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+        <link rel="stylesheet" href="../css/shared.css" />
+        <link rel="stylesheet" href="../css/games.css" />
+    </head>
+
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-jatekok fixed-top">
+            <div class="container-fluid px-5">
+                <a class="navbar-brand" href="games.html">
+                    <img src="../img/logo.png" alt="TrueChance logo" class="navbar-logo-img" />
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon" style="filter: invert(1)"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <div class="felhasznalo-szekcio ms-auto">
+                        <button type="button" id="statsToggleBtn" class="statisztika-gomb" title="Statisztikai Betekintő">
+                            <i class="fas fa-chart-bar me-2"></i>
+                            <span class="d-none d-lg-inline">Statisztikai Betekintő</span>
+                            <!--d-lg-inline = csak nagy kijelzőkön látszik a szöveg-->
+                        </button>
+
+                        <div class="dropdown">
+                            <button class="profil-gomb dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown">
+                                <div class="profil-avatar">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <span class="profil-nev d-none d-md-inline">Felhasználó</span> <!--itt később majd maga a felhasználó neve fog szerepelni-->
+                                <!--d-none = kisebb kijelzőkön nem látszik a név, csak a felhasználó ikonja-->
+                                <!--d-md-inline = csak közepes és nagyobb kijelzőkön látszik a szöveg-->
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end dropdown-lista">
+                                <li>
+                                    <a class="dropdown-item"><i class="fas fa-user me-2"></i>Profilom</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item"><i class="fas fa-chart-line me-2"></i>Statisztikáim</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item"><i class="fas fa-cog me-2"></i>Beállítások</a>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider"/>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item text-danger" href="index.html"><i class="fas fa-sign-out me-2"></i>Kilépés</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <section class="jatekok-szekcio">
+            <div class="container">
+                <div class="jatekok-fejlec text-center">
+                    <h1 class="jatekok-cim">Válassz Játékot</h1>
+                    <p class="jatekok-alcim">Lásd élőben, milyen alacsonyak a valódi nyerési esélyek.</p>
+                </div>
+
+                <!-- Első sor: BlackJack (2/3) részben és a Slot (1/3) maradékban -->
+                <div class="row g-4 mb-4 justify-content-center">
+                    <div class="col-lg-6 col-md-7">
+                        <a href="#blackjack" class="jatek-kartya">
+                            <div class="jatek-ikon">
+                                <i class="fas fa-diamond"></i>
+                            </div>
+                            <div class="jatek-tartalom">
+                                <h3>BlackJack</h3>
+                                <p>A klasszikus kártyajáték, ahol a 21-hez kell a legközelebb kerülnöd anélkül, hogy túllépnéd.</p>
+                                <div class="jatek-eselyek">
+                                    <span class="esely-cimke">Átlagos nyerési esély:</span>
+                                    <span class="esely-ertek">~42-49%</span>
+                                </div>
+                            </div>
+                            <div class="jatek-akcio">
+                                <span class="jatszas-gomb"> <i class="fas fa-play me-2"></i>Játék</span>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="col-lg-4 col-md-5">
+                        <a href="#slot" class="jatek-kartya">
+                            <div class="jatek-ikon">
+                                <i class="fas fa-dice"></i>
+                            </div>
+                            <div class="jatek-tartalom">
+                                <h3>Slot Machine</h3>
+                                <p>A legegyszerűbb, de legkockázatosabb játék. Egy gombnyomás, és a szerencse dönt.</p>
+                                <div class="jatek-eselyek">
+                                    <span class="esely-cimke">Átlagos nyerési esély:</span>
+                                    <span class="esely-ertek">~2-10% (hosszútávon)</span>
+                                </div>
+                            </div>
+                            <div class="jatek-akcio">
+                                <span class="jatszas-gomb"> <i class="fas fa-play me-2"></i>Játék</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Második sor: Roulette (1/3) és Póker (2/3) -->
+                <div class="row g-4 justify-content-center">
+                    <div class="col-lg-4 col-md-5">
+                        <a href="#roulette" class="jatek-kartya">
+                            <div class="jatek-ikon">
+                                <i class="fas fa-circle-notch"></i>
+                            </div>
+                            <div class="jatek-tartalom">
+                                <h3>Roulette</h3>
+                                <p>A casino klasszikus kereke. Tedd a téted piros vagy fekete színre, számokra, vagy kombinációkra.</p>
+                                <div class="jatek-eselyek">
+                                    <span class="esely-cimke">Átlagos nyerési esély:</span>
+                                    <span class="esely-ertek">~47-49%</span>
+                                </div>
+                            </div>
+                            <div class="jatek-akcio">
+                                <span class="jatszas-gomb"> <i class="fas fa-play me-2"></i>Játék</span>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="col-lg-6 col-md-7">
+                        <a href="poker.html" class="jatek-kartya">
+                            <div class="jatek-ikon">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <div class="jatek-tartalom">
+                                <h3>Texas Hold'em</h3>
+                                <p>Stratégia és szerencse keveréke. Tedd próbára a készségeidet virtuális ellenfelekkel szemben.</p>
+                                <div class="jatek-eselyek">
+                                    <span class="esely-cimke">Átlagos nyerési esély:</span>
+                                    <span class="esely-ertek">Stratégiafüggő (25-35%)   </span>
+                                </div>
+                            </div>
+                            <div class="jatek-akcio">
+                                <span class="jatszas-gomb"> <i class="fas fa-play me-2"></i>Játék</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="statisztika-info" class="statisztika-info-doboz">
+                    <div class="statisztika-fejlec">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>Statisztikai Betekintő</h3>
+                    </div>
+                    <p>Játék közben bekapcsolhatod a statisztikai betekintőt, amely valós időben mutatja a nyerési esélyeket, a ház előnyét és az átlagos veszteségeidet. Ez segít megérteni, miért van mindig a ház előnyben.</p>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-links d-flex gap-3 justify-content-center flex-wrap mb-3">
+                    <a href="#">Adatvédelem</a>
+                    <a href="#">Felhasználási feltételek</a>
+                    <a href="#">Kapcsolat</a>
+                    <a href="#">GYIK</a>
+                </div>
+                <div class="footer-copyright text-center small">
+                    <p>&copy; 2026 TrueChance. Minden jog fenntartva. Ez egy oktatási célú szimulátor.</p>
+                    <p class="mt-2" style="font-size: 0.8rem">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Ha te vagy valaki, akit ismersz, szerencsejáték függőséggel küzd, kérj segítséget:
+                        <a href="https://egeszsegvonal.gov.hu/egeszseg-a-z/s-sz/szerencsejatek-fuggoseg.html" target="_blank" rel="noopener" style="color: #8c5cff">egeszsegvonal.gov.hu</a>
+                    </p>
+                </div>
+            </div>
+        </footer>
+
+        <script src="../bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="../javascript/games.js"></script>
+    </body>
+</html>

@@ -1,0 +1,229 @@
+/* Játékok oldal */
+
+/* Játékok szekció */
+.jatekok-szekcio {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 7rem 0 4rem;
+    position: relative;
+}
+
+.jatekok-szekcio::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(ellipse at 50% 50%, rgba(140, 92, 255, 0.15) 0%, transparent 100%);
+    pointer-events: none;   
+}
+
+/* Fejléc */
+.jatekok-fejlec {
+    margin-bottom: 3rem;
+    position: relative;
+    z-index: 1;
+}
+
+.jatekok-cim {
+    font-size: 2.5rem;
+    color: #f0f0f0;
+    margin-bottom: 0.5rem;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+}
+
+.jatekok-alcim {
+    color: #a0a0a0;
+    max-width: 700px;
+    margin: 0 auto;
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+/* Játék kártyák */
+.jatek-kartya {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: #222327;
+    border: 1px solid #33353a;
+    backdrop-filter: blur(12px);
+    border-radius: 1.5rem;
+    padding: 2rem;
+    text-decoration: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.jatek-kartya:hover {
+    background: #2a2c33;
+    border-color: #8c5cff;
+    box-shadow:
+        0 4px 16px rgba(0, 0, 0, 0.4),
+        0 0 20px rgba(140, 92, 255, 0.4);
+}
+
+.jatek-ikon {
+    width: 70px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(140, 92, 255, 0.2);
+    border-radius: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.jatek-ikon i {
+    font-size: 2rem;
+    color: #8c5cff;
+}
+
+.jatek-tartalom {
+    flex: 1; /* ez azt csinálja, hogy a tartalom teljes mértékben kitöltse a rendelkezésre álló helyet */
+}
+
+.jatek-tartalom h3 {
+    font-size: 1.5rem;
+    color: #f0f0f0;
+    margin-bottom: 0.5rem;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+}
+
+.jatek-tartalom p {
+    color: #a0a0a0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+/* Nyerési esélyek */
+.jatek-eselyek {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+body.stats-hidden .jatek-eselyek {
+    /* ha a stats-hidden osztály jelen van a body-n, akkor elrejtjük az esélyeket */
+    display: none;
+}
+
+.esely-cimke {
+    font-size: 0.875rem;
+    color: rgba(240, 240, 240, 0.5);
+}
+
+.esely-ertek {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #8c5cff;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Játék gomb */
+.jatek-akcio {
+    margin-top: auto;
+}
+
+.jatszas-gomb {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0.75rem 1.5rem;
+    background: transparent; /* olyan háttér, ami a mögötte lévő kártya háttérszíne, a hover effektusnál megváltozik */
+    border: 1px solid #8c5cff;
+    border-radius: 50px;
+    color: #8c5cff;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+}
+
+.jatek-kartya:hover .jatszas-gomb {
+    background: #8c5cff;
+    color: #f0f0f0;
+    box-shadow: 0 0 20px rgba(140, 92, 255, 0.4);
+}
+
+/* Statisztika info doboz */
+.statisztika-info-doboz {
+    max-width: 700px;
+    margin: 3rem auto 0;
+    padding: 1.5rem;
+    background: rgba(42, 44, 51, 0.5);
+    border: 1px solid #33353a;
+    backdrop-filter: blur(12px); /* ez adja az üveghatást */
+    border-radius: 1.5rem;
+    position: relative;
+    z-index: 1;
+}
+
+.statisztika-fejlec {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.statisztika-fejlec i {
+    font-size: 1.5rem;
+    color: #8c5cff;
+}
+
+.statisztika-fejlec h3 {
+    font-size: 1.5rem;
+    color: #f0f0f0;
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+.statisztika-info-doboz p {
+    color: #a0a0a0;
+    margin: 0;
+    line-height: 1.7;
+}
+
+/* Reszponzív */
+@media (max-width: 991px) {
+    .statisztika-gomb {
+        flex: 1;
+        max-width: 250px;
+    }
+}
+
+@media (max-width: 768px) {
+    .jatekok-szekcio {
+        padding: 100px 0 2rem;
+    }
+
+    .jatekok-cim {
+        font-size: 2rem;
+    }
+
+    .jatek-kartya {
+        padding: 1.5rem;
+    }
+
+    .jatek-ikon {
+        width: 60px;
+        height: 60px;
+    }
+
+    .jatek-ikon i {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .jatekok-szekcio {
+        padding: 90px 0 1.5rem;
+    }
+}
