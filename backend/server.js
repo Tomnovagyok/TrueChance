@@ -23,9 +23,9 @@ app.use(
 );
 
 //!Routing
-//?Főoldal:
+//?Főoldal → Póker:
 router.get('/', (request, response) => {
-    response.sendFile(path.join(__dirname, '../frontend/html/index.html'));
+    response.sendFile(path.join(__dirname, '../frontend/html/poker.html'));
 });
 
 //!API endpoints
@@ -35,6 +35,7 @@ app.use('/api', endpoints);
 
 //!Szerver futtatása
 app.use(express.static(path.join(__dirname, '../frontend'))); //?frontend mappa tartalmának betöltése az oldal működéséhez
+
 app.listen(port, ip, () => {
     console.log(`Szerver elérhetősége: http://${ip}:${port}`);
 });

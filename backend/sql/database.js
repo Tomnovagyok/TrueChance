@@ -16,6 +16,7 @@ async function selectall() {
     const [rows] = await pool.execute(query);
     return rows;
 }
+
 //!Export
 module.exports = {
     selectall
