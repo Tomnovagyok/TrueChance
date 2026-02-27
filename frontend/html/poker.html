@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="hu">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>TrueChance - Texas Hold'em Poker</title>
+
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+        <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+        <link rel="stylesheet" href="../css/shared.css" />
+        <link rel="stylesheet" href="../css/poker.css" />
+    </head>
+
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-poker fixed-top">
+            <div class="container-fluid px-5">
+                <a class="navbar-brand" href="games.html">
+                    <img src="../img/logo.png" alt="TrueChance logo" class="navbar-logo-img" />
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon" style="filter: invert(1)"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <div class="felhasznalo-szekcio ms-auto">
+                        <button type="button" id="statsToggleBtn" class="statisztika-gomb" title="Statisztikai Betekintő">
+                            <i class="fas fa-chart-bar me-2"></i>
+                            <span>Statisztikai Betekintő</span>
+                        </button>
+
+                        <div class="dropdown">
+                            <button class="profil-gomb dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown">
+                                <div class="profil-avatar">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <span class="profil-nev">Felhasználó</span> <!--itt később majd maga a felhasználó neve fog szerepelni-->
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end dropdown-lista">
+                                <li>
+                                    <a class="dropdown-item"><i class="fas fa-user me-2"></i>Profilom</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item"><i class="fas fa-chart-line me-2"></i>Statisztikáim</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item"><i class="fas fa-cog me-2"></i>Beállítások</a>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider"/>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item text-danger" href="index.html"><i class="fas fa-sign-out me-2"></i>Kilépés</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <section class="poker-szekcio">
+            <div class="poker-kontener">
+                <div class="poker-asztal">
+                    <div class="asztal-hatter">
+                        <img src="../img/Truechance_table.png" alt="Póker asztal" class="asztal-kep" />
+                    </div>
+
+                    <div class="kartyak-overlay">
+                        <div class="kozos-kartyak">
+                            <div class="kartya-hely">
+                                <div class="kartya-placeholder">
+                                    <i class="fas fa-question"></i>
+                                </div>
+                            </div>
+                            <div class="kartya-hely">
+                                <div class="kartya-placeholder">
+                                    <i class="fas fa-question"></i>
+                                </div>
+                            </div>
+                            <div class="kartya-hely">
+                                <div class="kartya-placeholder">
+                                    <i class="fas fa-question"></i>
+                                </div>
+                            </div>
+                            <div class="kartya-hely">
+                                <div class="kartya-placeholder">
+                                    <i class="fas fa-question"></i>
+                                </div>
+                            </div>
+                            <div class="kartya-hely">
+                                <div class="kartya-placeholder">
+                                    <i class="fas fa-question"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="jatek-info-panel">
+                    <div class="info-elem">
+                        <i class="fas fa-coins"></i>
+                        <span class="info-cimke">Pot:</span>
+                        <span class="info-ertek">$0</span>
+                    </div>
+                    <div class="info-elem">
+                        <i class="fas fa-circle-notch"></i>
+                        <span class="info-cimke">Kör:</span>
+                        <span class="info-ertek">Várakozás</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-links d-flex gap-3 justify-content-center flex-wrap mb-3">
+                    <a href="#">Adatvédelem</a>
+                    <a href="#">Felhasználási feltételek</a>
+                    <a href="#">Kapcsolat</a>
+                    <a href="#">GYIK</a>
+                </div>
+                <div class="footer-copyright text-center small">
+                    <p>&copy; 2026 TrueChance. Minden jog fenntartva. Ez egy oktatási célú szimulátor.</p>
+                    <p class="mt-2" style="font-size: 0.8rem">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Ha te vagy valaki, akit ismersz, szerencsejáték függőséggel küzd, kérj segítséget:
+                        <a href="https://egeszsegvonal.gov.hu/egeszseg-a-z/s-sz/szerencsejatek-fuggoseg.html" target="_blank" rel="noopener" style="color: #8c5cff">egeszsegvonal.gov.hu</a>
+                    </p>
+                </div>
+            </div>
+        </footer>
+
+        <script src="../bootstrap/js/bootstrap.bundle.min.js"></script>
+    </body>
+</html>

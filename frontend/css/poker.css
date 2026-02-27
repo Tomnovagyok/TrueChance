@@ -1,0 +1,208 @@
+/* Poker oldal */
+
+/* poker szekcio */
+.poker-szekcio {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 120px 0px;
+    position: relative; /* hogy a ::before pszeudo-element pozícionálható legyen */
+}
+    
+.poker-szekcio::before {
+    content: ''; /* ez kell a pszeudo-element megjelenítéséhez */
+    position: absolute; 
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(ellipse at 50% 50%, rgba(140, 92, 255, 0.1) 25%, transparent 200%);
+    pointer-events: none; /* biztosítja, hogy a háttér ne zavarja a kattintásokat */
+}
+
+/* poker kontener */
+.poker-kontener {
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column-reverse; /* a jatek-info-panel legyen alul, asztal felül */
+    overflow: hidden; /* megakadályozza a vízszintes görgetést kis kijelzőkön */
+}
+
+/* Poker asztal */
+.poker-asztal {
+    position: relative;
+    width: 98%;
+    max-width: 1190px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.asztal-hatter {
+    position: relative;
+    width: 100%;
+}
+
+.asztal-kep {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 8px 32px rgba(0, 0, 0, 0.6)); /* árnyék az asztalnak */
+}
+
+/* Kártyák az asztalon */
+.kartyak-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.kozos-kartyak {
+    display: flex;
+    gap: 10px;
+    position: absolute;
+    top: 37%; /* függőlegesen középre */
+    left: 50%; /* vízszintesen középre */
+    transform: translateX(-50%); /* vízszintesen középre */
+    cursor: pointer;
+}
+
+.kartya-hely {
+    width: 120px;
+    height: 170px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.kartya-placeholder {
+    width: 100%;
+    height: 100%;
+    background: #222327;
+    border: 2px solid #33353a;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); /* enyhe árnyék a kártyákna */
+}
+
+.kartya-placeholder i {
+    font-size: 1.5rem;
+    color: #a0a0a0;
+    opacity: 0.5;
+}
+
+/* Info panel */
+.jatek-info-panel {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    padding: 0.75rem 1.5rem;
+    background: rgba(42, 44, 51, 0.5);
+    border: 1px solid #33353a;
+    border-radius: 1.5rem;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.info-elem {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #f0f0f0;
+    font-family: 'Poppins', sans-serif;
+}
+
+.info-elem i {
+    color: #8c5cff;
+    font-size: 1.2rem;
+}
+
+.info-cimke {
+    color: #a0a0a0;
+    font-size: 0.9rem;
+}
+
+.info-ertek {
+    color: #f0f0f0;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+/* Reszponzív */
+@media (max-width: 992px) {
+    .poker-asztal {
+        width: 100%;
+        transform: scale(1.3); /* nagyítás tablet nézetben */
+        transform-origin: center center; /* biztosítja, hogy a nagyítás középpontja az asztal közepe legyen */
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .kozos-kartyak {
+        gap: 10px;
+        top: 38%;
+    }
+
+    .kartya-hely {
+        width: 75px;
+        height: 105px;
+    }
+
+    .jatek-info-panel {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .poker-szekcio {
+        padding: 100px 10px 20px;
+    }
+
+    .poker-asztal {
+        width: 100%;
+        transform: scale(1.3); /* azonos nagyítás mint tablet nézetben */
+        transform-origin: center center;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .kozos-kartyak {
+        gap: 4px;
+        top: 38%;
+    }
+
+    .kartya-hely {
+        width: 48px;
+        height: 67px; /* megtartja a ~1:1.4 kártya arányt */
+    }
+
+    .kartya-placeholder {
+        border-width: 1px;
+    }
+
+    .kartya-placeholder i {
+        font-size: 0.7rem;
+    }
+
+    .jatek-info-panel {
+        padding: 0.5rem;
+    }
+
+    .info-elem {
+        font-size: 0.85rem;
+    }
+}

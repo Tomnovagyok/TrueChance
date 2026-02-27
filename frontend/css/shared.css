@@ -1,9 +1,9 @@
-/*Megosztott css fajl*/
+/*megosztott css fajl*/
 
 * {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
+  box-sizing: border-box; /* ez biztosítja, hogy a padding és margin ne befolyásolja a szélességet */
 }
 
 body {
@@ -33,7 +33,7 @@ p {
 .navbar-jatekok,
 .navbar-poker {
   background: rgba(42, 44, 51, 0.8);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px); /* ez adja az üveg/átlátszó hatást */
   border-bottom: 1px solid #33353a;
   padding: 0.25rem 0;
 }
@@ -49,7 +49,7 @@ p {
   color: #a0a0a0;
   font-weight: 500;
   padding: 0.5rem 1.5rem;
-  text-decoration: none;
+  text-decoration: none; /*a linkek aláhúzottak voltak, ezt eltávolítottam */
 }
 
 .nav-elem:hover {
@@ -167,7 +167,7 @@ p {
   display: flex;
   gap: 1.5rem;
   justify-content: center;
-  flex-wrap: wrap;
+  flex-wrap: wrap; /* ez lehetővé teszi a linkek több sorba törését, reszponzív */
   margin-bottom: 1rem;
 }
 
@@ -199,7 +199,9 @@ p {
 .card-glass:hover {
   background: #2a2c33;
   border-color: #8c5cff;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), 0 0 20px rgba(140, 92, 255, 0.4);
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.4), /* ez adja a mélység hatását */ 
+    0 0 20px rgba(140, 92, 255, 0.4); /* ez adja a lila fényhatást */
 }
 
 /* Üveg-style primary gomb */
@@ -211,7 +213,7 @@ p {
   padding: 0.75rem 1.5rem;
   border-radius: 0.5rem;
   text-decoration: none;
-  display: inline-block;
+  display: inline-block; /* gombok egymás mellé */
   font-weight: 500;
   box-shadow: 0 0 20px rgba(140, 92, 255, 0.4);
 }
@@ -262,9 +264,5 @@ p {
 @media (max-width: 576px) {
   .navbar-logo-img {
     height: 45px;
-  }
-
-  .profil-nev {
-    display: none;
   }
 }
