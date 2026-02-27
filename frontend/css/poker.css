@@ -1,0 +1,121 @@
+body {
+    background: #1a4a2e;
+    color: #f0e6c8;
+    font-family: 'Segoe UI', sans-serif;
+    min-height: 100vh;
+    text-align: center;
+    margin: 0;
+    padding: 40px 20px;
+}
+
+h1 {
+    color: #f0e6c8;
+    margin-bottom: 30px;
+}
+
+h3 {
+    color: #c8b97a;
+    margin-bottom: 8px;
+    font-size: 1.1rem;
+}
+
+#oszto, #kez, #ellenfel {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
+#oszto {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.kartya {
+    width: 120px;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+.kartya.nyertes {
+    box-shadow: 0 0 20px 6px #ffe680;
+}
+
+.pont-szoveg {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #ffe680;
+    margin-bottom: 15px;
+    min-height: 1.5em;
+}
+
+#eredmeny {
+    font-size: 1.6rem;
+    font-weight: 800;
+    margin-bottom: 20px;
+    min-height: 2em;
+}
+
+.nyert { color: #2ecc71; }
+.vesztett { color: #e74c3c; }
+.dontetlen { color: #f1c40f; }
+
+#zseton-bar {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+}
+
+#zseton-bar strong {
+    color: #ffe680;
+}
+
+#gombok {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+button {
+    padding: 10px 24px;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+#checkBtn {
+    background: #3498db;
+    color: #fff;
+}
+
+#callBtn {
+    background: #2ecc71;
+    color: #fff;
+}
+
+#raiseBtn {
+    background: #9b59b6;
+    color: #fff;
+}
+
+#foldBtn {
+    background: #e74c3c;
+    color: #fff;
+}
+
+#resetBtn {
+    background: #e67e22;
+    color: #fff;
+}

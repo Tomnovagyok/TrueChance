@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="hu">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>TrueChance – Póker</title>
+        <link rel="stylesheet" href="../css/poker.css" />
+    </head>
+    <body>
+        <h1>TrueChance Póker</h1>
+
+        <!-- Zseton kijelző -->
+        <div id="zseton-bar">
+            <span>Te: <strong id="jatekos_zseton">1000</strong> BÉ</span>
+            <span>Tét: <strong id="pot">0</strong> BÉ</span>
+            <span>Ellenfél: <strong id="ellenfel_zseton">1000</strong> BÉ</span>
+        </div>
+
+        <h3 id="ellenfel_cim">Ellenfél</h3>
+        <div id="ellenfel"></div>
+        <div id="ellenfel_pont" class="pont-szoveg"></div>
+
+        <div id="oszto"></div>
+
+        <h3>Te</h3>
+        <div id="kez"></div>
+        <div id="pontjaid" class="pont-szoveg">Pontjaid: –</div>
+
+        <div id="eredmeny"></div>
+
+        <!-- Döntési gombok -->
+        <div id="gombok">
+            <button id="checkBtn">Passz (Check)</button>
+            <button id="callBtn">Tartás (Call)</button>
+            <button id="raiseBtn">Emelés (Raise)</button>
+            <button id="foldBtn">Bedobás (Fold)</button>
+            <button id="resetBtn">Új leosztás</button>
+        </div>
+
+        <script src="../javascript/poker.js"></script>
+    </body>
+</html>

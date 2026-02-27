@@ -71,7 +71,7 @@ function pakliLetrehozas() {
     return osszlap;
 }
 
-//?Kéz kiértékelés (azonos a korábbi kiert() függvénnyel)
+//?Kéz kiértékelés – az összes lapból (kéz + asztal) a legjobb kombinációt keresi
 function kiert(jatekosKez, asztalLapok) {
     var aktivLapok = [jatekosKez[0], jatekosKez[1]];
     for (var i = 0; i < asztalLapok.length; i++) aktivLapok.push(asztalLapok[i]);
@@ -81,44 +81,42 @@ function kiert(jatekosKez, asztalLapok) {
         if (szint > eredmeny.ertek) { eredmeny.ertek = szint; eredmeny.nev = nev; }
     }
 
-    var kezpar = jatekosKez[0].szam === jatekosKez[1].szam;
-    var kez_1_db = 1, kez_2_db = 1;
-    if (kezpar) { kez_1_db++; kez_2_db++; }
-
-    for (var i = 0; i < asztalLapok.length; i++) {
-        if (jatekosKez[0].szam === asztalLapok[i].szam) kez_1_db++;
-        if (jatekosKez[1].szam === asztalLapok[i].szam) kez_2_db++;
+    // ---- Számok szerinti csoportosítás (összes lap) ----
+    var szamSzamlalo = {};
+    for (var i = 0; i < aktivLapok.length; i++) {
+        var sz = aktivLapok[i].szam;
+        szamSzamlalo[sz] = (szamSzamlalo[sz] || 0) + 1;
     }
 
-    var maxDb = Math.max(kez_1_db, kez_2_db);
-    if (maxDb === 4) ertekeles(8, "Póker");
-    else if (maxDb === 3) ertekeles(4, "Drill");
-    else if (maxDb === 2) {
-        if (kez_1_db === 2 && kez_2_db === 2 && !kezpar) ertekeles(3, "Két Pár");
-        else if (kezpar) ertekeles(2, "Kézpár");
-        else ertekeles(2, "Pár");
+    // Csoportok: hány darab négyes, hármas, kettes van + melyik lap értéke
+    var negyesek = 0, harmasok = 0, parok = 0;
+    var negyesErtek = 0, harmasErtek = 0, parErtek = 0, parErtek2 = 0;
+    for (var sz in szamSzamlalo) {
+        // Szám → érték konverzió
+        var lapErtek = SZAMOK.indexOf(sz) !== -1 ? ERTEKEK[SZAMOK.indexOf(sz)] : 0;
+        if (szamSzamlalo[sz] === 4) { negyesek++; if (lapErtek > negyesErtek) negyesErtek = lapErtek; }
+        else if (szamSzamlalo[sz] === 3) { harmasok++; if (lapErtek > harmasErtek) harmasErtek = lapErtek; }
+        else if (szamSzamlalo[sz] === 2) { parok++; if (lapErtek > parErtek) { parErtek2 = parErtek; parErtek = lapErtek; } else if (lapErtek > parErtek2) { parErtek2 = lapErtek; } }
     }
 
-    if (!kezpar) {
-        // Két különböző kézlap → az egyik drill, a másik legalább pár = Full House
-        if ((kez_1_db === 3 && kez_2_db >= 2) || (kez_2_db === 3 && kez_1_db >= 2)) ertekeles(7, "Full House");
-    } else {
-        var vanMasikPar = false;
-        var asztalSzamlalo = {};
-        for (var i = 0; i < asztalLapok.length; i++) {
-            var sz = asztalLapok[i].szam;
-            if (sz !== jatekosKez[0].szam) { // Csak a kézpártól ELTÉRŐ számokat nézzük
-                asztalSzamlalo[sz] = (asztalSzamlalo[sz] || 0) + 1;
-            }
-        }
-        for (var sz in asztalSzamlalo) {
-            if (asztalSzamlalo[sz] >= 2) { vanMasikPar = true; break; }
-        }
-        if (kez_1_db >= 3 && vanMasikPar) ertekeles(7, "Full House");
-    }
+    // Póker (4 egyforma)
+    if (negyesek >= 1) ertekeles(8, "Póker", negyesErtek);
 
+    // Full House (legalább egy hármas + legalább egy pár, VAGY két hármas)
+    if (harmasok >= 2 || (harmasok >= 1 && parok >= 1)) ertekeles(7, "Full House", harmasErtek);
+
+    // Drill (pontosan egy hármas, nincs mellé pár ami full house lenne)
+    if (harmasok >= 1 && eredmeny.ertek < 7) ertekeles(4, "Drill", harmasErtek);
+
+    // Két pár
+    if (parok >= 2 && eredmeny.ertek < 4) ertekeles(3, "Két Pár", parErtek);
+
+    // Egy pár
+    if (parok >= 1 && eredmeny.ertek < 3) ertekeles(2, "Pár", parErtek);
+
+    // ---- Sor keresés (összes lap) ----
     var ertekLista = aktivLapok.map(function(l) { return l.ertek; });
-    if (ertekLista.indexOf(14) !== -1) ertekLista.push(1);
+    if (ertekLista.indexOf(14) !== -1) ertekLista.push(1); // Ász = 1 is
     var egyediErtekek = [];
     for (var i = 0; i < ertekLista.length; i++) {
         if (egyediErtekek.indexOf(ertekLista[i]) === -1) egyediErtekek.push(ertekLista[i]);
@@ -130,8 +128,9 @@ function kiert(jatekosKez, asztalLapok) {
         if (egyediErtekek[k] === egyediErtekek[k - 1] + 1) { sorDb++; if (sorDb > maxSorDb) maxSorDb = sorDb; }
         else sorDb = 1;
     }
-    if (maxSorDb >= 5) { vanesor = true; ertekeles(5, "Sor"); }
+    if (maxSorDb >= 5) { vanesor = true; ertekeles(5, "Sor", egyediErtekek[egyediErtekek.length - 1]); }
 
+    // ---- Flöss keresés (összes lap) ----
     var vanefloss = false, flosslapok = [];
     var szimbolumSzamlalo = { "Pikk": 0, "Treff": 0, "Káró": 0, "Kör": 0 };
     aktivLapok.forEach(function(lap) { szimbolumSzamlalo[lap.szimbolum]++; });
@@ -139,12 +138,14 @@ function kiert(jatekosKez, asztalLapok) {
     for (var szimb in szimbolumSzamlalo) {
         if (szimbolumSzamlalo[szimb] >= 5) { flossSzimbolum = szimb; break; }
     }
-    if (flossSzimbolum && (jatekosKez[0].szimbolum === flossSzimbolum || jatekosKez[1].szimbolum === flossSzimbolum)) {
+    if (flossSzimbolum) {
         flosslapok = aktivLapok.filter(function(lap) { return lap.szimbolum === flossSzimbolum; });
         vanefloss = true;
-        ertekeles(6, "Flöss");
+        var maxFlossErtek = Math.max.apply(null, flosslapok.map(function(l) { return l.ertek; }));
+        ertekeles(6, "Flöss", maxFlossErtek);
     }
 
+    // ---- Szín Sor / Royal Flöss ----
     if (vanefloss && vanesor) {
         var flossErtekek = flosslapok.map(function(l) { return l.ertek; });
         if (flossErtekek.indexOf(14) !== -1) flossErtekek.push(1);
@@ -160,8 +161,8 @@ function kiert(jatekosKez, asztalLapok) {
         }
         if (maxFSorDb >= 5) {
             var royal = [10, 11, 12, 13, 14].every(function(e) { return egyediFloss.indexOf(e) !== -1; });
-            if (royal) ertekeles(10, "Királyi Sor");
-            else ertekeles(9, "Szín Sor");
+            if (royal) ertekeles(10, "Royal flöss", 14);
+            else ertekeles(9, "Szín Sor", egyediFloss[egyediFloss.length - 1]);
         }
     }
 
@@ -169,36 +170,69 @@ function kiert(jatekosKez, asztalLapok) {
     return eredmeny;
 }
 
-//?Ellenfél AI döntés
-function ellenfelAI(kez2, oszto, felforditottDb, aktualisTet) {
-    var felfordított = [];
-    for (var i = 0; i < felforditottDb; i++) felfordított.push(oszto[i]);
-    var eredmeny = kiert(kez2, felfordított);
-    var ero = eredmeny.ertek;
-    var rand = Math.random();
-
-    // Pre-flop (0 lap felfordítva) → agresszívebb AI
-    if (felforditottDb === 0 || ero >= 6) {
+//?Ellenfél döntés
+function ellenfelAI(kez2, oszto, felforditottDb, aktualisTet, bloff) {
+    // Ha blöff mód aktív → végig agresszív (raise/call, soha nem fold)
+    if (bloff) {
         if (aktualisTet > 0) {
-            // Játékos emelt → szinte mindig tartja, erős kézzel vissza is emel
-            if (ero >= 2) return rand < 0.5 ? "raise" : "call";
-            else return rand < 0.9 ? "call" : "fold";
+            return Math.random() < 0.6 ? "raise" : "call";
         } else {
-            // Nincs tét → gyakran emel
-            if (ero >= 2) return rand < 0.8 ? "raise" : "check";
-            else return rand < 0.5 ? "raise" : "check";
+            return Math.random() < 0.7 ? "raise" : "check";
         }
     }
 
-    // Flop / Turn / River → normál AI
+    var felfordított = [];
+    for (var i = 0; i < felforditottDb; i++) felfordított.push(oszto[i]);
+    var eredmeny = kiert(kez2, felfordított);
+    var ero = eredmeny.ertek;        // 0–10 közötti erősség
+    var rand = Math.random();
+
+    // Pre-flop (0 lap felfordítva): SOHA nem dobja be
+    if (felforditottDb === 0) {
+        if (aktualisTet > 0) {
+            return rand < 0.7 ? "call" : "raise";
+        } else {
+            return rand < 0.6 ? "check" : "raise";
+        }
+    }
+
+    // Flop / Turn / River → formula alapú döntés
+    // Alapesélyek erő szerint:
+    //   ero 0 (Magas lap):  tartás 25%, emelés 5%,  bedobás 70%
+    //   ero 2 (Pár):        tartás 50%, emelés 20%, bedobás 30%
+    //   ero 3 (Két pár):    tartás 45%, emelés 25%, bedobás 30%
+    //   ero 4 (Drill):      tartás 50%, emelés 25%, bedobás 25%
+    //   ero 5 (Sor):        tartás 40%, emelés 40%, bedobás 20%
+    //   ero 6 (Flöss):      tartás 35%, emelés 50%, bedobás 15%
+    //   ero 7 (Full House):  tartás 30%, emelés 60%, bedobás 10%
+    //   ero 8 (Póker):      tartás 40%, emelés 60%, bedobás 5%
+    //   ero 9+ (Szín Sor+): tartás 30%, emelés 70%, bedobás 0%
+    var tartasAlap, emelesAlap;
+    if (ero >= 9)      { tartasAlap = 0.30; emelesAlap = 0.70; }
+    else if (ero === 8) { tartasAlap = 0.40; emelesAlap = 0.60; }
+    else if (ero === 7) { tartasAlap = 0.30; emelesAlap = 0.60; }
+    else if (ero === 6) { tartasAlap = 0.35; emelesAlap = 0.50; }
+    else if (ero === 5) { tartasAlap = 0.40; emelesAlap = 0.40; }
+    else if (ero === 4) { tartasAlap = 0.50; emelesAlap = 0.25; }
+    else if (ero === 3) { tartasAlap = 0.45; emelesAlap = 0.25; }
+    else if (ero === 2) { tartasAlap = 0.50; emelesAlap = 0.20; }
+    else                { tartasAlap = 0.25; emelesAlap = 0.05; }
+
+    // Felfordított lapok hatása: minél több lap van kint, annál magabiztosabb
+    // felforditottDb: 3→0, 4→1, 5→2  → bonus 0% / 3% / 6%
+    var bonus = (felforditottDb - 3) * 0.03;
+    tartasAlap = Math.min(tartasAlap + bonus, 0.95);
+    emelesAlap = Math.min(emelesAlap + bonus, 0.95);
+
     if (aktualisTet > 0) {
-        if (ero >= 8) return "raise";
-        else if (ero >= 2) return rand < 0.8 ? "call" : "fold";
-        else return rand < 0.6 ? "call" : "fold";
+        // Van tét → call / raise / fold (river-en SOHA nem fold, inkább call)
+        if (rand < emelesAlap) return "raise";
+        else if (rand < emelesAlap + tartasAlap) return "call";
+        else return felforditottDb === 5 ? "call" : "fold";
     } else {
-        if (ero >= 4) return rand < 0.8 ? "raise" : "check";
-        else if (ero >= 2) return rand < 0.4 ? "raise" : "check";
-        else return rand < 0.2 ? "raise" : "check";
+        // Nincs tét → raise / check (fold nincs, mert ingyen passzolhat)
+        if (rand < emelesAlap) return "raise";
+        else return "check";
     }
 }
 
@@ -217,6 +251,7 @@ function getJatek(session) {
             felforditottDb: 0,
             jatekVege: false,
             varakozikDontesre: false,
+            bloff: false,
             uzenet: "",
             uzenetTipus: ""
         };
@@ -229,7 +264,7 @@ function biztonsagosAllapot(jatek) {
     // Az ellenfél lapjait és a paklit SOHA nem küldjük el, csak játék végén
     var ellenfelLapok = jatek.jatekVege ? jatek.kez2 : null;
 
-    // Asztal lapjai: játék végén az összeset, egyébként csak a felfordítottakat küldjük
+    // Asztal lapjai: játék végén (showdown VAGY fold) → mind az 5, egyébként csak a felfordítottak
     var lathatolapok = [];
     if (jatek.jatekVege) {
         for (var i = 0; i < jatek.oszto.length; i++) {
@@ -241,15 +276,21 @@ function biztonsagosAllapot(jatek) {
         }
     }
 
+    // Kiértékeléshez használt asztali lapok: showdown → mind az 5, egyébként csak a felfordítottak
+    var kiertLapok = [];
+    if (jatek.felforditottDb === 5) {
+        for (var i = 0; i < jatek.oszto.length; i++) kiertLapok.push(jatek.oszto[i]);
+    } else {
+        for (var i = 0; i < jatek.felforditottDb; i++) kiertLapok.push(jatek.oszto[i]);
+    }
+
     // Játékos kéz kiértékelése
-    var felfordított = [];
-    for (var i = 0; i < jatek.felforditottDb; i++) felfordított.push(jatek.oszto[i]);
-    var jatekosEredmeny = jatek.kez.length === 2 ? kiert(jatek.kez, felfordított) : { ertek: 0, nev: "–" };
+    var jatekosEredmeny = jatek.kez.length === 2 ? kiert(jatek.kez, kiertLapok) : { ertek: 0, nev: "–" };
 
     // Ellenfél kéz kiértékelése (csak játék végén)
     var ellenfelEredmeny = null;
     if (jatek.jatekVege && jatek.kez2.length === 2) {
-        ellenfelEredmeny = kiert(jatek.kez2, jatek.oszto);
+        ellenfelEredmeny = kiert(jatek.kez2, kiertLapok);
     }
 
     return {
@@ -278,6 +319,17 @@ function biztonsagosAllapot(jatek) {
 router.post('/poker/uj', (req, res) => {
     var jatek = getJatek(req.session);
 
+    // Ha a bot pénze 100 vagy alá csökkent, kap 1000-et
+    if (jatek.ellenfelZseton <= 100) {
+        jatek.ellenfelZseton += 1000;
+    }
+
+    // Ha a játékos pénze 0 vagy negatív, mindkét játékos visszaáll 1000-re
+    if (jatek.jatekosZseton <= 0) {
+        jatek.jatekosZseton = 1000;
+        jatek.ellenfelZseton = 1000;
+    }
+
     // Pakli keverés és kártyák kiosztása
     jatek.pakli = pakliLetrehozas();
     jatek.kez = [jatek.pakli.pop(), jatek.pakli.pop()];
@@ -289,6 +341,9 @@ router.post('/poker/uj', (req, res) => {
     jatek.jatekVege = false;
     jatek.uzenet = "";
     jatek.uzenetTipus = "";
+
+    // 20% eséllyel a bot blöfföl ebben a körben (végig agresszív)
+    jatek.bloff = Math.random() < 0.2;
 
     // Vakok befizetése
     var kisVak = NAGYVAK / 2;
@@ -321,7 +376,7 @@ router.post('/poker/check', (req, res) => {
     jatek.varakozikDontesre = false;
 
     // Ellenfél dönt
-    var aiDontes = ellenfelAI(jatek.kez2, jatek.oszto, jatek.felforditottDb, jatek.aktualisTet);
+    var aiDontes = ellenfelAI(jatek.kez2, jatek.oszto, jatek.felforditottDb, jatek.aktualisTet, jatek.bloff);
     vegrehajtEllenfelet(jatek, aiDontes);
 
     res.json(biztonsagosAllapot(jatek));
@@ -367,7 +422,7 @@ router.post('/poker/raise', (req, res) => {
     jatek.varakozikDontesre = false;
 
     // Ellenfél dönt az emelésre
-    var aiDontes = ellenfelAI(jatek.kez2, jatek.oszto, jatek.felforditottDb, jatek.aktualisTet);
+    var aiDontes = ellenfelAI(jatek.kez2, jatek.oszto, jatek.felforditottDb, jatek.aktualisTet, jatek.bloff);
     vegrehajtEllenfelet(jatek, aiDontes);
 
     res.json(biztonsagosAllapot(jatek));
@@ -413,6 +468,13 @@ function vegrehajtEllenfelet(jatek, dontes) {
     } else if (dontes === "raise") {
         var emeles = NAGYVAK;
         if (jatek.ellenfelZseton < emeles) emeles = jatek.ellenfelZseton;
+        // Ha nincs pénze emelésre → inkább call vagy check
+        if (emeles <= 0) {
+            jatek.uzenet = "Ellenfél: Passz (Check)";
+            jatek.uzenetTipus = "";
+            kovetkezoFazis(jatek);
+            return;
+        }
         jatek.ellenfelZseton -= emeles;
         jatek.pot += emeles;
         jatek.aktualisTet = emeles;
@@ -464,7 +526,11 @@ function showdown(jatek) {
     } else if (jatekosEredmeny.ertek < ellenfelEredmeny.ertek) {
         nyertes = "ellenfel";
     } else {
-        if (jatekosEredmeny.maxLap > ellenfelEredmeny.maxLap) nyertes = "jatekos";
+        // Azonos kombináció → a kombináció fő lapja dönt (pl. király pár > tízes pár)
+        if (jatekosEredmeny.kombinacioLap > ellenfelEredmeny.kombinacioLap) nyertes = "jatekos";
+        else if (jatekosEredmeny.kombinacioLap < ellenfelEredmeny.kombinacioLap) nyertes = "ellenfel";
+        // Ha a kombináció lapja is egyezik → kézlap (kicker) dönt
+        else if (jatekosEredmeny.maxLap > ellenfelEredmeny.maxLap) nyertes = "jatekos";
         else if (jatekosEredmeny.maxLap < ellenfelEredmeny.maxLap) nyertes = "ellenfel";
         else nyertes = "dontetlen";
     }
