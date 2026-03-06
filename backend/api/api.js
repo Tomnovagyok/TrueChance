@@ -41,12 +41,12 @@ router.get('/testsql', async (request, response) => {
     }
 });
 
-// ============================================================
+// ------------------------------------------------------------
 //!                     PÓKER BACKEND
 //! A teljes játéklogika szerver oldalon fut.
 //! A frontend csak megjelenít, semmilyen érzékeny adatot
 //! (pakli, ellenfél lapjai, kiértékelés) nem kap meg.
-// ============================================================
+// ------------------------------------------------------------
 
 //?Kártya adatok
 var SZAMOK = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
@@ -203,15 +203,15 @@ function ellenfelAI(kez2, oszto, felforditottDb, aktualisTet, bloff) {
     //   ero 8 (Póker):      tartás 40%, emelés 59%, bedobás 1%
     //   ero 9+ (Szín Sor+): tartás 30%, emelés 70%, bedobás 0% 
     var tartasAlap, emelesAlap;
-    if (ero >= 9)      { tartasAlap = 0.30; emelesAlap = 0.70; }
+    if (ero >= 9)      { tartasAlap = 0.03; emelesAlap = 0.97; }
     else if (ero === 8) { tartasAlap = 0.40; emelesAlap = 0.59; }
-    else if (ero === 7) { tartasAlap = 0.30; emelesAlap = 0.60; }
-    else if (ero === 6) { tartasAlap = 0.35; emelesAlap = 0.50; }
-    else if (ero === 5) { tartasAlap = 0.40; emelesAlap = 0.40; }
-    else if (ero === 4) { tartasAlap = 0.50; emelesAlap = 0.25; }
+    else if (ero === 7) { tartasAlap = 0.40; emelesAlap = 0.55; }
+    else if (ero === 6) { tartasAlap = 0.40; emelesAlap = 0.50; }
+    else if (ero === 5) { tartasAlap = 0.45; emelesAlap = 0.40; }
+    else if (ero === 4) { tartasAlap = 0.45; emelesAlap = 0.35; }
     else if (ero === 3) { tartasAlap = 0.45; emelesAlap = 0.25; }
-    else if (ero === 2) { tartasAlap = 0.50; emelesAlap = 0.20; }
-    else                { tartasAlap = 0.25; emelesAlap = 0.05; }
+    else if (ero === 2) { tartasAlap = 0.40; emelesAlap = 0.20; }
+    else                { tartasAlap = 0.40; emelesAlap = 0.10; }
 
     // Felfordított lapok hatása: minél több lap van kint, annál magabiztosabb
     // felforditottDb: 3→0, 4→1, 5→2  → bonus 0% / 3% / 6%
@@ -392,6 +392,10 @@ router.post('/poker/call', (req, res) => {
     jatek.pot += osszeg;
     jatek.aktualisTet = 0;
     jatek.varakozikDontesre = false;
+
+    // Régi üzenet törlése mielőtt új fázis indul
+    jatek.uzenet = "";
+    jatek.uzenetTipus = "";
 
     // Következő fázis (új lapok)
     kovetkezoFazis(jatek);

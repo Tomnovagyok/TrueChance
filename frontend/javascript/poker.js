@@ -124,20 +124,30 @@ document.addEventListener("DOMContentLoaded", function () {
     for (var i = 0; i < lapok.length; i++) lapok[i].classList.add("nyertes");
   }
 
+  // ==================== JÁTÉKOS DÖNTÉS KIÍRÁSA + KÉSLELTETETT API HÍVÁS ====================
+  function jatekosDontesKiiras(szoveg, vegpont, callback) {
+    var eredmenyDiv = document.getElementById("eredmeny");
+    eredmenyDiv.innerHTML = szoveg;
+    eredmenyDiv.className = "";
+    setTimeout(function () {
+      apiHivas(vegpont, callback);
+    }, 1500);
+  }
+
   // ==================== GOMB ESEMÉNYEK ====================
   checkBtn.addEventListener("click", function () {
     gombokKi();
-    apiHivas("/api/poker/check", megjelenit);
+    jatekosDontesKiiras("Te: Passz (Check)", "/api/poker/check", megjelenit);
   });
 
   callBtn.addEventListener("click", function () {
     gombokKi();
-    apiHivas("/api/poker/call", megjelenit);
+    jatekosDontesKiiras("Te: Tartás (Call)", "/api/poker/call", megjelenit);
   });
 
   raiseBtn.addEventListener("click", function () {
     gombokKi();
-    apiHivas("/api/poker/raise", megjelenit);
+    jatekosDontesKiiras("Te: Emelés (Raise)", "/api/poker/raise", megjelenit);
   });
 
   foldBtn.addEventListener("click", function () {
