@@ -3,17 +3,17 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>TrueChance - Texas Hold'em Poker</title>
+        <title>TrueChance - Blackjack</title>
 
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
         <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
         <link rel="stylesheet" href="../css/shared.css" />
-        <link rel="stylesheet" href="../css/poker.css" />
+        <link rel="stylesheet" href="../css/blackjack.css" />
     </head>
 
     <body>
-        <nav class="navbar navbar-expand-lg navbar-poker fixed-top">
+        <nav class="navbar navbar-expand-lg navbar-blackjack fixed-top">
             <div class="container-fluid px-5">
                 <a class="navbar-brand" href="games.html">
                     <img src="../img/logo.png" alt="TrueChance logo" class="navbar-logo-img" />
@@ -60,20 +60,26 @@
             </div>
         </nav>
 
-        <section class="poker-szekcio">
-            <div class="poker-kontener">
-                <div class="poker-asztal">
+        <section class="blackjack-szekcio">
+            <div class="blackjack-kontener">
+                <div class="blackjack-asztal">
                     <div class="asztal-hatter">
-                        <img src="../img/Truechance_table.png" alt="Póker asztal" class="asztal-kep" />
+                        <img src="../img/Truechance_table.png" alt="Blackjack asztal" class="asztal-kep" />
                     </div>
 
                     <div class="kartyak-overlay">
-                        <div class="kozos-kartyak">
-                            <img src="../img/Kártyák/Káró/A.png" alt="kártya hátlap" class="kartya-hely" />
-                            <img src="../img/Kártyák/Pikk/10.png" alt="kártya hátlap" class="kartya-hely" />
-                            <img src="../img/Kártyák/Backside.png" alt="kártya hátlap" class="kartya-hely" />
-                            <img src="../img/Kártyák/Backside.png" alt="kártya hátlap" class="kartya-hely" />
-                            <img src="../img/Kártyák/Backside.png" alt="kártya hátlap" class="kartya-hely" />
+                        <!--Osztó lapjai - felül, középen -->
+                        <div class="oszto-kartyak">
+                            <!--Egyelőre mindkét lap backside -->
+                            <img src="../img/Kártyák/Backside.png" alt="kártya hátlap" class="kartya" />
+                            <img src="../img/Kártyák/Backside.png" alt="kártya hátlap" class="kartya" />
+                        </div>
+
+                        <!--Játékos lapjai - alul, középen -->
+                        <div class="jatekos-kartyak">
+                            <!--Alapból 1 backside, 1 felfordított lap -->
+                            <img src="../img/Kártyák/Backside.png" alt="kártya hátlap" class="kartya" />
+                            <img src="../img/Kártyák/Pikk/A.png" alt="pikk ász" class="kartya" />
                         </div>
                     </div>
                 </div>

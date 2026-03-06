@@ -31,7 +31,9 @@ p {
 .navbar-truechance,
 .navbar-bejelentkezes,
 .navbar-jatekok,
-.navbar-poker {
+.navbar-poker,
+.navbar-blackjack,
+.navbar-roulette {
   background: rgba(42, 44, 51, 0.8);
   backdrop-filter: blur(12px); /* ez adja az üveg/átlátszó hatást */
   border-bottom: 1px solid #33353a;
