@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="hu">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>TrueChance - Profilom</title>
+
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+        <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+        <link rel="stylesheet" href="../css/shared.css" />
+        <link rel="stylesheet" href="../css/profil.css" />
+    </head>
+
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-jatekok fixed-top">
+            <div class="container-fluid px-5">
+                <a class="navbar-brand" href="games.html">
+                    <img src="../img/logo.png" alt="TrueChance logo" class="navbar-logo-img" />
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon" style="filter: invert(1)"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <div class="felhasznalo-szekcio ms-auto">
+                        <div class="navbar-egyenleg">
+                            <i class="fas fa-coins"></i>
+                            <span id="navbarEgyenleg">$0</span>
+                        </div>
+
+                        <div class="dropdown">
+                            <button class="profil-gomb dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown">
+                                <div class="profil-avatar">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <span class="profil-nev d-none d-md-inline">Felhasználó</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end dropdown-lista">
+                                <li>
+                                    <a class="dropdown-item" href="profil.html"><i class="fas fa-user me-2"></i>Profilom</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="statisztikaim.html"><i class="fas fa-chart-line me-2"></i>Statisztikáim</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="daily-cash.html"><i class="fas fa-gift me-2"></i>Daily Cash</a>
+                                </li>
+                                <li class="admin-menu-pont d-none">
+                                    <a class="dropdown-item" href="admin.html"><i class="fas fa-user-shield me-2"></i>Admin menü</a>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider"/>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item text-danger" href="#" id="kilepesLink"><i class="fas fa-sign-out me-2"></i>Kilépés</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <section class="profil-szekcio">
+            <div class="container">
+                <div class="profil-fejlec text-center mb-5">
+                    <h1 class="profil-cim">Profilom</h1>
+                    <p class="profil-alcim">Személyes adataid és játék statisztikáid</p>
+                </div>
+
+                <!-- Betöltés animáció -->
+                <div id="loadingSpinner" class="text-center my-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Betöltés...</span>
+                    </div>
+                    <p class="mt-3 text-muted">Profil betöltése...</p>
+                </div>
+
+                <!-- Profil tartalom - JS tölti fel -->
+                <div id="profilTartalom" style="display: none;">
+
+                    <div class="row g-4">
+                        <!-- Bal oldal: Személyes adatok form -->
+                        <div class="col-lg-5">
+                            <div class="card-glass profil-kartya">
+                                <div class="kartya-fejlec">
+                                    <i class="fas fa-user-edit me-2"></i>Személyes adatok
+                                </div>
+
+                                <form id="profilForm">
+                                    <div class="mb-3">
+                                        <label for="profilNev" class="form-label">Név</label>
+                                        <input type="text" id="profilNev" name="nev" class="form-control profil-input" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="profilEmail" class="form-label">Email</label>
+                                        <input type="email" id="profilEmail" name="email" class="form-control profil-input" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="profilLetrehozva" class="form-label">Regisztráció dátuma</label>
+                                        <input type="text" id="profilLetrehozva" class="form-control profil-input" disabled />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Regisztrált napok</label>
+                                        <input type="text" id="profilRegNapok" class="form-control profil-input" disabled />
+                                    </div>
+
+                                    <!-- Üzenet mező -->
+                                    <div id="profilUzenet" class="profil-uzenet" style="display: none;"></div>
+
+                                    <button type="button" id="mentesGomb" class="btn btn-glass-primary w-100 mt-2">
+                                        <i class="fas fa-save me-2"></i>Mentés
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Jobb oldal: Statisztikák -->
+                        <div class="col-lg-7">
+                            <!-- Összesített statisztikák -->
+                            <div class="card-glass profil-kartya mb-4">
+                                <div class="kartya-fejlec">
+                                    <i class="fas fa-chart-bar me-2"></i>Összesített statisztikák
+                                </div>
+                                <div class="row g-3">
+                                    <div class="col-sm-6">
+                                        <div class="stat-doboz">
+                                            <div class="stat-ikon egyenleg-ikon">
+                                                <i class="fas fa-wallet"></i>
+                                            </div>
+                                            <div class="stat-info">
+                                                <span class="stat-cimke">Egyenleg</span>
+                                                <span class="stat-ertek" id="statEgyenleg">$0</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="stat-doboz">
+                                            <div class="stat-ikon jatek-ikon">
+                                                <i class="fas fa-gamepad"></i>
+                                            </div>
+                                            <div class="stat-info">
+                                                <span class="stat-cimke">Összes játék</span>
+                                                <span class="stat-ertek" id="statOsszesJatek">0</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="stat-doboz">
+                                            <div class="stat-ikon eljatszott-ikon">
+                                                <i class="fas fa-coins"></i>
+                                            </div>
+                                            <div class="stat-info">
+                                                <span class="stat-cimke">Eljátszott pénz</span>
+                                                <span class="stat-ertek" id="statEljatszott">$0</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="stat-doboz">
+                                            <div class="stat-ikon nyert-ikon">
+                                                <i class="fas fa-trophy"></i>
+                                            </div>
+                                            <div class="stat-info">
+                                                <span class="stat-cimke">Nyert pénz</span>
+                                                <span class="stat-ertek nyert-szin" id="statNyert">$0</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="stat-doboz">
+                                            <div class="stat-ikon vesztett-ikon">
+                                                <i class="fas fa-arrow-trend-down"></i>
+                                            </div>
+                                            <div class="stat-info">
+                                                <span class="stat-cimke">Vesztett pénz</span>
+                                                <span class="stat-ertek vesztett-szin" id="statVesztett">$0</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="stat-doboz">
+                                            <div class="stat-ikon profit-ikon">
+                                                <i class="fas fa-scale-balanced"></i>
+                                            </div>
+                                            <div class="stat-info">
+                                                <span class="stat-cimke">Profit / Veszteség</span>
+                                                <span class="stat-ertek" id="statProfit">$0</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Játékonkénti nyerési esélyek -->
+                            <div class="card-glass profil-kartya">
+                                <div class="kartya-fejlec">
+                                    <i class="fas fa-percent me-2"></i>Nyerési esélyek játékonként
+                                </div>
+                                <div class="row g-3" id="jatekEselyekKontener">
+                                    <!-- JS tölti fel -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-copyright text-center small">
+                    <p>&copy; 2026 TrueChance. Minden jog fenntartva. Ez egy oktatási célú szimulátor.</p>
+                    <p class="mt-2" style="font-size: 0.8rem">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Ha te vagy valaki, akit ismersz, szerencsejáték függőséggel küzd, kérj segítséget:
+                        <a href="https://egeszsegvonal.gov.hu/egeszseg-a-z/s-sz/szerencsejatek-fuggoseg.html" target="_blank" rel="noopener" style="color: #8c5cff">egeszsegvonal.gov.hu</a>
+                    </p>
+                </div>
+            </div>
+        </footer>
+
+        <script src="../bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="../javascript/auth-check.js"></script>
+        <script src="../javascript/profil.js"></script>
+    </body>
+</html>

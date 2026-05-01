@@ -1,0 +1,163 @@
+/* Daily cash oldal */
+
+.daily-cash-szekcio {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 120px 20px 60px;
+    position: relative;
+}
+
+.daily-cash-szekcio::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(ellipse at 50% 50%, rgba(140, 92, 255, 0.1) 25%, transparent 200%);
+    pointer-events: none;
+}
+
+.daily-fejlec {
+    position: relative;
+    z-index: 1;
+}
+
+.daily-cim {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #f0f0f0;
+    margin-bottom: 0.5rem;
+}
+
+.daily-alcim {
+    font-size: 1.1rem;
+    color: #a0a0a0;
+}
+
+.daily-kartya {
+    position: relative;
+    z-index: 1;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+.daily-jatek {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.daily-opciok-sor {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.75rem;
+}
+
+.daily-opcio {
+    padding: 14px 10px;
+    text-align: center;
+    border-radius: 10px;
+    border: 1px solid #33353a;
+    background: rgba(42, 44, 51, 0.55);
+    color: #f0f0f0;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    transition: all 0.15s ease;
+}
+
+.daily-opcio.aktiv {
+    border-color: #ffd166;
+    background: rgba(140, 92, 255, 0.45);
+    box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 0.35),
+        0 0 18px rgba(255, 209, 102, 0.5);
+    transform: translateY(-2px);
+}
+
+.daily-porgetes-gomb {
+    min-width: 180px;
+}
+
+.daily-statusz {
+    margin: 0;
+    color: #d6d6dd;
+    font-weight: 500;
+    text-align: center;
+}
+
+.daily-nyeremeny {
+    margin: 0;
+    min-height: 28px;
+    font-size: 1.15rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+.daily-nyeremeny.nyert {
+    color: #34a853;
+}
+
+.daily-nyeremeny.hiba {
+    color: #ea4335;
+}
+
+.daily-info-panel {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.2rem;
+    padding: 1rem 1.2rem;
+    background: rgba(42, 44, 51, 0.5);
+    border: 1px solid #33353a;
+    border-radius: 1rem;
+}
+
+.info-elem {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #f0f0f0;
+    font-family: 'Poppins', sans-serif;
+}
+
+.info-elem i {
+    color: #8c5cff;
+    font-size: 1.1rem;
+}
+
+.info-cimke {
+    color: #a0a0a0;
+    font-size: 0.9rem;
+}
+
+.info-ertek {
+    color: #f0f0f0;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .daily-cim {
+        font-size: 2rem;
+    }
+
+    .daily-alcim {
+        font-size: 1rem;
+    }
+
+    .daily-kartya {
+        padding: 1.5rem;
+    }
+
+    .daily-opciok-sor {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}

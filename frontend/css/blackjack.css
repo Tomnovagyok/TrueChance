@@ -5,9 +5,9 @@
     min-height: 100vh;
     width: 100%;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
-    padding: 120px 0px;
+    padding: 120px 20px 40px 20px;
     position: relative;
 }
 
@@ -25,20 +25,20 @@
 .blackjack-kontener {
     position: relative;
     width: 100%;
-    max-width: 1200px;
+    max-width: 1600px;
     display: flex;
-    flex-direction: column-reverse;
-    overflow: hidden;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
 }
 
 .blackjack-asztal {
     position: relative;
-    width: 98%;
-    max-width: 1190px;
+    width: 100%;
+    max-width: 1000px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto;
 }
 
 .asztal-hatter {
@@ -56,7 +56,7 @@
 /* Kártyák az asztalon */
 .kartyak-overlay {
     position: absolute;
-    width: 100%; 
+    width: 100%;
     height: 100%; /* ezek azért kellenek, mert különben a kártyák nem helyezkednének el az asztal közepén */
     pointer-events: none;
 }
@@ -65,10 +65,10 @@
 .oszto-kartyak,
 .jatekos-kartyak {
     display: flex;
-    gap: 12px;
+    gap: 0;
     position: absolute;
     left: 50%; /* középre helyezés */
-    transform: translateX(-50%); 
+    transform: translateX(-50%);
 }
 
 .oszto-kartyak {
@@ -79,27 +79,183 @@
     top: 50%; /* játékos lapjai lent */
 }
 
+.jatekos-kez {
+    display: flex;
+}
+
+.jatekos-kez.aktiv .kartya {
+    box-shadow:
+        0 0 0 2px rgba(255, 214, 102, 0.85),
+        0 0 16px rgba(255, 214, 102, 0.45);
+}
+
 /* Kártya alap stílus */
 .kartya {
     width: 90px;
     height: auto;
     border-radius: 0.5rem;
     box-shadow: 0 8px 12px rgba(0, 0, 0, 0.5);
+    margin-left: -36px; /* 60% átfedés (90px * 0.4 = 36px látszik) */
+}
+
+.kartya:first-child {
+    margin-left: 0; /* Az első kártya ne tolódjon */
 }
 
 /* Info panel */
 .jatek-info-panel {
     display: flex;
-    justify-content: center;
-    gap: 1.5rem;
-    padding: 0.75rem 1.5rem;
+    justify-content: space-around;
+    gap: 2rem;
+    padding: 1rem 2rem;
     background: rgba(42, 44, 51, 0.5);
     border: 1px solid #33353a;
     border-radius: 1.5rem;
     backdrop-filter: blur(12px);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    max-width: 600px;
-    margin: 0 auto;
+    width: 90%;
+    max-width: 1200px;
+}
+
+/* Játék terület layout */
+.jatek-terulet {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+/* Bal panel */
+.bal-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 250px;
+    flex-shrink: 0;
+    padding-top: 0;
+    align-self: center;
+}
+
+/* Gombok és számok egymás mellett */
+.gombok-szamok {
+    display: flex;
+    gap: 15px;
+    align-items: stretch;
+}
+
+/* Gomb oszlop */
+.gomb-oszlop {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 120px;
+}
+
+.gomb-oszlop .btn {
+    width: 100%;
+    padding: 10px;
+    font-size: 0.85rem;
+}
+
+/* Szám oszlop */
+.szam-oszlop {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100px;
+    flex: 1;
+}
+
+/* Pont doboz */
+.pont-doboz {
+    background: rgba(42, 44, 51, 0.8);
+    border: 1px solid #33353a;
+    border-radius: 0.75rem;
+    padding: 20px 10px;
+    text-align: center;
+    backdrop-filter: blur(12px);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.pont-cimke {
+    color: #a0a0a0;
+    font-size: 0.7rem;
+    margin-bottom: 4px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.pont-ertek {
+    color: #8c5cff;
+    font-size: 1.4rem;
+    font-weight: bold;
+    font-family: 'Poppins', sans-serif;
+}
+
+.pont-kez {
+    color: #a0a0a0;
+    font-size: 0.6rem;
+    margin-top: 3px;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Tét panel */
+.tet-panel {
+    background: rgba(42, 44, 51, 0.8);
+    border: 1px solid #33353a;
+    border-radius: 0.75rem;
+    padding: 15px;
+    backdrop-filter: blur(12px);
+}
+
+.tet-cimke {
+    color: #a0a0a0;
+    font-size: 0.8rem;
+    margin-bottom: 8px;
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+}
+
+.tet-egyenleg {
+    color: #f0f0f0;
+    font-size: 0.75rem;
+    margin-bottom: 8px;
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+}
+
+.tet-egyenleg span {
+    color: #8c5cff;
+    font-weight: 600;
+}
+
+.tet-input {
+    width: 100%;
+    padding: 8px;
+    font-size: 0.9rem;
+    text-align: center;
+    border-radius: 0.4rem;
+    border: 1px solid #33353a;
+    background: rgba(42, 44, 51, 0.5);
+    color: #f0f0f0;
+    font-family: 'Poppins', sans-serif;
+    margin-bottom: 10px;
+}
+
+.tet-gomb {
+    width: 100%;
+    padding: 10px;
+    font-size: 0.9rem;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Asztal wrapper */
+.asztal-wrapper {
+    flex: 1;
+    max-width: 1000px;
 }
 
 .info-elem {
@@ -124,6 +280,155 @@
     color: #f0f0f0;
     font-weight: 600;
     font-size: 1.1rem;
+}
+
+/* Statisztika panel (jobb oldal) */
+.statisztika-panel {
+    width: 380px;
+    flex-shrink: 0;
+    display: none;
+    align-items: center;
+}
+
+.jatek-terulet.statisztika-aktiv .statisztika-panel {
+    display: flex;
+}
+
+.statisztika-info-doboz {
+    max-width: 700px;
+    margin: 0;
+    padding: 1.75rem;
+    background: rgba(42, 44, 51, 0.5);
+    border: 1px solid #33353a;
+    backdrop-filter: blur(12px);
+    border-radius: 1.5rem;
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    min-height: 470px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.statisztika-fejlec {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.statisztika-fejlec i {
+    font-size: 1.5rem;
+    color: #8c5cff;
+}
+
+.statisztika-fejlec h3 {
+    font-size: 1.5rem;
+    color: #f0f0f0;
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+.statisztika-info-doboz p {
+    color: #a0a0a0;
+    margin: 0;
+    line-height: 1.7;
+}
+
+.lepesajanlo-kartya {
+    background: rgba(26, 27, 30, 0.7);
+    border: 1px solid #33353a;
+    border-radius: 1rem;
+    padding: 1rem;
+}
+
+.lepesajanlo-cimke {
+    color: #a0a0a0;
+    font-size: 0.8rem;
+    margin-bottom: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-family: 'Poppins', sans-serif;
+}
+
+.lepesajanlo-sor {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+#stat-decision {
+    color: #f0f0f0;
+    font-size: 1.05rem;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.4;
+}
+
+.winrate-sor #stat-winrate {
+    color: #f0f0f0;
+    font-size: 1.05rem;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.4;
+}
+
+.strategia-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 46px;
+    height: 26px;
+    padding: 0 8px;
+    border-radius: 0.4rem;
+    color: #ffffff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.strategia-h { background: #00a65a; }
+.strategia-s { background: #cc1f2f; }
+.strategia-d { background: #0f7db3; }
+.strategia-p { background: #e6cf11; color: #1a1b1e; }
+.strategia-semleges { background: #4b4d55; }
+
+.ajanlas-split-highlight {
+    color: #ffd666 !important;
+    text-shadow: 0 0 10px rgba(255, 214, 102, 0.35);
+}
+
+#stat-action-code.ajanlas-split-highlight {
+    box-shadow:
+        0 0 0 2px rgba(255, 214, 102, 0.75),
+        0 0 12px rgba(255, 214, 102, 0.35);
+}
+
+.ajanlott-lepes-gomb {
+    border-color: #ffd666 !important;
+    box-shadow: 0 0 0 2px rgba(255, 214, 102, 0.55), 0 0 12px rgba(255, 214, 102, 0.4);
+}
+
+.statisztika-ertekek {
+    margin-top: auto;
+    padding-top: 0.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.statisztika-ertekek p + p {
+    margin-top: 0.4rem;
+}
+
+.statisztika-gomb.active {
+    background: #8c5cff;
+    border-color: #8c5cff;
+    color: #f0f0f0;
+    box-shadow: 0 0 20px rgba(140, 92, 255, 0.4);
+}
+
+@media (max-width: 992px) {
+    .statisztika-panel { display: none !important; }
 }
 
 /* Reszponzív */
@@ -183,4 +488,90 @@
     .info-elem {
         font-size: 0.85rem;
     }
+}
+
+/* Tét csúszka stílus */
+.tet-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    background: rgba(42, 44, 51, 0.5);
+    border: 1px solid #33353a;
+    border-radius: 5px;
+    outline: none;
+    transition: all 0.2s;
+    margin-bottom: 10px;
+}
+
+.tet-slider:hover {
+    background: rgba(42, 44, 51, 0.8);
+}
+
+.tet-slider:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.tet-slider:disabled:hover {
+    background: rgba(42, 44, 51, 0.5);
+}
+
+/* Csúszka "thumb" (a kis gomb ami mozog) */
+.tet-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #8c5cff;
+    border: 2px solid #f0f0f0;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.tet-slider::-webkit-slider-thumb:hover {
+    background: #9d75ff;
+    box-shadow: 0 0 12px rgba(140, 92, 255, 0.6);
+    transform: scale(1.1);
+}
+
+.tet-slider:disabled::-webkit-slider-thumb {
+    background: #5a5a5a;
+    border-color: #7a7a7a;
+    cursor: not-allowed;
+}
+
+.tet-slider:disabled::-webkit-slider-thumb:hover {
+    background: #5a5a5a;
+    box-shadow: none;
+    transform: scale(1);
+}
+
+.tet-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #8c5cff;
+    border: 2px solid #f0f0f0;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.tet-slider::-moz-range-thumb:hover {
+    background: #9d75ff;
+    box-shadow: 0 0 12px rgba(140, 92, 255, 0.6);
+    transform: scale(1.1);
+}
+
+.tet-slider:disabled::-moz-range-thumb {
+    background: #5a5a5a;
+    border-color: #7a7a7a;
+    cursor: not-allowed;
+}
+
+.tet-slider:disabled::-moz-range-thumb:hover {
+    background: #5a5a5a;
+    box-shadow: none;
+    transform: scale(1);
 }

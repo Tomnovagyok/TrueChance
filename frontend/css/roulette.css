@@ -1,0 +1,707 @@
+/* Roulette oldal */
+
+/* roulette szekció */
+.roulette-szekcio {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 0px;
+    position: relative;
+}
+
+.roulette-szekcio::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(ellipse at 50% 50%, rgba(140, 92, 255, 0.1) 25%, transparent 200%);
+    pointer-events: none;
+}
+
+/* roulette kontener */
+.roulette-kontener {
+    position: relative;
+    width: 100%;
+    max-width: 1400px;
+    display: flex;
+    flex-direction: column; /* info panel alul, asztal felül */
+}
+
+/* Az asztal maga */
+.roulette-asztal {
+    position: relative;
+    width: 98%;
+    max-width: 1390px;
+    margin: 0 auto;
+}
+
+.asztal-hatter {
+    position: relative;
+    width: 100%;
+}
+
+.asztal-kep {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 8px 32px rgba(0, 0, 0, 0.6));
+}
+
+/* Az asztalra kerülő tartalom: kerék balra, tétek jobbra.
+   Az asztal képének belső "zöld" területe kb. 8%-tól 92%-ig tart vízszintesen,
+   és kb. 10%-tól 90%-ig függőlegesen – ehhez igazítjuk a paddinget. */
+.asztal-tartalom {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 5% 7% 5% 10%; /* bal oldal több, mert az asztalkép bal széle vastagabb */
+}
+
+/* ---- BAL OLDAL: kerék szekció ---- */
+.kerek-szekcio {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 0 0 auto;
+    width: 30%; /* kicsit szélesebb, hogy a kerék nagyobb legyen */
+}
+
+.kerek-wrapper {
+    position: relative; /* szükséges a nyíl absolute pozícionálásához */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+/* A nyíl közvetlenül a kerék tetején – absolute pozícióval ültetjük rá,
+   hogy pontosan a kerék felső középéhez igazodjon */
+.roulette-nyil {
+    width: 14%;
+    height: auto;
+    position: absolute;
+    top: -2%;   /* kicsit a kerék teteje fölé lóg */
+    left: 50%;
+    transform: translateX(-50%); /* vízszintesen középre igazít */
+    z-index: 2;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.8));
+}
+
+/* Maga a kerék - ezt forgatjuk JS-ből transform: rotate(Xdeg)-gel */
+.roulette-kerek {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.7));
+    transform: rotate(0deg);
+    transform-origin: center center;
+}
+
+/* Forgás animáció - JS dinamikusan állítja be a --cel-fok css változót */
+.roulette-kerek.forog {
+    /* transition: a transform property változzon "idő" másodperc alatt, ease-out = lassan áll meg */
+    transition: transform 4s ease-out;
+}
+
+/* Pörgetés gomb */
+.porgetes-gomb {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    padding: 8px 20px;
+    margin-bottom: 0.5rem;
+}
+
+.porgetes-gomb:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Eredmény kijelző - a kijött szám jelenik meg itt */
+.eredmeny-kijelzo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(42, 44, 51, 0.8);
+    border: 2px solid #33353a;
+    box-shadow: 0 0 16px rgba(0, 0, 0, 0.5);
+}
+
+.eredmeny-szam {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #f0f0f0;
+}
+
+/* Piros szám - a kijelző háttere piros lesz */
+.eredmeny-kijelzo.piros {
+    background: rgba(180, 30, 30, 0.85);
+    border-color: #e74c3c;
+    box-shadow: 0 0 20px rgba(231, 76, 60, 0.5);
+}
+
+/* Fekete szám */
+.eredmeny-kijelzo.fekete {
+    background: rgba(20, 20, 20, 0.9);
+    border-color: #555;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+/* Zöld szám (0) */
+.eredmeny-kijelzo.zold {
+    background: rgba(30, 130, 50, 0.85);
+    border-color: #27ae60;
+    box-shadow: 0 0 20px rgba(39, 174, 96, 0.5);
+}
+
+/* ---- JOBB OLDAL: tét szekció ---- */
+.tet-szekcio {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0; /* megakadályozza, hogy szélesebb legyen mint a rendelkezésre álló hely */
+    overflow: hidden;
+    margin-right: 4rem;
+    margin-bottom: 4rem;
+}
+
+/* Tét összeg megadás sor */
+.tet-osszeg-sor {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 3px;
+}
+
+.tet-label {
+    color: #a0a0a0;
+    font-size: 0.75rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.tet-input-csoport {
+    display: flex;
+    gap: 3px;
+}
+
+.tet-gyors-gomb {
+    background: rgba(42, 44, 51, 0.7);
+    border: 1px solid #33353a;
+    border-radius: 5px;
+    color: #a0a0a0;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 2px 7px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.tet-gyors-gomb:hover {
+    background: rgba(140, 92, 255, 0.2);
+    border-color: #8c5cff;
+    color: #f0f0f0;
+}
+
+.tet-input {
+    width: 60px;
+    background: rgba(42, 44, 51, 0.7);
+    border: 1px solid #33353a;
+    border-radius: 5px;
+    color: #f0f0f0;
+    font-size: 0.8rem;
+    padding: 2px 6px;
+    text-align: center;
+}
+
+.tet-input:focus {
+    outline: none;
+    border-color: #8c5cff;
+    box-shadow: 0 0 8px rgba(140, 92, 255, 0.3);
+}
+
+.tet-torles-gomb {
+    background: rgba(42, 44, 51, 0.7);
+    border: 1px solid #33353a;
+    border-radius: 5px;
+    color: #f0f0f0;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 3px 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.tet-torles-gomb:hover {
+    border-color: #8c5cff;
+    box-shadow: 0 0 8px rgba(140, 92, 255, 0.25);
+}
+
+/* Számok táblázat (kaszinó elrendezés) */
+.szamok-tabla {
+    display: flex;
+    gap: 2px;
+    align-items: stretch;
+}
+
+/* A 0-ás cella magassága = 3 sor + 2 gap = 3*28px + 2*2px = 88px */
+.nulla-cella {
+    display: flex;
+    align-items: stretch;
+}
+
+.nulla-cella .szam-gomb {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    padding: 3px 4px;
+    height: 88px;
+    font-size: 0.8rem;
+}
+
+/* 12 oszlop, 3 sor grid a számokhoz + 1 extra oszlop a sor gomboknak.
+   A sorok fix 28px magasak, hogy a gombok nagyjából négyzet alakúak legyenek.
+   minmax(0, 1fr) biztosítja, hogy az oszlopok ne lépjék túl a rendelkezésre álló szélességet. */
+.szamok-grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr)) auto;
+    grid-template-rows: repeat(3, 28px);
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+    align-content: center;
+}
+
+/* Általános szám gomb – a magasságot a grid fix sora határozza meg (32px) */
+.szam-gomb {
+    border: 1px solid transparent;
+    border-radius: 3px;
+    color: #f0f0f0;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0 2px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    min-width: 0;
+    line-height: 1;
+}
+
+.szam-gomb.piros {
+    background: #c0392b;
+}
+
+.szam-gomb.piros:hover,
+.szam-gomb.piros.kivalasztott {
+    background: #e74c3c;
+    box-shadow: 0 0 10px rgba(231, 76, 60, 0.6);
+    transform: scale(1.08);
+}
+
+.szam-gomb.fekete {
+    background: #1a1a1a;
+    border: 1px solid #444;
+}
+
+.szam-gomb.fekete:hover,
+.szam-gomb.fekete.kivalasztott {
+    background: #333;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.15);
+    transform: scale(1.08);
+}
+
+.szam-gomb.zold {
+    background: #27ae60;
+}
+
+.szam-gomb.zold:hover,
+.szam-gomb.zold.kivalasztott {
+    background: #2ecc71;
+    box-shadow: 0 0 10px rgba(46, 204, 113, 0.6);
+    transform: scale(1.08);
+}
+
+/* Sor gombok (2:1) a számok jobb szélén */
+.sor-gomb {
+    background: rgba(140, 92, 255, 0.15);
+    border: 1px solid rgba(140, 92, 255, 0.4);
+    border-radius: 3px;
+    color: #c8a8ff;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 600;
+    padding: 2px 4px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+}
+
+.sor-gomb:hover,
+.sor-gomb.kivalasztott {
+    background: rgba(140, 92, 255, 0.35);
+    border-color: #8c5cff;
+    color: #f0f0f0;
+    box-shadow: 0 0 8px rgba(140, 92, 255, 0.4);
+}
+
+/* Alsó fogadás sorok (tucatok, színek, stb.) */
+.also-fogadas-sor {
+    display: flex;
+    gap: 2px;
+}
+
+.also-gomb {
+    flex: 1;
+    background: rgba(42, 44, 51, 0.7);
+    border: 1px solid #44464d;
+    border-radius: 3px;
+    color: #d0d0d0;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 4px 3px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-align: center;
+    line-height: 1;
+}
+
+.also-gomb:hover,
+.also-gomb.kivalasztott {
+    background: rgba(140, 92, 255, 0.25);
+    border-color: #8c5cff;
+    color: #f0f0f0;
+    box-shadow: 0 0 8px rgba(140, 92, 255, 0.3);
+}
+
+.szam-gomb.kivalasztott,
+.sor-gomb.kivalasztott,
+.also-gomb.kivalasztott {
+    border: 2px solid #ffd166 !important;
+    box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 0.45),
+        0 0 12px rgba(255, 209, 102, 0.45) !important;
+}
+
+/* Piros szín gomb */
+.szin-gomb.piros-gomb {
+    background: rgba(192, 57, 43, 0.5);
+    border-color: #c0392b;
+    color: #f0f0f0;
+}
+
+.szin-gomb.piros-gomb:hover,
+.szin-gomb.piros-gomb.kivalasztott {
+    background: rgba(231, 76, 60, 0.7);
+    border-color: #e74c3c;
+    box-shadow: 0 0 10px rgba(231, 76, 60, 0.4);
+}
+
+/* Fekete szín gomb */
+.szin-gomb.fekete-gomb {
+    background: rgba(20, 20, 20, 0.7);
+    border-color: #555;
+    color: #f0f0f0;
+}
+
+.szin-gomb.fekete-gomb:hover,
+.szin-gomb.fekete-gomb.kivalasztott {
+    background: rgba(50, 50, 50, 0.9);
+    border-color: #888;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+/* Kiválasztott tét kijelzése */
+.kivalasztott-tet {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 4px 10px;
+    background: rgba(42, 44, 51, 0.5);
+    border: 1px solid #33353a;
+    border-radius: 6px;
+    margin-top: 2px;
+}
+
+.tet-ertek {
+    color: #8c5cff;
+    font-weight: 600;
+    font-size: 0.8rem;
+    flex: 1;
+    line-height: 1.35;
+}
+
+.porgetes-history {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 10px;
+    height: 32px;
+    max-height: 32px;
+    background: rgba(42, 44, 51, 0.5);
+    border: 1px solid #33353a;
+    border-radius: 6px;
+    margin-top: 2px;
+    overflow: hidden;
+}
+
+.history-lista {
+    flex: 1;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 6px;
+    height: 24px;
+    overflow: hidden;
+    align-items: center;
+}
+
+.history-szam {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #f0f0f0;
+    flex: 0 0 auto;
+}
+
+.history-szam.piros {
+    background: rgba(180, 30, 30, 0.9);
+    border: 1px solid #e74c3c;
+}
+
+.history-szam.fekete {
+    background: rgba(20, 20, 20, 0.95);
+    border: 1px solid #555;
+}
+
+.history-szam.zold {
+    background: rgba(30, 130, 50, 0.9);
+    border: 1px solid #27ae60;
+}
+
+/* Info panel az asztal alatt */
+.jatek-info-panel {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    padding: 0.75rem 1.5rem;
+    background: rgba(42, 44, 51, 0.5);
+    border: 1px solid #33353a;
+    border-radius: 1.5rem;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    max-width: 600px;
+    margin: 0 auto;
+    margin-top: 12px;
+}
+
+.info-elem {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #f0f0f0;
+    font-family: 'Poppins', sans-serif;
+}
+
+.info-elem i {
+    color: #8c5cff;
+    font-size: 1.2rem;
+}
+
+.info-cimke {
+    color: #a0a0a0;
+    font-size: 0.9rem;
+}
+
+.info-ertek {
+    color: #f0f0f0;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+/* Eredmény üzenet (nyertél/vesztettél popup) */
+.eredmeny-uzenet {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px 40px;
+    border-radius: 1rem;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    text-align: center;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    /* Megjelenési animáció - fadeIn majd fadeOut */
+    transition: opacity 0.3s ease;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+}
+
+.eredmeny-uzenet.nyert {
+    background: rgba(39, 174, 96, 0.95);
+    border: 2px solid #2ecc71;
+    color: #fff;
+}
+
+.eredmeny-uzenet.vesztett {
+    background: rgba(192, 57, 43, 0.95);
+    border: 2px solid #e74c3c;
+    color: #fff;
+}
+
+.eredmeny-uzenet.latszik {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Statisztikai betekinto */
+.roulette-kontener {
+    --statisztika-szelesseg: 320px;
+    --statisztika-gap: 14px;
+}
+
+.roulette-asztal {
+    transition: none;
+}
+
+.statisztika-panel {
+    position: absolute;
+    top: 50%;
+    left: calc(100% + var(--statisztika-gap));
+    width: var(--statisztika-szelesseg);
+    transform: translateY(-50%);
+    display: none;
+    z-index: 3;
+}
+
+.roulette-kontener.statisztika-aktiv .statisztika-panel {
+    display: block;
+}
+
+.roulette-kontener.statisztika-aktiv .roulette-asztal {
+    transform: translateX(calc(-0.5 * (var(--statisztika-szelesseg) + var(--statisztika-gap))));
+}
+
+.statisztika-info-doboz {
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    padding: 1.2rem;
+    background: rgba(42, 44, 51, 0.5);
+    border: 1px solid #33353a;
+    backdrop-filter: blur(12px);
+    border-radius: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.statisztika-fejlec {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.3rem;
+}
+
+.statisztika-fejlec i {
+    font-size: 1.2rem;
+    color: #8c5cff;
+}
+
+.statisztika-fejlec h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #f0f0f0;
+    font-family: 'Poppins', sans-serif;
+}
+
+.statisztika-kartya {
+    background: rgba(26, 27, 30, 0.7);
+    border: 1px solid #33353a;
+    border-radius: 0.9rem;
+    padding: 0.9rem;
+}
+
+.statisztika-cimke {
+    color: #a0a0a0;
+    font-size: 0.74rem;
+    margin-bottom: 0.4rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-family: 'Poppins', sans-serif;
+}
+
+.statisztika-kartya p {
+    margin: 0;
+    color: #f0f0f0;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+}
+
+.statisztika-ertekek {
+    margin-top: 0;
+    padding-top: 0.6rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.statisztika-ertekek p {
+    margin: 0;
+    color: #a0a0a0;
+    font-size: 0.88rem;
+    line-height: 1.55;
+    font-family: 'Poppins', sans-serif;
+}
+
+.statisztika-ertekek p + p {
+    margin-top: 0.32rem;
+}
+
+.statisztika-gomb.active {
+    background: #8c5cff;
+    border-color: #8c5cff;
+    color: #f0f0f0;
+    box-shadow: 0 0 20px rgba(140, 92, 255, 0.4);
+}
+
+@media (max-width: 1400px) {
+    .roulette-kontener {
+        --statisztika-szelesseg: 290px;
+        --statisztika-gap: 12px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .statisztika-panel {
+        display: none !important;
+    }
+
+    .roulette-kontener.statisztika-aktiv .roulette-asztal {
+        transform: none;
+    }
+}
+
+/* Navbar roulette stílusa a shared.css-ben van definiálva (.navbar-roulette) */

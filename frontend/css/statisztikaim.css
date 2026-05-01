@@ -1,0 +1,173 @@
+/* Statisztikáim oldal CSS */
+
+.stats-szekcio {
+    min-height: 100vh;
+    padding-top: 120px;
+    padding-bottom: 80px;
+}
+
+.stats-fejlec {
+    margin-bottom: 3rem;
+}
+
+.stats-cim {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #f0f0f0;
+    margin-bottom: 0.5rem;
+}
+
+.stats-alcim {
+    font-size: 1.1rem;
+    color: #a0a0a0;
+}
+
+/* Dátum csoport */
+.datum-csoport {
+    margin-bottom: 3rem;
+}
+
+.datum-fejlec {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    background: rgba(42, 44, 51, 0.6);
+    border-left: 4px solid #8c5cff;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #f0f0f0;
+}
+
+/* Táblázat stílus */
+.stats-tabla-tabla {
+    background: #1a1b1e !important;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 0;
+    border: 1px solid #33353a;
+    border-bottom: 2px solid #8c5cff !important;
+}
+
+.stats-tabla-tabla thead {
+    background: #0f1012 !important;
+    border-bottom: 2px solid #8c5cff;
+}
+
+.stats-tabla-tabla thead th {
+    color: #8c5cff;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: none;
+    padding: 16px;
+    background-color: transparent !important;
+}
+
+.stats-tabla-tabla tbody {
+    background: #1a1b1e !important;
+}
+
+.stats-tabla-tabla tbody tr {
+    border-bottom: 1px solid rgba(51, 53, 58, 0.3);
+    transition: background 0.2s ease;
+    background: #1a1b1e !important;
+}
+
+.stats-tabla-tabla tbody tr:hover {
+    background: rgba(140, 92, 255, 0.15) !important;
+}
+
+.stats-tabla-tabla tbody tr:last-child {
+    border-bottom: none;
+}
+
+.stats-tabla-tabla tbody td {
+    color: #f0f0f0;
+    padding: 16px;
+    background-color: transparent !important;
+    vertical-align: middle;
+}
+
+/* Szövegek olvashatósága miatt sötét témához optimalizált szövegszín a halványított oszlopokon */
+.stats-tabla-tabla tbody td.text-muted {
+    color: #c4c4cd !important;
+}
+
+/* Eredmény badge */
+.eredmeny-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.eredmeny-badge.nyert {
+    background: rgba(52, 168, 83, 0.2);
+    color: #34a853;
+    border: 1px solid rgba(52, 168, 83, 0.4);
+}
+
+.eredmeny-badge.vesztett {
+    background: rgba(234, 67, 53, 0.2);
+    color: #ea4335;
+    border: 1px solid rgba(234, 67, 53, 0.4);
+}
+
+.eredmeny-badge.dontetlen {
+    background: rgba(160, 160, 160, 0.2);
+    color: #a0a0a0;
+    border: 1px solid rgba(160, 160, 160, 0.4);
+}
+
+/* Reszponzív */
+@media (max-width: 768px) {
+    .stats-cim {
+        font-size: 2rem;
+    }
+    
+    .stats-alcim {
+        font-size: 1rem;
+    }
+    
+    .datum-fejlec {
+        font-size: 1rem;
+        padding: 10px 16px;
+    }
+    
+    .stats-tabla-tabla thead th,
+    .stats-tabla-tabla tbody td {
+        padding: 12px 8px;
+        font-size: 0.85rem;
+    }
+    
+    /* Mobil táblázat görgethetővé tétele */
+    .table-responsive {
+        overflow-x: auto;
+    }
+}
+
+/* Betöltés és üres állapot */
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+    border-width: 0.3rem;
+}
+
+.btn-primary {
+    background: #8c5cff;
+    border: none;
+    padding: 12px 32px;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background: #7a4de0;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(140, 92, 255, 0.4);
+}

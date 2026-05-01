@@ -1,0 +1,174 @@
+/* Admin oldal CSS */
+
+.admin-szekcio {
+    min-height: 100vh;
+    padding-top: 120px;
+    padding-bottom: 80px;
+}
+
+.admin-fejlec {
+    margin-bottom: 3rem;
+}
+
+.admin-cim {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #f0f0f0;
+    margin-bottom: 0.5rem;
+}
+
+.admin-alcim {
+    font-size: 1.1rem;
+    color: #a0a0a0;
+}
+
+.admin-kartya {
+    padding: 2rem;
+}
+
+.kartya-fejlec {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #f0f0f0;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #8c5cff;
+}
+
+.kartya-fejlec i {
+    color: #8c5cff;
+}
+
+.admin-tabla {
+    background: #1a1b1e !important;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 0;
+    border: 1px solid #33353a;
+    border-bottom: 2px solid #8c5cff !important;
+}
+
+.admin-tabla thead {
+    background: #0f1012 !important;
+    border-bottom: 2px solid #8c5cff;
+}
+
+.admin-tabla thead th {
+    color: #8c5cff;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: none;
+    padding: 14px;
+    background-color: transparent !important;
+}
+
+.admin-tabla tbody tr {
+    border-bottom: 1px solid rgba(51, 53, 58, 0.3);
+    background: #1a1b1e !important;
+}
+
+.admin-tabla tbody tr:hover {
+    background: rgba(140, 92, 255, 0.15) !important;
+}
+
+.admin-tabla tbody td {
+    color: #f0f0f0;
+    padding: 14px;
+    background-color: transparent !important;
+    vertical-align: middle;
+}
+
+.admin-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+.admin-badge.igen {
+    background: rgba(52, 168, 83, 0.2);
+    color: #34a853;
+    border: 1px solid rgba(52, 168, 83, 0.4);
+}
+
+.admin-badge.nem {
+    background: rgba(160, 160, 160, 0.2);
+    color: #a0a0a0;
+    border: 1px solid rgba(160, 160, 160, 0.4);
+}
+
+.szerkesztes-gomb {
+    padding: 6px 12px;
+    font-size: 0.82rem;
+}
+
+.admin-uzenet {
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+.admin-uzenet.siker {
+    background: rgba(52, 168, 83, 0.15);
+    color: #34a853;
+    border: 1px solid rgba(52, 168, 83, 0.3);
+}
+
+.admin-uzenet.hiba {
+    background: rgba(234, 67, 53, 0.15);
+    color: #ea4335;
+    border: 1px solid rgba(234, 67, 53, 0.3);
+}
+
+.admin-modal {
+    background: #1f2025;
+    border: 1px solid #33353a;
+}
+
+.admin-modal .modal-header,
+.admin-modal .modal-footer {
+    border-color: #33353a;
+}
+
+.admin-modal .modal-title {
+    color: #f0f0f0;
+}
+
+.admin-input {
+    background: #2a2c33;
+    border: 1px solid #33353a;
+    color: #f0f0f0;
+    border-radius: 8px;
+    padding: 10px 14px;
+}
+
+.admin-input:focus {
+    background: #2a2c33;
+    border-color: #8c5cff;
+    color: #f0f0f0;
+    box-shadow: 0 0 0 3px rgba(140, 92, 255, 0.15);
+}
+
+.form-label,
+.form-check-label {
+    color: #a0a0a0;
+}
+
+@media (max-width: 768px) {
+    .admin-cim {
+        font-size: 2rem;
+    }
+
+    .admin-alcim {
+        font-size: 1rem;
+    }
+
+    .admin-kartya {
+        padding: 1.5rem;
+    }
+}

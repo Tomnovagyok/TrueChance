@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="hu">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>TrueChance - Slot</title>
+
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+        <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+        <link rel="stylesheet" href="../css/shared.css" />
+        <link rel="stylesheet" href="../css/slot.css" />
+    </head>
+
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-slot fixed-top">
+            <div class="container-fluid px-5">
+                <a class="navbar-brand" href="games.html">
+                    <img src="../img/logo.png" alt="TrueChance logo" class="navbar-logo-img" />
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon" style="filter: invert(1)"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <div class="felhasznalo-szekcio ms-auto">
+                        <a href="ranglista.html" class="statisztika-gomb text-decoration-none">
+                            <i class="fas fa-trophy me-2"></i>
+                            <span>Ranglista</span>
+                        </a>
+
+                        <button type="button" id="statsToggleBtn" class="statisztika-gomb" title="Statisztikai Betekintő">
+                            <i class="fas fa-chart-bar me-2"></i>
+                            <span>Statisztikai Betekintő</span>
+                        </button>
+
+                        <div class="navbar-egyenleg">
+                            <i class="fas fa-coins"></i>
+                            <span id="navbarEgyenleg">$0</span>
+                        </div>
+
+                        <div class="dropdown">
+                            <button class="profil-gomb dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown">
+                                <div class="profil-avatar">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <span class="profil-nev">Felhasználó</span> <!--itt később majd maga a felhasználó neve fog szerepelni-->
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end dropdown-lista">
+                                <li>
+                                    <a class="dropdown-item" href="profil.html"><i class="fas fa-user me-2"></i>Profilom</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="statisztikaim.html"><i class="fas fa-chart-line me-2"></i>Statisztikáim</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="daily-cash.html"><i class="fas fa-gift me-2"></i>Daily Cash</a>
+                                </li>
+                                <li class="admin-menu-pont d-none">
+                                    <a class="dropdown-item" href="admin.html"><i class="fas fa-user-shield me-2"></i>Admin menü</a>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider"/>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item text-danger" href="#" id="kilepesLink"><i class="fas fa-sign-out me-2"></i>Kilépés</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <section class="slot-szekcio">
+            <div class="slot-kontener">
+                <div class="slot-jatek-terulet">
+                    <div class="statisztika-panel statisztika-panel-bal">
+                        <div class="statisztika-info-doboz">
+                            <div class="statisztika-kartya">
+                                <div class="statisztika-cimke">Session összegzés</div>
+                                <p id="stat-session-spins">Összes pörgetés: 0</p>
+                                <p id="stat-winning-spins">Nyerő pörgetések: 0</p>
+                                <p id="stat-hit-rate" class="kiemelt-sor">Találati arány: 0.0%</p>
+                                <p id="stat-total-bet">Össztét: $0.00</p>
+                                <p id="stat-total-win">Össznyeremény: $0.00</p>
+                                <p id="stat-session-profit" class="kiemelt-sor stat-profit-null">Profit/loss: $0.00</p>
+                                <p id="stat-session-rtp" class="kiemelt-sor">RTP: 0.0%</p>
+                            </div>
+
+                            <div class="statisztika-kartya">
+                                <div class="statisztika-cimke">Statikus mutatók</div>
+                                <p id="stat-house-edge">Statikus ház előny: 0.0%</p>
+                                <p id="stat-roi">Statikus ROI: 0.0%</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="slot-kozep-panel">
+                        <!-- A nyerőgép képe + a görgők felette -->
+                        <div class="gepkep-wrapper">
+                            <img src="../img/Slot/Slot Machine.png" alt="Slot nyerőgép" class="gep-kep" />
+
+                            <!-- Az 5 görge (reel) ráhelyezve a gép képére -->
+                            <!-- A pozíciók a képelemzés alapján: 5 oszlop, egyenként ~9% széles,
+                                 az első ~26.2%-tól indul, a dobozok ~42%-tól ~72%-ig tartanak vertikálisan -->
+                            <div class="reels-wrapper">
+                                <div class="reel-oszlop" id="reel0">
+                                    <div class="reel-szalag" id="szalag0"></div>
+                                </div>
+                                <div class="reel-oszlop" id="reel1">
+                                    <div class="reel-szalag" id="szalag1"></div>
+                                </div>
+                                <div class="reel-oszlop" id="reel2">
+                                    <div class="reel-szalag" id="szalag2"></div>
+                                </div>
+                                <div class="reel-oszlop" id="reel3">
+                                    <div class="reel-szalag" id="szalag3"></div>
+                                </div>
+                                <div class="reel-oszlop" id="reel4">
+                                    <div class="reel-szalag" id="szalag4"></div>
+                                </div>
+                            </div>
+
+                            <!-- A pörgetés gomb - külön képként, hogy animálható legyen -->
+                            <button class="spin-gomb" id="spinGomb" title="Pörgetés">
+                                <img src="../img/Slot/Spin Button.png" alt="Pörgetés gomb" class="spin-gomb-kep" id="spinGombKep" />
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="statisztika-panel statisztika-panel-jobb">
+                        <div class="statisztika-info-doboz">
+                            <div class="statisztika-kartya">
+                                <div class="statisztika-cimke">Nyeremény és szériák</div>
+                                <p id="stat-largest-win">Legnagyobb nyeremény: $0.00</p>
+                                <p id="stat-average-win">Átlagos nyeremény / nyerő kör: $0.00</p>
+                                <p id="stat-longest-lose-streak">Leghosszabb vesztes sorozat: 0</p>
+                                <p id="stat-current-lose-streak">Current lose streak: 0</p>
+                            </div>
+
+                            <div class="statisztika-kartya">
+                                <div class="statisztika-cimke">Manipuláció</div>
+                                <p id="stat-nearmiss-manipulated">Manipulált near miss: Nincs adat</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tét összeg + egyenleg panel -->
+                <div class="jatek-info-panel">
+                    <div class="info-elem">
+                        <i class="fas fa-coins"></i>
+                        <span class="info-cimke">Tét:</span>
+                        <span class="info-ertek" id="infoPanelTet">$10</span>
+                    </div>
+                    <div class="info-elem">
+                        <i class="fas fa-trophy"></i>
+                        <span class="info-cimke">Utolsó nyeremény:</span>
+                        <span class="info-ertek" id="infoPanelNyeremeny">-</span>
+                    </div>
+                    <div class="info-elem">
+                        <i class="fas fa-wallet"></i>
+                        <span class="info-cimke">Egyenleg:</span>
+                        <span class="info-ertek" id="infoPanelEgyenleg">$1000</span>
+                    </div>
+                </div>
+
+                <!-- Tét megadás + gyors gombok -->
+                <div class="tet-panel">
+                    <span class="tet-label">Tét összeg:</span>
+                    <div class="tet-input-csoport">
+                        <button class="tet-gyors-gomb" data-ertek="5">$5</button>
+                        <button class="tet-gyors-gomb" data-ertek="10">$10</button>
+                        <button class="tet-gyors-gomb" data-ertek="25">$25</button>
+                        <button class="tet-gyors-gomb" data-ertek="50">$50</button>
+                        <button class="tet-gyors-gomb" data-ertek="100">$100</button>
+                    </div>
+                    <input type="number" id="tetOsszegInput" class="tet-input" min="1" max="500" value="10" />
+                </div>
+
+                <!-- Nyerési tábla -->
+                <div class="nyeresitabla">
+                    <h3 class="tabla-cim"><i class="fas fa-star me-2"></i>Nyerési tábla</h3>
+                    <p class="tabla-leiras">A középső sor számít. Balról jobbra az egymás melletti azonos szimbólumok száma határozza meg a nyereményt.</p>
+
+                    <table class="tabla-grid">
+                        <thead>
+                            <tr>
+                                <th>Szimbólum</th>
+                                <th>2x egyező</th>
+                                <th>3x egyező</th>
+                                <th>4x egyező</th>
+                                <th>5x egyező</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="tabla-jackpot-sor">
+                                <td>
+                                    <div class="tabla-szimbolum-cella">
+                                        <img src="../img/Slot/Seven.png" alt="7" class="tabla-icon" />
+                                        <span>Hetes</span>
+                                    </div>
+                                </td>
+                                <td class="tabla-ertek jackpot-ertek">15x</td>
+                                <td class="tabla-ertek jackpot-ertek">100x</td>
+                                <td class="tabla-ertek jackpot-ertek">200x</td>
+                                <td class="tabla-ertek jackpot-ertek">400x</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="tabla-szimbolum-cella">
+                                        <img src="../img/Slot/Sárkánygyümölcs.png" alt="Sárkánygyümölcs" class="tabla-icon" />
+                                        <span>Sárkánygyümölcs</span>
+                                    </div>
+                                </td>
+                                <td class="tabla-ertek">3.2x</td>
+                                <td class="tabla-ertek">8x</td>
+                                <td class="tabla-ertek">16x</td>
+                                <td class="tabla-ertek">32x</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="tabla-szimbolum-cella">
+                                        <img src="../img/Slot/Ananász.png" alt="Ananász" class="tabla-icon" />
+                                        <span>Ananász</span>
+                                    </div>
+                                </td>
+                                <td class="tabla-ertek">2x</td>
+                                <td class="tabla-ertek">5x</td>
+                                <td class="tabla-ertek">10x</td>
+                                <td class="tabla-ertek">20x</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="tabla-szimbolum-cella">
+                                        <img src="../img/Slot/Kiwi.png" alt="Kiwi" class="tabla-icon" />
+                                        <span>Kiwi</span>
+                                    </div>
+                                </td>
+                                <td class="tabla-ertek">1.2x</td>
+                                <td class="tabla-ertek">3x</td>
+                                <td class="tabla-ertek">6x</td>
+                                <td class="tabla-ertek">12x</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="tabla-szimbolum-cella">
+                                        <img src="../img/Slot/Eper.png" alt="Eper" class="tabla-icon" />
+                                        <span>Eper</span>
+                                    </div>
+                                </td>
+                                <td class="tabla-ertek">0.8x</td>
+                                <td class="tabla-ertek">2x</td>
+                                <td class="tabla-ertek">4x</td>
+                                <td class="tabla-ertek">8x</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="tabla-szimbolum-cella">
+                                        <img src="../img/Slot/Citrom.png" alt="Citrom" class="tabla-icon" />
+                                        <span>Citrom</span>
+                                    </div>
+                                </td>
+                                <td class="tabla-ertek">0.6x</td>
+                                <td class="tabla-ertek">1.5x</td>
+                                <td class="tabla-ertek">3x</td>
+                                <td class="tabla-ertek">6x</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p class="tabla-megjegyzes">
+                        <i class="fas fa-info-circle me-1"></i>
+                        A szorzó a tétedre vonatkozik. Pl. $10 tét + 3x egyező Kiwi = $10 × 3 = <strong>$30 nyeremény</strong>.
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-copyright text-center small">
+                    <p>&copy; 2026 TrueChance. Minden jog fenntartva. Ez egy oktatási célú szimulátor.</p>
+                    <p class="mt-2" style="font-size: 0.8rem">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Ha te vagy valaki, akit ismersz, szerencsejáték függőséggel küzd, kérj segítséget:
+                        <a href="https://egeszsegvonal.gov.hu/egeszseg-a-z/s-sz/szerencsejatek-fuggoseg.html" target="_blank" rel="noopener" style="color: #8c5cff">egeszsegvonal.gov.hu</a>
+                    </p>
+                </div>
+            </div>
+        </footer>
+
+        <script src="../bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="../javascript/auth-check.js"></script>
+        <script src="../javascript/slot.js"></script>
+    </body>
+</html>

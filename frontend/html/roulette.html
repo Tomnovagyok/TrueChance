@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="hu">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>TrueChance - Rulett</title>
+
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+        <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+        <link rel="stylesheet" href="../css/shared.css" />
+        <link rel="stylesheet" href="../css/roulette.css" />
+    </head>
+
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-roulette fixed-top">
+            <div class="container-fluid px-5">
+                <a class="navbar-brand" href="games.html">
+                    <img src="../img/logo.png" alt="TrueChance logo" class="navbar-logo-img" />
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon" style="filter: invert(1)"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <div class="felhasznalo-szekcio ms-auto">
+                        <a href="ranglista.html" class="statisztika-gomb text-decoration-none">
+                            <i class="fas fa-trophy me-2"></i>
+                            <span>Ranglista</span>
+                        </a>
+
+                        <button type="button" id="statsToggleBtn" class="statisztika-gomb" title="Statisztikai Betekintő">
+                            <i class="fas fa-chart-bar me-2"></i>
+                            <span>Statisztikai Betekintő</span>
+                        </button>
+
+                        <div class="navbar-egyenleg">
+                            <i class="fas fa-coins"></i>
+                            <span id="navbarEgyenleg">$0</span>
+                        </div>
+
+                        <div class="dropdown">
+                            <button class="profil-gomb dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown">
+                                <div class="profil-avatar">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <span class="profil-nev">Felhasználó</span> <!--itt később majd maga a felhasználó neve fog szerepelni-->
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end dropdown-lista">
+                                <li>
+                                    <a class="dropdown-item" href="profil.html"><i class="fas fa-user me-2"></i>Profilom</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="statisztikaim.html"><i class="fas fa-chart-line me-2"></i>Statisztikáim</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="daily-cash.html"><i class="fas fa-gift me-2"></i>Daily Cash</a>
+                                </li>
+                                <li class="admin-menu-pont d-none">
+                                    <a class="dropdown-item" href="admin.html"><i class="fas fa-user-shield me-2"></i>Admin menü</a>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider"/>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item text-danger" href="#" id="kilepesLink"><i class="fas fa-sign-out me-2"></i>Kilépés</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <section class="roulette-szekcio">
+            <div class="roulette-kontener">
+
+                <!-- Az asztal - rajta minden játékelem -->
+                <div class="roulette-asztal">
+                    <div class="asztal-hatter">
+                        <img src="../img/Truechance_table.png" alt="Rulett asztal" class="asztal-kep" />
+                    </div>
+
+                    <!-- Az asztalra kerülő tartalom (kerék + tét-grid) -->
+                    <div class="asztal-tartalom">
+
+                        <!-- Bal oldal: rulett kerék + nyíl -->
+                        <div class="kerek-szekcio">
+                            <div class="kerek-wrapper">
+                                <!-- A nyíl a kerék felett, az alja ráló a kerékre -->
+                                <img src="../img/Roulette_arrow.png" alt="Rulett nyíl" class="roulette-nyil" />
+                                <!-- Maga a kerék - ezt forgatjuk CSS transform-mal -->
+                                <img src="../img/Roulette.png" alt="Rulett kerék" class="roulette-kerek" id="rouletteKerek" />
+                            </div>
+
+                            <!-- Kisorsolás gomb -->
+                            <button class="porgetes-gomb btn-glass-primary" id="porgetesBtnElem" disabled>
+                                <i class="fas fa-circle-notch me-2"></i>
+                                Pörgetés
+                            </button>
+
+                            <!-- Eredmény kijelző -->
+                            <div class="eredmeny-kijelzo" id="eredmenyKijelzo">
+                                <span class="eredmeny-szam" id="eredmenySzam">-</span>
+                            </div>
+                        </div>
+
+                        <!-- Jobb oldal: tét-rakási grid -->
+                        <div class="tet-szekcio">
+
+                            <!-- Tét összeg megadás -->
+                            <div class="tet-osszeg-sor">
+                                <span class="tet-label">Tét összeg:</span>
+                                <div class="tet-input-csoport">
+                                    <button class="tet-gyors-gomb" data-ertek="10">$10</button>
+                                    <button class="tet-gyors-gomb" data-ertek="25">$25</button>
+                                    <button class="tet-gyors-gomb" data-ertek="50">$50</button>
+                                    <button class="tet-gyors-gomb" data-ertek="100">$100</button>
+                                </div>
+                                <input type="number" id="tetOsszegInput" class="tet-input" min="1" max="1000" value="10" />
+                                <button type="button" id="osszesTetLevetelBtn" class="tet-torles-gomb">Összes tét levétele</button>
+                            </div>
+
+                            <!-- Számok táblázata (0-36) - kaszinó elrendezés -->
+                            <div class="szamok-tabla">
+                                <!-- Nulla - bal oldalt külön -->
+                                <div class="nulla-cella">
+                                    <button class="szam-gomb zold" data-tipus="szam" data-ertek="0">0</button>
+                                </div>
+
+                                <!-- 1-36 a kaszinóban 3 sorban vannak, oszlopok 1-12 -->
+                                <div class="szamok-grid">
+                                    <!--
+                                        Kaszinó elrendezés:
+                                        Felső sor  (3-tól 36-ig, hármasával): 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36
+                                        Középső sor (2-től 35-ig, hármasával): 2, 5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35
+                                        Alsó sor   (1-től 34-ig, hármasával): 1, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31, 34
+                                        Piros: 3, 6, 7, 8, 10, 11, 12, 13, 15, 17, 18, 20, 22, 24, 31, 33
+                                        Fekete: minden más (kivéve 0 = zöld)
+                                    -->
+                                    <!-- Felső sor -->
+                                    <button class="szam-gomb piros"  data-tipus="szam" data-ertek="3">3</button>
+                                    <button class="szam-gomb fekete"  data-tipus="szam" data-ertek="6">6</button>
+                                    <button class="szam-gomb piros" data-tipus="szam" data-ertek="9">9</button>
+                                    <button class="szam-gomb piros"  data-tipus="szam" data-ertek="12">12</button>
+                                    <button class="szam-gomb fekete"  data-tipus="szam" data-ertek="15">15</button>
+                                    <button class="szam-gomb piros"  data-tipus="szam" data-ertek="18">18</button>
+                                    <button class="szam-gomb piros" data-tipus="szam" data-ertek="21">21</button>
+                                    <button class="szam-gomb fekete"  data-tipus="szam" data-ertek="24">24</button>
+                                    <button class="szam-gomb piros" data-tipus="szam" data-ertek="27">27</button>
+                                    <button class="szam-gomb piros" data-tipus="szam" data-ertek="30">30</button>
+                                    <button class="szam-gomb fekete"  data-tipus="szam" data-ertek="33">33</button>
+                                    <button class="szam-gomb piros" data-tipus="szam" data-ertek="36">36</button>
+                                    <button class="sor-gomb" data-tipus="sor" data-ertek="3">3:1</button>
+
+                                    <!-- Középső sor -->
+                                    <button class="szam-gomb fekete"  data-tipus="szam" data-ertek="2">2</button>
+                                    <button class="szam-gomb piros" data-tipus="szam" data-ertek="5">5</button>
+                                    <button class="szam-gomb fekete"  data-tipus="szam" data-ertek="8">8</button>
+                                    <button class="szam-gomb fekete"  data-tipus="szam" data-ertek="11">11</button>
+                                    <button class="szam-gomb piros" data-tipus="szam" data-ertek="14">14</button>
+                                    <button class="szam-gomb fekete"  data-tipus="szam" data-ertek="17">17</button>
+                                    <button class="szam-gomb fekete"  data-tipus="szam" data-ertek="20">20</button>
+                                    <button class="szam-gomb piros" data-tipus="szam" data-ertek="23">23</button>
+                                    <button class="szam-gomb fekete" data-tipus="szam" data-ertek="26">26</button>
+                                    <button class="szam-gomb fekete" data-tipus="szam" data-ertek="29">29</button>
+                                    <button class="szam-gomb piros" data-tipus="szam" data-ertek="32">32</button>
+                                    <button class="szam-gomb fekete" data-tipus="szam" data-ertek="35">35</button>
+                                    <button class="sor-gomb" data-tipus="sor" data-ertek="2">3:1</button>
+
+                                    <!-- Alsó sor -->
+                                    <button class="szam-gomb piros" data-tipus="szam" data-ertek="1">1</button>
+                                    <button class="szam-gomb fekete"  data-tipus="szam" data-ertek="4">4</button>
+                                    <button class="szam-gomb piros"  data-tipus="szam" data-ertek="7">7</button>
+                                    <button class="szam-gomb fekete"  data-tipus="szam" data-ertek="10">10</button>
+                                    <button class="szam-gomb fekete"  data-tipus="szam" data-ertek="13">13</button>
+                                    <button class="szam-gomb piros" data-tipus="szam" data-ertek="16">16</button>
+                                    <button class="szam-gomb piros" data-tipus="szam" data-ertek="19">19</button>
+                                    <button class="szam-gomb fekete"  data-tipus="szam" data-ertek="22">22</button>
+                                    <button class="szam-gomb piros" data-tipus="szam" data-ertek="25">25</button>
+                                    <button class="szam-gomb fekete" data-tipus="szam" data-ertek="28">28</button>
+                                    <button class="szam-gomb fekete"  data-tipus="szam" data-ertek="31">31</button>
+                                    <button class="szam-gomb piros" data-tipus="szam" data-ertek="34">34</button>
+                                    <button class="sor-gomb" data-tipus="sor" data-ertek="1">3:1</button>
+                                </div>
+                            </div>
+
+                            <!-- Tucat és egyéb fogadások -->
+                            <div class="also-fogadas-sor">
+                                <button class="also-gomb" data-tipus="tucat" data-ertek="1">1-12</button>
+                                <button class="also-gomb" data-tipus="tucat" data-ertek="2">13-24</button>
+                                <button class="also-gomb" data-tipus="tucat" data-ertek="3">25-36</button>
+                            </div>
+
+                            <div class="also-fogadas-sor">
+                                <button class="also-gomb" data-tipus="tartomany" data-ertek="also">1-18</button>
+                                <button class="also-gomb paros-gomb" data-tipus="paros" data-ertek="paros">Páros</button>
+                                <button class="also-gomb szin-gomb piros-gomb" data-tipus="szin" data-ertek="piros">Piros</button>
+                                <button class="also-gomb szin-gomb fekete-gomb" data-tipus="szin" data-ertek="fekete">Fekete</button>
+                                <button class="also-gomb paros-gomb" data-tipus="paros" data-ertek="paratlan">Páratlan</button>
+                                <button class="also-gomb" data-tipus="tartomany" data-ertek="felso">19-36</button>
+                            </div>
+
+                            <!-- Aktuális tét kijelzés -->
+                            <div class="kivalasztott-tet" id="kivalasztottTet">
+                                <span class="tet-label">Fogadás:</span>
+                                <span id="kivalasztottTetSzoveg" class="tet-ertek">Nincs kiválasztva</span>
+                            </div>
+                            <div class="porgetes-history">
+                                <span class="tet-label">Pörgetés history:</span>
+                                <div class="history-lista" id="porgetesHistoryLista"></div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="statisztika-panel" id="statisztikaPanel">
+                        <div class="statisztika-info-doboz">
+                            <div class="statisztika-fejlec">
+                                <i class="fas fa-chart-line"></i>
+                                <h3>Statisztikai Betekintő</h3>
+                            </div>
+
+                            <div class="statisztika-kartya">
+                                <div class="statisztika-cimke">Összes tét egyszerre nyer</div>
+                                <p id="stat-all-win">Esély: 0.0%</p>
+                            </div>
+
+                            <div class="statisztika-kartya">
+                                <div class="statisztika-cimke">Legalább egy tét nyer</div>
+                                <p id="stat-any-win">Esély: 0.0%</p>
+                            </div>
+
+                            <div class="statisztika-ertekek">
+                                <p id="stat-house">Statikus ház előny: 2.7%</p>
+                                <p id="stat-roi">Statikus ROI: -2.7%</p>
+                                <p id="stat-winloss">Session Win/Loss: 0/0</p>
+                                <p id="stat-round-profit">Körprofit: $0.00</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info panel az asztal alatt -->
+                <div class="jatek-info-panel">
+                    <div class="info-elem">
+                        <i class="fas fa-coins"></i>
+                        <span class="info-cimke">Tét:</span>
+                        <span class="info-ertek" id="infoPanelTet">$0</span>
+                    </div>
+                    <div class="info-elem">
+                        <i class="fas fa-circle-notch"></i>
+                        <span class="info-cimke">Utolsó szám:</span>
+                        <span class="info-ertek" id="infoPanelUtolso">-</span>
+                    </div>
+                    <div class="info-elem">
+                        <i class="fas fa-wallet"></i>
+                        <span class="info-cimke">Egyenleg:</span>
+                        <span class="info-ertek" id="infoPanelEgyenleg">$1000</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-copyright text-center small">
+                    <p>&copy; 2026 TrueChance. Minden jog fenntartva. Ez egy oktatási célú szimulátor.</p>
+                    <p class="mt-2" style="font-size: 0.8rem">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Ha te vagy valaki, akit ismersz, szerencsejáték függőséggel küzd, kérj segítséget:
+                        <a href="https://egeszsegvonal.gov.hu/egeszseg-a-z/s-sz/szerencsejatek-fuggoseg.html" target="_blank" rel="noopener" style="color: #8c5cff">egeszsegvonal.gov.hu</a>
+                    </p>
+                </div>
+            </div>
+        </footer>
+
+        <script src="../bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="../javascript/auth-check.js"></script>
+        <script src="../javascript/roulette.js"></script>
+    </body>
+</html>

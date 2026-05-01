@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="hu">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>TrueChance - Admin</title>
+
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+        <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+        <link rel="stylesheet" href="../css/shared.css" />
+        <link rel="stylesheet" href="../css/admin.css" />
+    </head>
+
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-jatekok fixed-top">
+            <div class="container-fluid px-5">
+                <a class="navbar-brand" href="games.html">
+                    <img src="../img/logo.png" alt="TrueChance logo" class="navbar-logo-img" />
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon" style="filter: invert(1)"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <div class="felhasznalo-szekcio ms-auto">
+                        <div class="navbar-egyenleg">
+                            <i class="fas fa-coins"></i>
+                            <span id="navbarEgyenleg">$0</span>
+                        </div>
+
+                        <div class="dropdown">
+                            <button class="profil-gomb dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown">
+                                <div class="profil-avatar">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <span class="profil-nev d-none d-md-inline">Felhasználó</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end dropdown-lista">
+                                <li>
+                                    <a class="dropdown-item" href="profil.html"><i class="fas fa-user me-2"></i>Profilom</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="statisztikaim.html"><i class="fas fa-chart-line me-2"></i>Statisztikáim</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="daily-cash.html"><i class="fas fa-gift me-2"></i>Daily Cash</a>
+                                </li>
+                                <li class="admin-menu-pont d-none">
+                                    <a class="dropdown-item" href="admin.html"><i class="fas fa-user-shield me-2"></i>Admin menü</a>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider" />
+                                </li>
+                                <li>
+                                    <a class="dropdown-item text-danger" href="#" id="kilepesLink"><i class="fas fa-sign-out me-2"></i>Kilépés</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <section class="admin-szekcio">
+            <div class="container">
+                <div class="admin-fejlec text-center mb-5">
+                    <h1 class="admin-cim">Admin panel</h1>
+                    <p class="admin-alcim">Felhasználók listázása és szerkesztése</p>
+                </div>
+
+                <div id="adminUzenet" class="admin-uzenet" style="display: none;"></div>
+
+                <div id="loadingSpinner" class="text-center my-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Betöltés...</span>
+                    </div>
+                    <p class="mt-3 text-muted">Felhasználók betöltése...</p>
+                </div>
+
+                <div id="adminTartalom" style="display: none;">
+                    <div class="card-glass admin-kartya">
+                        <div class="kartya-fejlec">
+                            <i class="fas fa-users me-2"></i>Regisztrált felhasználók
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover admin-tabla">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Név</th>
+                                        <th>Email</th>
+                                        <th>Egyenleg</th>
+                                        <th>Admin</th>
+                                        <th>Művelet</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="felhasznaloTablaBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="modal fade" id="felhasznaloSzerkesztesModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content admin-modal">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><i class="fas fa-user-edit me-2"></i>Felhasználó szerkesztése</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Bezárás"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="modalFelhasznaloId" />
+                        <div class="mb-3">
+                            <label for="modalFelhasznaloNev" class="form-label">Név</label>
+                            <input type="text" id="modalFelhasznaloNev" class="form-control admin-input" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="modalFelhasznaloEmail" class="form-label">Email</label>
+                            <input type="email" id="modalFelhasznaloEmail" class="form-control admin-input" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="modalFelhasznaloEgyenleg" class="form-label">Egyenleg</label>
+                            <input type="number" id="modalFelhasznaloEgyenleg" class="form-control admin-input" min="0" step="0.01" />
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="modalFelhasznaloAdminE" />
+                            <label class="form-check-label" for="modalFelhasznaloAdminE">Admin jogosultság</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Mégse</button>
+                        <button type="button" id="felhasznaloMentesGomb" class="btn btn-glass-primary">
+                            <i class="fas fa-save me-2"></i>Mentés
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-copyright text-center small">
+                    <p>&copy; 2026 TrueChance. Minden jog fenntartva. Ez egy oktatási célú szimulátor.</p>
+                    <p class="mt-2" style="font-size: 0.8rem">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Ha te vagy valaki, akit ismersz, szerencsejáték függőséggel küzd, kérj segítséget:
+                        <a href="https://egeszsegvonal.gov.hu/egeszseg-a-z/s-sz/szerencsejatek-fuggoseg.html" target="_blank" rel="noopener" style="color: #8c5cff">egeszsegvonal.gov.hu</a>
+                    </p>
+                </div>
+            </div>
+        </footer>
+
+        <script src="../bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="../javascript/auth-check.js"></script>
+        <script src="../javascript/admin.js"></script>
+    </body>
+</html>

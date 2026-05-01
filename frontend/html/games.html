@@ -25,11 +25,21 @@
 
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <div class="felhasznalo-szekcio ms-auto">
+                        <a href="ranglista.html" class="statisztika-gomb text-decoration-none">
+                            <i class="fas fa-trophy me-2"></i>
+                            <span class="d-none d-lg-inline">Ranglista</span>
+                        </a>
+
                         <button type="button" id="statsToggleBtn" class="statisztika-gomb" title="Statisztikai Betekintő">
                             <i class="fas fa-chart-bar me-2"></i>
                             <span class="d-none d-lg-inline">Statisztikai Betekintő</span>
                             <!--d-lg-inline = csak nagy kijelzőkön látszik a szöveg-->
                         </button>
+
+                        <div class="navbar-egyenleg">
+                            <i class="fas fa-coins"></i>
+                            <span id="navbarEgyenleg">$0</span>
+                        </div>
 
                         <div class="dropdown">
                             <button class="profil-gomb dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown">
@@ -42,19 +52,22 @@
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end dropdown-lista">
                                 <li>
-                                    <a class="dropdown-item"><i class="fas fa-user me-2"></i>Profilom</a>
+                                    <a class="dropdown-item" href="profil.html"><i class="fas fa-user me-2"></i>Profilom</a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item"><i class="fas fa-chart-line me-2"></i>Statisztikáim</a>
+                                    <a class="dropdown-item" href="statisztikaim.html"><i class="fas fa-chart-line me-2"></i>Statisztikáim</a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item"><i class="fas fa-cog me-2"></i>Beállítások</a>
+                                    <a class="dropdown-item" href="daily-cash.html"><i class="fas fa-gift me-2"></i>Daily Cash</a>
+                                </li>
+                                <li class="admin-menu-pont d-none">
+                                    <a class="dropdown-item" href="admin.html"><i class="fas fa-user-shield me-2"></i>Admin menü</a>
                                 </li>
                                 <li>
                                     <hr class="dropdown-divider"/>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item text-danger" href="index.html"><i class="fas fa-sign-out me-2"></i>Kilépés</a>
+                                    <a class="dropdown-item text-danger" href="#" id="kilepesLink"><i class="fas fa-sign-out me-2"></i>Kilépés</a>
                                 </li>
                             </ul>
                         </div>
@@ -81,8 +94,8 @@
                                 <h3>BlackJack</h3>
                                 <p>A klasszikus kártyajáték, ahol a 21-hez kell a legközelebb kerülnöd anélkül, hogy túllépnéd.</p>
                                 <div class="jatek-eselyek">
-                                    <span class="esely-cimke">Átlagos nyerési esély:</span>
-                                    <span class="esely-ertek">~42-49%</span>
+                                    <span class="esely-cimke">Átlagos profitálási esély:</span>
+                                    <span class="esely-ertek">Szimuláció alapján: 40.95%</span>
                                 </div>
                             </div>
                             <div class="jatek-akcio">
@@ -92,7 +105,7 @@
                     </div>
 
                     <div class="col-lg-4 col-md-5">
-                        <a href="#slot" class="jatek-kartya">
+                        <a href="slot.html" class="jatek-kartya">
                             <div class="jatek-ikon">
                                 <i class="fas fa-dice"></i>
                             </div>
@@ -100,8 +113,8 @@
                                 <h3>Slot Machine</h3>
                                 <p>A legegyszerűbb, de legkockázatosabb játék. Egy gombnyomás, és a szerencse dönt.</p>
                                 <div class="jatek-eselyek">
-                                    <span class="esely-cimke">Átlagos nyerési esély:</span>
-                                    <span class="esely-ertek">~2-10% (hosszútávon)</span>
+                                    <span class="esely-cimke">Átlagos profitálási esély:</span>
+                                    <span class="esely-ertek">Szimuláció alapján: 21.88%</span>
                                 </div>
                             </div>
                             <div class="jatek-akcio">
@@ -122,8 +135,8 @@
                                 <h3>Roulette</h3>
                                 <p>A casino klasszikus kereke. Tedd a téted piros vagy fekete színre, számokra, vagy kombinációkra.</p>
                                 <div class="jatek-eselyek">
-                                    <span class="esely-cimke">Átlagos nyerési esély:</span>
-                                    <span class="esely-ertek">~47-49%</span>
+                                    <span class="esely-cimke">Átlagos profitálási esély:</span>
+                                    <span class="esely-ertek">Szimuláció alapján: 48.65% (szín/páros)</span>
                                 </div>
                             </div>
                             <div class="jatek-akcio">
@@ -141,8 +154,8 @@
                                 <h3>Texas Hold'em</h3>
                                 <p>Stratégia és szerencse keveréke. Tedd próbára a készségeidet virtuális ellenfelekkel szemben.</p>
                                 <div class="jatek-eselyek">
-                                    <span class="esely-cimke">Átlagos nyerési esély:</span>
-                                    <span class="esely-ertek">Stratégiafüggő (25-35%)   </span>
+                                    <span class="esely-cimke">Átlagos profitálási esély:</span>
+                                    <span class="esely-ertek">Szimuláció alapján: 48.22%</span>
                                 </div>
                             </div>
                             <div class="jatek-akcio">
@@ -164,12 +177,6 @@
 
         <footer class="footer">
             <div class="container">
-                <div class="footer-links d-flex gap-3 justify-content-center flex-wrap mb-3">
-                    <a href="#">Adatvédelem</a>
-                    <a href="#">Felhasználási feltételek</a>
-                    <a href="#">Kapcsolat</a>
-                    <a href="#">GYIK</a>
-                </div>
                 <div class="footer-copyright text-center small">
                     <p>&copy; 2026 TrueChance. Minden jog fenntartva. Ez egy oktatási célú szimulátor.</p>
                     <p class="mt-2" style="font-size: 0.8rem">
@@ -182,6 +189,7 @@
         </footer>
 
         <script src="../bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="../javascript/auth-check.js"></script>
         <script src="../javascript/games.js"></script>
     </body>
 </html>

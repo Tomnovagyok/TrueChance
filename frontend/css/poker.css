@@ -5,54 +5,55 @@
     min-height: 100vh;
     width: 100%;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
-    padding: 120px 0px;
-    position: relative; /* hogy a ::before pszeudo-element pozícionálható legyen */
+    padding: 120px 20px 40px 20px;
+    position: relative;
 }
-    
+
 .poker-szekcio::before {
-    content: ''; /* ez kell a pszeudo-element megjelenítéséhez */
-    position: absolute; 
+    content: '';
+    position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
     background: radial-gradient(ellipse at 50% 50%, rgba(140, 92, 255, 0.1) 25%, transparent 200%);
-    pointer-events: none; /* biztosítja, hogy a háttér ne zavarja a kattintásokat */
+    pointer-events: none;
 }
 
 /* poker kontener */
 .poker-kontener {
     position: relative;
     width: 100%;
-    max-width: 1200px;
+    max-width: 1600px;
     display: flex;
-    flex-direction: column-reverse; /* a jatek-info-panel legyen alul, asztal felül */
-    overflow: hidden; /* megakadályozza a vízszintes görgetést kis kijelzőkön */
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
 }
 
 /* Poker asztal */
 .poker-asztal {
     position: relative;
-    width: 98%;
-    max-width: 1190px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto;
+    width: 100%;
+    max-width: 1150px;
+    aspect-ratio: 2490 / 1635; /* Truechance_table.png aránya */
+    overflow: hidden;
+    transform: scale(1.08);
+    transform-origin: center center;
 }
 
-.asztal-hatter {
-    position: relative;
+.asztal-hatter,
+.asztal-kep {
     width: 100%;
+    height: 100%;
 }
 
 .asztal-kep {
-    width: 100%;
-    height: auto;
+    object-fit: cover;      /* kitölti ugyanazt a "helyet" */
+    object-position: center;
     display: block;
-    filter: drop-shadow(0 8px 32px rgba(0, 0, 0, 0.6)); /* árnyék az asztalnak */
 }
 
 /* Kártyák az asztalon */
@@ -65,36 +66,246 @@
     pointer-events: none;
 }
 
-.kozos-kartyak {
+/* Ellenfél, közös és játékos kártyák pozicionálása */
+.ellenfel-kartyak,
+.kozos-kartyak,
+.jatekos-kartyak {
     display: flex;
-    gap: 10px;
+    gap: 0;
     position: absolute;
-    top: 37%; /* függőlegesen középre */
-    left: 50%; /* vízszintesen középre */
-    transform: translateX(-50%); /* vízszintesen középre */
-    cursor: pointer;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
-.kartya-hely {
-    width: 120px;
+.ellenfel-kartyak {
+    top: 24.5%;
+}
+
+.kozos-kartyak {
+    top: 42.5%;
+}
+
+.jatekos-kartyak {
+    top: 61.5%;
+}
+
+/* Kártya stílus */
+.kartya {
+    width: 80px;
     height: auto;
     border-radius: 0.5rem;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    margin-left: -20px;
+}
+
+.kartya:first-child {
+    margin-left: 0;
+}
+
+.kartya.nyertes {
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+    border: 2px solid gold;
 }
 
 /* Info panel */
 .jatek-info-panel {
     display: flex;
-    justify-content: center;
-    gap: 1.5rem;
-    padding: 0.75rem 1.5rem;
+    justify-content: space-around;
+    gap: 2rem;
+    padding: 1rem 2rem;
     background: rgba(42, 44, 51, 0.5);
     border: 1px solid #33353a;
     border-radius: 1.5rem;
     backdrop-filter: blur(12px);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    max-width: 600px;
-    margin: 0 auto;
+    width: 90%;
+    max-width: 1200px;
+}
+
+/* Játék terület layout */
+.jatek-terulet {
+    display: flex;
+    gap: 25px;
+    align-items: flex-start;
+    justify-content: center;
+    width: 100%;
+    --statisztika-szelesseg: 320px;
+    --statisztika-gap: 14px;
+}
+
+/* Bal panel */
+.bal-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 280px;
+    flex-shrink: 0;
+    padding-top: 0;
+}
+
+/* Gombok és számok egymás mellett */
+.gombok-szamok {
+    display: flex;
+    gap: 15px;
+    align-items: stretch;
+}
+
+/* Gomb oszlop */
+.gomb-oszlop {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 120px;
+}
+
+.gomb-oszlop .btn {
+    width: 100%;
+    padding: 10px;
+    font-size: 0.85rem;
+}
+
+/* Szám oszlop */
+.szam-oszlop {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 120px;
+    flex: 1;
+}
+
+/* Pont doboz */
+.pont-doboz {
+    background: rgba(42, 44, 51, 0.8);
+    border: 1px solid #33353a;
+    border-radius: 0.75rem;
+    padding: 15px 10px;
+    text-align: center;
+    backdrop-filter: blur(12px);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.pont-cimke {
+    color: #a0a0a0;
+    font-size: 0.7rem;
+    margin-bottom: 4px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.pont-ertek {
+    color: #8c5cff;
+    font-size: 1.2rem;
+    font-weight: bold;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Asztal wrapper */
+.asztal-wrapper {
+    flex: 1;
+    max-width: 1150px;
+    transition: none;
+}
+
+.jatek-terulet.statisztika-aktiv .asztal-wrapper {
+    transform: translateX(calc(-0.05 * (var(--statisztika-szelesseg) + var(--statisztika-gap))));
+}
+
+.statisztika-panel {
+    width: var(--statisztika-szelesseg);
+    margin-left: var(--statisztika-gap);
+    flex-shrink: 0;
+    display: none;
+}
+
+.jatek-terulet.statisztika-aktiv .statisztika-panel {
+    display: block;
+}
+
+.statisztika-info-doboz {
+    width: 100%;
+    padding: 1.2rem;
+    background: rgba(42, 44, 51, 0.5);
+    border: 1px solid #33353a;
+    backdrop-filter: blur(12px);
+    border-radius: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.statisztika-fejlec {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.3rem;
+}
+
+.statisztika-fejlec i {
+    font-size: 1.2rem;
+    color: #8c5cff;
+}
+
+.statisztika-fejlec h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #f0f0f0;
+    font-family: 'Poppins', sans-serif;
+}
+
+.statisztika-kartya {
+    background: rgba(26, 27, 30, 0.7);
+    border: 1px solid #33353a;
+    border-radius: 0.9rem;
+    padding: 0.9rem;
+}
+
+.statisztika-cimke {
+    color: #a0a0a0;
+    font-size: 0.74rem;
+    margin-bottom: 0.4rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-family: 'Poppins', sans-serif;
+}
+
+.statisztika-kartya p {
+    margin: 0;
+    color: #f0f0f0;
+    font-size: 0.98rem;
+    font-weight: 600;
+    line-height: 1.45;
+    font-family: 'Poppins', sans-serif;
+}
+
+.statisztika-kartya p + p {
+    margin-top: 0.25rem;
+}
+
+.statisztika-ertekek {
+    margin-top: 0;
+    padding-top: 0.6rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.statisztika-ertekek p {
+    margin: 0;
+    color: #a0a0a0;
+    font-size: 0.88rem;
+    line-height: 1.55;
+    font-family: 'Poppins', sans-serif;
+}
+
+.statisztika-ertekek p + p {
+    margin-top: 0.32rem;
+}
+
+.statisztika-gomb.active {
+    background: #8c5cff;
+    border-color: #8c5cff;
+    color: #f0f0f0;
+    box-shadow: 0 0 20px rgba(140, 92, 255, 0.4);
 }
 
 .info-elem {
@@ -121,28 +332,158 @@
     font-size: 1.1rem;
 }
 
+/* Eredmény üzenet stílusok */
+#eredmeny.nyert {
+    color: #4caf50;
+}
+
+#eredmeny.vesztett {
+    color: #f44336;
+}
+
+#eredmeny.dontetlen {
+    color: #ff9800;
+}
+
+/* Tét panel (emelés csúszka) */
+.tet-panel {
+    background: rgba(42, 44, 51, 0.8);
+    border: 1px solid #33353a;
+    border-radius: 0.75rem;
+    padding: 15px;
+    backdrop-filter: blur(12px);
+}
+
+.tet-cimke {
+    color: #a0a0a0;
+    font-size: 0.8rem;
+    margin-bottom: 8px;
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+}
+
+.tet-egyenleg {
+    color: #f0f0f0;
+    font-size: 0.75rem;
+    margin-bottom: 8px;
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+}
+
+.tet-egyenleg span {
+    color: #8c5cff;
+    font-weight: 600;
+}
+
+.tet-input {
+    width: 100%;
+    padding: 8px;
+    font-size: 0.9rem;
+    text-align: center;
+    border-radius: 0.4rem;
+    border: 1px solid #33353a;
+    background: rgba(42, 44, 51, 0.5);
+    color: #f0f0f0;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Tét csúszka stílus */
+.tet-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    background: rgba(42, 44, 51, 0.5);
+    border: 1px solid #33353a;
+    border-radius: 5px;
+    outline: none;
+    transition: all 0.2s;
+    margin-bottom: 10px;
+}
+
+.tet-slider:hover {
+    background: rgba(42, 44, 51, 0.8);
+}
+
+.tet-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #8c5cff;
+    border: 2px solid #f0f0f0;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.tet-slider::-webkit-slider-thumb:hover {
+    background: #9d75ff;
+    box-shadow: 0 0 12px rgba(140, 92, 255, 0.6);
+    transform: scale(1.1);
+}
+
+.tet-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #8c5cff;
+    border: 2px solid #f0f0f0;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.tet-slider::-moz-range-thumb:hover {
+    background: #9d75ff;
+    box-shadow: 0 0 12px rgba(140, 92, 255, 0.6);
+    transform: scale(1.1);
+}
+
+@media (max-width: 1400px) {
+    .jatek-terulet {
+        --statisztika-szelesseg: 290px;
+        --statisztika-gap: 12px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .statisztika-panel {
+        display: none !important;
+    }
+
+    .jatek-terulet.statisztika-aktiv .asztal-wrapper {
+        transform: none;
+    }
+}
+
 /* Reszponzív */
 @media (max-width: 992px) {
     .poker-asztal {
         width: 100%;
-        transform: scale(1.3); /* nagyítás tablet nézetben */
-        transform-origin: center center; /* biztosítja, hogy a nagyítás középpontja az asztal közepe legyen */
+        transform: scale(1.1);
+        transform-origin: center center;
         margin-top: 20px;
         margin-bottom: 20px;
     }
 
-    .kozos-kartyak {
-        gap: 10px;
-        top: 38%;
-    }
-
-    .kartya-hely {
-        width: 75px;
+    .kartya {
+        width: 60px;
+        margin-left: -15px;
     }
 
     .jatek-info-panel {
         flex-direction: column;
         gap: 0.5rem;
+    }
+
+    .jatek-terulet {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .bal-panel {
+        width: 100%;
+        max-width: 300px;
     }
 }
 
@@ -153,27 +494,15 @@
 
     .poker-asztal {
         width: 100%;
-        transform: scale(1.3); /* azonos nagyítás mint tablet nézetben */
+        transform: scale(1.2);
         transform-origin: center center;
         margin-top: 20px;
         margin-bottom: 20px;
     }
 
-    .kozos-kartyak {
-        gap: 4px;
-        top: 38%;
-    }
-
-    .kartya-hely {
-        width: 48px;
-    }
-
-    .kartya-placeholder {
-        border-width: 1px;
-    }
-
-    .kartya-placeholder i {
-        font-size: 0.7rem;
+    .kartya {
+        width: 45px;
+        margin-left: -10px;
     }
 
     .jatek-info-panel {

@@ -1,0 +1,115 @@
+/* Ranglista oldal CSS */
+
+.ranglista-szekcio {
+    min-height: 100vh;
+    padding-top: 120px;
+    padding-bottom: 80px;
+}
+
+.ranglista-fejlec {
+    margin-bottom: 3rem;
+}
+
+.ranglista-cim {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #f0f0f0;
+    margin-bottom: 0.5rem;
+}
+
+.ranglista-alcim {
+    font-size: 1.1rem;
+    color: #a0a0a0;
+}
+
+.ranglista-kartya {
+    padding: 2rem;
+}
+
+.kartya-fejlec {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #f0f0f0;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #8c5cff;
+}
+
+.kartya-fejlec i {
+    color: #8c5cff;
+}
+
+.ranglista-tabla {
+    background: #1a1b1e !important;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 0;
+    border: 1px solid #33353a;
+    border-bottom: 2px solid #8c5cff !important;
+}
+
+.ranglista-tabla thead {
+    background: #0f1012 !important;
+    border-bottom: 2px solid #8c5cff;
+}
+
+.ranglista-tabla thead th {
+    color: #8c5cff;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: none;
+    padding: 14px;
+    background-color: transparent !important;
+}
+
+.ranglista-tabla tbody tr {
+    border-bottom: 1px solid rgba(51, 53, 58, 0.3);
+    background: #1a1b1e !important;
+}
+
+.ranglista-tabla tbody tr:hover {
+    background: rgba(140, 92, 255, 0.15) !important;
+}
+
+.ranglista-tabla tbody td {
+    color: #f0f0f0;
+    padding: 14px;
+    background-color: transparent !important;
+    vertical-align: middle;
+}
+
+.helyezes-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #8c5cff;
+    background: rgba(140, 92, 255, 0.15);
+    border: 1px solid rgba(140, 92, 255, 0.35);
+}
+
+.egyenleg-oszlop {
+    color: #52c47a !important;
+    font-weight: 600;
+}
+
+#uresAllapot i {
+    color: #8c5cff;
+}
+
+@media (max-width: 768px) {
+    .ranglista-cim {
+        font-size: 2rem;
+    }
+
+    .ranglista-alcim {
+        font-size: 1rem;
+    }
+
+    .ranglista-kartya {
+        padding: 1.5rem;
+    }
+}
