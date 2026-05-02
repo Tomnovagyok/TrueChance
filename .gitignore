@@ -1,2 +1,9 @@
 # node_modules mappák ignorálása mindenhol
 **/node_modules/
+
+# macOS metadata
+._*
+.DS_Store
+
+# VS/VS Code workspace cache
+.vs/

@@ -1,0 +1,583 @@
+/* Slot oldal */
+
+/* slot szekció */
+.slot-szekcio {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 20px 40px;
+    position: relative;
+}
+
+/* Háttér lila glowing hatás */
+.slot-szekcio::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(ellipse at 50% 50%, rgba(140, 92, 255, 0.1) 25%, transparent 200%);
+    pointer-events: none;
+}
+
+/* Slot kontener - mindent összefog */
+.slot-kontener {
+    position: relative;
+    width: 100%;
+    max-width: 1460px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+/* Navbar */
+.navbar-slot {
+    background: rgba(42, 44, 51, 0.8);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid #33353a;
+    padding: 0.25rem 0;
+}
+
+.slot-jatek-terulet {
+    width: 100%;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    gap: 14px;
+}
+
+.slot-kozep-panel {
+    width: 100%;
+    max-width: 700px;
+    flex-shrink: 0;
+}
+
+.gepkep-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 700px;
+    user-select: none;
+}
+
+.statisztika-panel {
+    width: 300px;
+    display: none;
+    flex-shrink: 0;
+    align-items: center;
+}
+
+.slot-kontener.statisztika-aktiv .statisztika-panel {
+    display: flex;
+}
+
+.statisztika-info-doboz {
+    width: 100%;
+    height: 400px;
+    min-height: 400px;
+    max-height: 400px;
+    padding: 1.2rem;
+    background: rgba(42, 44, 51, 0.5);
+    border: 1px solid #33353a;
+    backdrop-filter: blur(12px);
+    border-radius: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    overflow: hidden;
+}
+
+.statisztika-fejlec {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.3rem;
+}
+
+.statisztika-fejlec i {
+    font-size: 1.2rem;
+    color: #8c5cff;
+}
+
+.statisztika-fejlec h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #f0f0f0;
+    font-family: 'Poppins', sans-serif;
+}
+
+.statisztika-kartya {
+    background: rgba(26, 27, 30, 0.7);
+    border: 1px solid #33353a;
+    border-radius: 0.9rem;
+    padding: 0.9rem;
+}
+
+.statisztika-cimke {
+    color: #a0a0a0;
+    font-size: 0.74rem;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-family: 'Poppins', sans-serif;
+}
+
+.statisztika-kartya p {
+    margin: 0;
+    color: #f0f0f0;
+    font-size: 0.9rem;
+    line-height: 1.55;
+    font-family: 'Poppins', sans-serif;
+}
+
+.statisztika-kartya p + p {
+    margin-top: 0.28rem;
+}
+
+.kiemelt-sor {
+    font-weight: 700;
+}
+
+.stat-profit-pozitiv {
+    color: #36d47f !important;
+}
+
+.stat-profit-negativ {
+    color: #ff6b6b !important;
+}
+
+.stat-profit-null {
+    color: #f0f0f0 !important;
+}
+
+.statisztika-gomb.active {
+    background: #8c5cff;
+    border-color: #8c5cff;
+    color: #f0f0f0;
+    box-shadow: 0 0 20px rgba(140, 92, 255, 0.4);
+}
+
+/* Maga a gép képe */
+.gep-kep {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 8px 32px rgba(0, 0, 0, 0.7));
+}
+
+/* Görgők wrapper */
+.reels-wrapper {
+    position: absolute;
+    top: 42%;
+    left: 26.2%;
+    width: 47.6%;
+    height: 30%;
+    display: flex;
+    gap: 0;
+    overflow: hidden;
+}
+
+.reels-wrapper::before,
+.reels-wrapper::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: rgba(140, 92, 255, 0.4);
+    z-index: 5;
+    pointer-events: none;
+}
+
+.reels-wrapper::before {
+    top: 33.33%;
+}
+
+.reels-wrapper::after {
+    top: 66.66%;
+}
+
+/* Egy görgedob */
+.reel-oszlop {
+    flex: 1;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+    border-left: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.reel-oszlop:first-child {
+    border-left: none;
+}
+
+/* Szalag */
+.reel-szalag {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.reel-gyumolcs {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.reel-gyumolcs img {
+    width: 80%;
+    height: 80%;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.3));
+}
+
+/* Spin gomb */
+.spin-gomb {
+    position: absolute;
+    left: 50%;
+    top: 85%;
+    transform: translate(-50%, -50%);
+    width: 14%;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    filter: drop-shadow(0 4px 12px rgba(140, 92, 255, 0.4));
+    transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.spin-gomb:hover:not(:disabled) {
+    filter: drop-shadow(0 6px 18px rgba(140, 92, 255, 0.7));
+    transform: translate(-50%, -50%) scale(1.05);
+}
+
+.spin-gomb.lenyomva {
+    transform: translate(-50%, -50%) scale(0.92);
+    filter: drop-shadow(0 2px 6px rgba(140, 92, 255, 0.3));
+}
+
+/* Pörgetés közben nem lehet újra kattintani */
+.spin-gomb:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.spin-gomb-kep {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Info panel */
+.jatek-info-panel {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    padding: 0.75rem 1.5rem;
+    background: rgba(42, 44, 51, 0.5);
+    border: 1px solid #33353a;
+    border-radius: 1.5rem;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 700px;
+    flex-wrap: wrap;
+}
+
+.info-elem {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #f0f0f0;
+    font-family: 'Poppins', sans-serif;
+}
+
+.info-elem i {
+    color: #8c5cff;
+    font-size: 1.1rem;
+}
+
+.info-cimke {
+    color: #a0a0a0;
+    font-size: 0.85rem;
+}
+
+.info-ertek {
+    color: #f0f0f0;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+/* Tét panel */
+.tet-panel {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 10px 16px;
+    background: rgba(42, 44, 51, 0.5);
+    border: 1px solid #33353a;
+    border-radius: 1rem;
+    width: 100%;
+    max-width: 700px;
+}
+
+.tet-label {
+    color: #a0a0a0;
+    font-size: 0.85rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.tet-input-csoport {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+.tet-gyors-gomb {
+    background: rgba(42, 44, 51, 0.7);
+    border: 1px solid #33353a;
+    border-radius: 5px;
+    color: #a0a0a0;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.tet-gyors-gomb:hover {
+    background: rgba(140, 92, 255, 0.2);
+    border-color: #8c5cff;
+    color: #f0f0f0;
+}
+
+.tet-input {
+    width: 70px;
+    background: rgba(42, 44, 51, 0.7);
+    border: 1px solid #33353a;
+    border-radius: 5px;
+    color: #f0f0f0;
+    font-size: 0.85rem;
+    padding: 4px 8px;
+    text-align: center;
+}
+
+.tet-input:focus {
+    outline: none;
+    border-color: #8c5cff;
+    box-shadow: 0 0 8px rgba(140, 92, 255, 0.3);
+}
+
+/* Nyerési tábla */
+.nyeresitabla {
+    width: 100%;
+    max-width: 700px;
+    background: rgba(42, 44, 51, 0.4);
+    border: 1px solid #33353a;
+    border-radius: 1rem;
+    padding: 16px 20px;
+}
+
+.tabla-cim {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #f0f0f0;
+    margin-bottom: 6px;
+    text-align: center;
+}
+
+.tabla-leiras {
+    font-size: 0.8rem;
+    color: #a0a0a0;
+    text-align: center;
+    margin-bottom: 12px;
+}
+
+.tabla-grid {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 4px;
+}
+
+.tabla-grid thead th {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #a0a0a0;
+    text-align: center;
+    padding: 6px 4px;
+    border-bottom: 1px solid #33353a;
+}
+
+.tabla-grid thead th:first-child {
+    text-align: left;
+}
+
+.tabla-grid tbody tr {
+    background: rgba(42, 44, 51, 0.4);
+    border-radius: 0.5rem;
+    transition: background 0.15s ease;
+}
+
+.tabla-grid tbody tr:hover {
+    background: rgba(42, 44, 51, 0.8);
+}
+
+.tabla-grid tbody td {
+    padding: 6px 8px;
+    border-top: 1px solid #2a2c33;
+    border-bottom: 1px solid #2a2c33;
+}
+
+.tabla-grid tbody td:first-child {
+    border-left: 1px solid #2a2c33;
+    border-radius: 0.5rem 0 0 0.5rem;
+}
+
+.tabla-grid tbody td:last-child {
+    border-right: 1px solid #2a2c33;
+    border-radius: 0 0.5rem 0.5rem 0;
+}
+
+.tabla-szimbolum-cella {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.tabla-szimbolum-cella span {
+    font-size: 0.8rem;
+    color: #f0f0f0;
+    font-weight: 500;
+}
+
+.tabla-icon {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.4));
+}
+
+.tabla-ertek {
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #8c5cff;
+}
+
+.jackpot-ertek {
+    color: #ffd700;
+    text-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+}
+
+.tabla-jackpot-sor td {
+    border-color: rgba(255, 215, 0, 0.3);
+    background: rgba(255, 215, 0, 0.05);
+}
+
+.tabla-megjegyzes {
+    font-size: 0.75rem;
+    color: #a0a0a0;
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 0;
+}
+
+/* Eredmény üzenet */
+.eredmeny-uzenet {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px 40px;
+    border-radius: 1rem;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    text-align: center;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+}
+
+.eredmeny-uzenet.nyert {
+    background: rgba(39, 174, 96, 0.95);
+    border: 2px solid #2ecc71;
+    color: #fff;
+}
+
+.eredmeny-uzenet.vesztett {
+    background: rgba(192, 57, 43, 0.95);
+    border: 2px solid #e74c3c;
+    color: #fff;
+}
+
+.eredmeny-uzenet.kozel {
+    background: rgba(230, 160, 20, 0.95);
+    border: 2px solid #f39c12;
+    color: #fff;
+}
+
+.eredmeny-uzenet.jackpot-uzenet {
+    background: rgba(180, 130, 0, 0.97);
+    border: 2px solid #ffd700;
+    color: #fff;
+    font-size: 1.7rem;
+    text-shadow: 0 0 12px rgba(255, 215, 0, 0.7);
+}
+
+.eredmeny-uzenet.latszik {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Reszponzív */
+@media (max-width: 768px) {
+    .slot-szekcio {
+        padding: 70px 10px 30px;
+    }
+
+    .slot-jatek-terulet {
+        gap: 0;
+    }
+
+    .jatek-info-panel {
+        gap: 0.7rem;
+        padding: 0.6rem 1rem;
+    }
+
+    .nyeresitabla {
+        padding: 12px 14px;
+    }
+}
+
+@media (max-width: 1300px) {
+    .statisztika-panel {
+        display: none !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .tet-panel {
+        gap: 6px;
+    }
+
+    .tet-gyors-gomb {
+        padding: 3px 7px;
+        font-size: 0.7rem;
+    }
+}

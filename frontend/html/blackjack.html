@@ -25,33 +25,47 @@
 
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <div class="felhasznalo-szekcio ms-auto">
+                        <a href="ranglista.html" class="statisztika-gomb text-decoration-none">
+                            <i class="fas fa-trophy me-2"></i>
+                            <span>Ranglista</span>
+                        </a>
+
                         <button type="button" id="statsToggleBtn" class="statisztika-gomb" title="Statisztikai Betekintő">
                             <i class="fas fa-chart-bar me-2"></i>
                             <span>Statisztikai Betekintő</span>
                         </button>
+
+                        <div class="navbar-egyenleg">
+                            <i class="fas fa-coins"></i>
+                            <span id="navbarEgyenleg">$0</span>
+                        </div>
 
                         <div class="dropdown">
                             <button class="profil-gomb dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown">
                                 <div class="profil-avatar">
                                     <i class="fas fa-user"></i>
                                 </div>
-                                <span class="profil-nev">Felhasználó</span> <!--itt később majd maga a felhasználó neve fog szerepelni-->
+                                <span class="profil-nev">Felhasználó</span>
+                                <!--itt később majd maga a felhasználó neve fog szerepelni-->
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end dropdown-lista">
                                 <li>
-                                    <a class="dropdown-item"><i class="fas fa-user me-2"></i>Profilom</a>
+                                    <a class="dropdown-item" href="profil.html"><i class="fas fa-user me-2"></i>Profilom</a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item"><i class="fas fa-chart-line me-2"></i>Statisztikáim</a>
+                                    <a class="dropdown-item" href="statisztikaim.html"><i class="fas fa-chart-line me-2"></i>Statisztikáim</a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item"><i class="fas fa-cog me-2"></i>Beállítások</a>
+                                    <a class="dropdown-item" href="daily-cash.html"><i class="fas fa-gift me-2"></i>Daily Cash</a>
+                                </li>
+                                <li class="admin-menu-pont d-none">
+                                    <a class="dropdown-item" href="admin.html"><i class="fas fa-user-shield me-2"></i>Admin menü</a>
                                 </li>
                                 <li>
-                                    <hr class="dropdown-divider"/>
+                                    <hr class="dropdown-divider" />
                                 </li>
                                 <li>
-                                    <a class="dropdown-item text-danger" href="index.html"><i class="fas fa-sign-out me-2"></i>Kilépés</a>
+                                    <a class="dropdown-item text-danger" href="#" id="kilepesLink"><i class="fas fa-sign-out me-2"></i>Kilépés</a>
                                 </li>
                             </ul>
                         </div>
@@ -62,43 +76,107 @@
 
         <section class="blackjack-szekcio">
             <div class="blackjack-kontener">
-                <div class="blackjack-asztal">
-                    <div class="asztal-hatter">
-                        <img src="../img/Truechance_table.png" alt="Blackjack asztal" class="asztal-kep" />
-                    </div>
-
-                    <div class="kartyak-overlay">
-                        <!--Osztó lapjai - felül, középen -->
-                        <div class="oszto-kartyak">
-                            <!--Egyelőre mindkét lap backside -->
-                            <img src="../img/Kártyák/Backside.png" alt="kártya hátlap" class="kartya" />
-                            <img src="../img/Kártyák/Backside.png" alt="kártya hátlap" class="kartya" />
-                        </div>
-
-                        <!--Játékos lapjai - alul, középen -->
-                        <div class="jatekos-kartyak">
-                            <!--Alapból 1 backside, 1 felfordított lap -->
-                            <img src="../img/Kártyák/Backside.png" alt="kártya hátlap" class="kartya" />
-                            <img src="../img/Kártyák/Pikk/A.png" alt="pikk ász" class="kartya" />
-                        </div>
-                    </div>
-                </div>
-
+                <!-- Állapotjelző felül -->
                 <div class="jatek-info-panel">
                     <div class="info-elem">
                         <i class="fas fa-coins"></i>
                         <span class="info-cimke">Tét:</span>
-                        <span class="info-ertek">$0</span>
+                        <span class="info-ertek" id="tetMutato">$0</span>
                     </div>
                     <div class="info-elem">
                         <i class="fas fa-circle-notch"></i>
-                        <span class="info-cimke">Kör:</span>
-                        <span class="info-ertek">Várakozás</span>
+                        <span class="info-cimke">Állapot:</span>
+                        <span class="info-ertek" id="pontjaid">Állítsd be a tétet és indítsd a játékot!</span>
                     </div>
                     <div class="info-elem">
                         <i class="fas fa-wallet"></i>
                         <span class="info-cimke">Egyenleg:</span>
-                        <span class="info-ertek">$1000</span>
+                        <span class="info-ertek" id="egyenlegInfo">Betöltés...</span>
+                    </div>
+                </div>
+
+                <!-- Játék terület: Bal panel + Asztal -->
+                <div class="jatek-terulet">
+                    <!-- Bal oldal -->
+                    <div class="bal-panel">
+                        <!-- Gombok és számok sor -->
+                        <div class="gombok-szamok">
+                            <!-- Gombok -->
+                            <div class="gomb-oszlop">
+                                <button type="button" id="nextBtn" class="btn btn-success" disabled><i class="fas fa-plus-circle me-1"></i>Hit</button>
+                                <button type="button" id="standBtn" class="btn btn-warning" disabled><i class="fas fa-hand-paper me-1"></i>Stand</button>
+                                <button type="button" id="doubleBtn" class="btn btn-info" disabled><i class="fas fa-coins me-1"></i>Double</button>
+                                <button type="button" id="splitBtn" class="btn btn-secondary" disabled><i class="fas fa-clone me-1"></i>Split</button>
+                                <button type="button" id="resetBtn" class="btn btn-primary"><i class="fas fa-redo me-1"></i>Új Játék</button>
+                            </div>
+
+                            <!-- Pontszámok -->
+                            <div class="szam-oszlop">
+                                <div class="pont-doboz">
+                                    <div class="pont-cimke">Osztó</div>
+                                    <div class="pont-ertek" id="oszto_osszeg">-</div>
+                                </div>
+                                <div class="pont-doboz">
+                                    <div class="pont-cimke">Játékos</div>
+                                    <div class="pont-ertek" id="jatekos_osszeg">-</div>
+                                    <div class="pont-kez" id="jelenlegi_kez"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Csúszka -->
+                        <div id="tetPanel" class="tet-panel">
+                            <div class="tet-cimke">Tét összege</div>
+                            <div class="tet-egyenleg">Egyenleg: <span id="egyenlegMutato">$0</span></div>
+                            <input type="range" id="tetSlider" min="0" max="0" step="50" value="0" class="tet-slider" />
+                            <input type="number" id="tetInput" min="0" max="0" step="50" value="0" class="tet-input" />
+                            <button type="button" id="startGameBtn" class="btn btn-success tet-gomb"><i class="fas fa-play me-2"></i>Játék indítása</button>
+                        </div>
+                    </div>
+
+                    <!-- Asztal -->
+                    <div class="asztal-wrapper">
+                        <div class="blackjack-asztal" id="blackjackAsztal">
+                            <div class="asztal-hatter">
+                                <img src="../img/Truechance_table.png" alt="Blackjack asztal" class="asztal-kep" />
+                            </div>
+                            <div class="kartyak-overlay">
+                                <div class="oszto-kartyak" id="oszto"></div>
+                                <div class="jatekos-kartyak" id="kez"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Statisztika panel (jobb oldal) -->
+                    <div class="statisztika-panel" id="statisztikaPanel">
+                        <div class="statisztika-info-doboz">
+                            <div class="statisztika-fejlec">
+                                <i class="fas fa-chart-line"></i>
+                                <h3>Statisztikai Betekintő</h3>
+                            </div>
+
+                            <div class="lepesajanlo-kartya">
+                                <div class="lepesajanlo-cimke">Lépésajánló</div>
+                                <div class="lepesajanlo-sor">
+                                    <span class="strategia-chip strategia-h" id="stat-action-code">H</span>
+                                    <p id="stat-decision">Legjobb döntés: Húzás</p>
+                                </div>
+                            </div>
+
+                            <div class="lepesajanlo-kartya">
+                                <div class="lepesajanlo-cimke">Win Rate</div>
+                                <div class="lepesajanlo-sor winrate-sor">
+                                    <p id="stat-winrate">Session győzelmi arány: 0.0%</p>
+                                </div>
+                            </div>
+
+                            <div class="statisztika-ertekek">
+                                <p id="stat-house">Átlagos ház előny: 2.7%</p>
+                                <p id="stat-roi">Átlagos ROI: -3.5%</p>
+                                <p id="stat-session-profit">Session profit: $0.00</p>
+                                <p id="stat-session-rounds">Session körök: 0</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -106,12 +184,6 @@
 
         <footer class="footer">
             <div class="container">
-                <div class="footer-links d-flex gap-3 justify-content-center flex-wrap mb-3">
-                    <a href="#">Adatvédelem</a>
-                    <a href="#">Felhasználási feltételek</a>
-                    <a href="#">Kapcsolat</a>
-                    <a href="#">GYIK</a>
-                </div>
                 <div class="footer-copyright text-center small">
                     <p>&copy; 2026 TrueChance. Minden jog fenntartva. Ez egy oktatási célú szimulátor.</p>
                     <p class="mt-2" style="font-size: 0.8rem">
@@ -124,5 +196,7 @@
         </footer>
 
         <script src="../bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="../javascript/auth-check.js"></script>
+        <script src="../javascript/blackjack.js"></script>
     </body>
 </html>

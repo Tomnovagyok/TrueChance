@@ -33,7 +33,8 @@ p {
 .navbar-jatekok,
 .navbar-poker,
 .navbar-blackjack,
-.navbar-roulette {
+.navbar-roulette,
+.navbar-slot {
   background: rgba(42, 44, 51, 0.8);
   backdrop-filter: blur(12px); /* ez adja az üveg/átlátszó hatást */
   border-bottom: 1px solid #33353a;
@@ -89,6 +90,37 @@ p {
   border-color: #8c5cff;
   color: #f0f0f0;
   box-shadow: 0 0 20px rgba(140, 92, 255, 0.4);
+}
+
+/* Egyenleg megjelenítése a navbar-ban */
+.navbar-egyenleg {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 8px 16px;
+  background: rgba(42, 44, 51, 0.5);
+  border: 1px solid #33353a;
+  border-radius: 50px;
+  color: #52c47a;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.navbar-egyenleg i {
+  color: #ffd700;
+  font-size: 1rem;
+}
+
+/* Reszponzív viselkedés */
+@media (max-width: 768px) {
+  .navbar-egyenleg {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
+  
+  .navbar-egyenleg i {
+    font-size: 0.9rem;
+  }
 }
 
 /* bejelentkezés utáni oldalakon */

@@ -1,0 +1,264 @@
+/* Profil oldal CSS */
+
+.profil-szekcio {
+    min-height: 100vh;
+    padding-top: 120px;
+    padding-bottom: 80px;
+}
+
+.profil-fejlec {
+    margin-bottom: 3rem;
+}
+
+.profil-cim {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #f0f0f0;
+    margin-bottom: 0.5rem;
+}
+
+.profil-alcim {
+    font-size: 1.1rem;
+    color: #a0a0a0;
+}
+
+/* Kártya fejléc */
+.kartya-fejlec {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #f0f0f0;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #8c5cff;
+}
+
+.kartya-fejlec i {
+    color: #8c5cff;
+}
+
+/* Profil kártya */
+.profil-kartya {
+    padding: 2rem;
+}
+
+/* Form inputok */
+.profil-input {
+    background: #2a2c33;
+    border: 1px solid #33353a;
+    color: #f0f0f0;
+    border-radius: 8px;
+    padding: 10px 14px;
+}
+
+.profil-input:focus {
+    background: #2a2c33;
+    border-color: #8c5cff;
+    color: #f0f0f0;
+    box-shadow: 0 0 0 3px rgba(140, 92, 255, 0.15);
+}
+
+.profil-input:disabled {
+    background: #1a1b1e;
+    border-color: #33353a;
+    color: #a0a0a0;
+    cursor: not-allowed;
+}
+
+.form-label {
+    color: #a0a0a0;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 0.4rem;
+}
+
+/* Üzenet */
+.profil-uzenet {
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-top: 0.5rem;
+}
+
+.profil-uzenet-siker {
+    background: rgba(52, 168, 83, 0.15);
+    color: #34a853;
+    border: 1px solid rgba(52, 168, 83, 0.3);
+}
+
+.profil-uzenet-hiba {
+    background: rgba(234, 67, 53, 0.15);
+    color: #ea4335;
+    border: 1px solid rgba(234, 67, 53, 0.3);
+}
+
+/* Stat dobozok */
+.stat-doboz {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px;
+    background: rgba(42, 44, 51, 0.4);
+    border: 1px solid #33353a;
+    border-radius: 10px;
+    transition: background 0.2s ease;
+}
+
+.stat-doboz:hover {
+    background: rgba(42, 44, 51, 0.7);
+}
+
+.stat-ikon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    font-size: 1.1rem;
+}
+
+.egyenleg-ikon {
+    background: rgba(140, 92, 255, 0.2);
+    color: #8c5cff;
+}
+
+.jatek-ikon {
+    background: rgba(255, 215, 0, 0.2);
+    color: #ffd700;
+}
+
+.eljatszott-ikon {
+    background: rgba(255, 165, 0, 0.2);
+    color: #ffa500;
+}
+
+.nyert-ikon {
+    background: rgba(52, 168, 83, 0.2);
+    color: #34a853;
+}
+
+.vesztett-ikon {
+    background: rgba(234, 67, 53, 0.2);
+    color: #ea4335;
+}
+
+.profit-ikon {
+    background: rgba(33, 150, 243, 0.2);
+    color: #2196f3;
+}
+
+.stat-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-cimke {
+    font-size: 0.8rem;
+    color: #a0a0a0;
+    font-weight: 500;
+}
+
+.stat-ertek {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #f0f0f0;
+}
+
+.nyert-szin {
+    color: #34a853 !important;
+}
+
+.vesztett-szin {
+    color: #ea4335 !important;
+}
+
+/* Játékonkénti nyerési esélyek */
+.esely-doboz {
+    padding: 14px;
+    background: rgba(42, 44, 51, 0.4);
+    border: 1px solid #33353a;
+    border-radius: 10px;
+    transition: background 0.2s ease;
+}
+
+.esely-doboz:hover {
+    background: rgba(42, 44, 51, 0.7);
+}
+
+.esely-fejlec {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    font-size: 1rem;
+}
+
+.esely-fejlec i {
+    font-size: 1.1rem;
+}
+
+.esely-nev {
+    font-weight: 600;
+    color: #f0f0f0;
+}
+
+.esely-progress-kontener {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+}
+
+.esely-progress-bar {
+    flex: 1;
+    height: 8px;
+    background: rgba(42, 44, 51, 0.8);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.esely-progress-kitoltes {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.5s ease;
+}
+
+.esely-szazalek {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #f0f0f0;
+    min-width: 45px;
+    text-align: right;
+}
+
+.esely-korok {
+    font-size: 0.8rem;
+    color: #a0a0a0;
+}
+
+/* Betöltés */
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+    border-width: 0.3rem;
+}
+
+/* Reszponzív */
+@media (max-width: 768px) {
+    .profil-cim {
+        font-size: 2rem;
+    }
+
+    .profil-alcim {
+        font-size: 1rem;
+    }
+
+    .profil-kartya {
+        padding: 1.5rem;
+    }
+
+    .stat-ertek {
+        font-size: 1rem;
+    }
+}

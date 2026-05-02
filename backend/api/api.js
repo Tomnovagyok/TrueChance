@@ -1,44 +1,57 @@
 const express = require('express');
 const router = express.Router();
-const database = require('../sql/database.js');
-const fs = require('fs/promises');
 
-//!Multer
-const multer = require('multer'); //?npm install multer
-const path = require('path');
+//!Multer - fájlfeltöltéshez (egyelőre nem használjuk, de a template-ben benne volt)
 
-const storage = multer.diskStorage({
-    destination: (request, file, callback) => {
-        callback(null, path.join(__dirname, '../uploads'));
-    },
-    filename: (request, file, callback) => {
-        callback(null, Date.now() + '-' + file.originalname); //?egyedi név: dátum - file eredeti neve
-    }
-});
+//!Auth router bekötése
+//?  A bejelentkezés, regisztráció, kijelentkezés és session ellenőrzés
+//?  a /api/auth/... útvonalon érhetők el
+const authRouter = require('./auth.js');
+router.use('/auth', authRouter);
 
-const upload = multer({ storage });
+//!Slot router bekötése
+const slotRouter = require('./slot.js');
+router.use('/slot', slotRouter);
 
-//!Endpoints:
-//?GET /api/test
+//!Roulette router bekötése
+const rouletteRouter = require('./roulette.js');
+router.use('/roulette', rouletteRouter);
+
+//!Stats router bekötése
+//?  A statisztikák lekérése a /api/stats/... útvonalon
+const statsRouter = require('./stats.js');
+router.use('/stats', statsRouter);
+
+//!Profile router bekötése
+const profileRouter = require('./profile.js');
+router.use('/profile', profileRouter);
+
+//!Admin router bekötése
+const adminRouter = require('./admin.js');
+router.use('/admin', adminRouter);
+
+//!Ranglista router bekötése
+const ranglistaRouter = require('./ranglista.js');
+router.use('/ranglista', ranglistaRouter);
+
+//!Daily cash router bekötése
+const dailyCashRouter = require('./daily-cash.js');
+router.use('/daily-cash', dailyCashRouter);
+
+//!Blackjack router bekötése
+const blackjackRouter = require('./blackjack.js');
+router.use('/blackjack', blackjackRouter);
+
+//!Poker router bekötése
+const pokerRouter = require('./poker.js');
+router.use('/', pokerRouter); // A poker.js-ben már /poker/ prefix van az útvonalakon
+
+//!Teszt endpoint
+//?GET /api/test - gyors ellenőrzés, hogy a szerver él-e
 router.get('/test', (request, response) => {
     response.status(200).json({
         message: 'Ez a végpont működik.'
     });
-});
-
-//?GET /api/testsql
-router.get('/testsql', async (request, response) => {
-    try {
-        const selectall = await database.selectall();
-        response.status(200).json({
-            message: 'Ez a végpont működik.',
-            results: selectall
-        });
-    } catch (error) {
-        response.status(500).json({
-            message: 'Ez a végpont nem működik.'
-        });
-    }
 });
 
 module.exports = router;
