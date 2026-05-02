@@ -1,154 +1,131 @@
-<h1 align="center">TrueChance - Vizsgaremek</h1>
+# TrueChance - Casino szimulátor (vizsgaremek)
 
-## readme.md preview megnyitása:<br>
+A **TrueChance** egy teljes stackes, böngészőből futó kaszinó szimulátor projekt.  
+A frontend statikus fájlokból áll (HTML/CSS/JavaScript), a backend pedig Node.js + Express alapon fut, MySQL adatbázissal.
 
-`Ctrl + Shift + V`<br>
+## Mi van benne?
 
-## package.json fájl létrehozása, amennyiben nem létezik:<br>
+- Felhasználói rendszer: regisztráció, bejelentkezés, kijelentkezés, session-kezelés
+- Játékok: **Slot**, **Roulette**, **Blackjack**, **Texas Hold'em Poker**
+- Kiegészítő oldalak: **Daily Cash**, **Statisztikáim**, **Ranglista**, **Profil**
+- Admin felület felhasználó-kezeléssel
+- Játékmenet naplózás és statisztika
 
-1. Terminal megnyitása.<br>
+## Tech stack
 
-2. npm init<br>
+- **Frontend:** Vanilla JS, Bootstrap (lokálisan a projektben)
+- **Backend:** Node.js, Express, express-session, bcrypt, mysql2
+- **Adatbázis:** MySQL
 
-3. **Package name:** A projekt neve<br>
+## Projektstruktúra
 
-4. **Version:** Elég egy entert nyomni<br>
-
-5. **Description:** Leírása a projektnek _(valamilyen stringet megadunk, majd enter)_<br>
-
-6. **Entry point:** elég egy entert nyomnunk<br>
-
-7. **Test command:** elég egy entert nyomnunk<br>
-
-8. **Git repository:** elég egy entert nyomnunk<br>
-
-9. **Keywords:** elég egy entert nyomnunk<br>
-
-10. **Author:** beírhatjuk a saját nevünket<br>
-
-11. **License:** elég egy entert nyomnunk<br>
-
-12. Ezután megjelenik az, hogy ez a fájl, amit szeretnénk-e létrehozni, majd egy enter megadásával létrehozhatjuk a **package.json** fájlt.<br>
-
-## NodeJS - Template project használata:<br>
-
-1. Töltsd le a Template project-et és csomagold ki.<br>
-
-2. Lépj be a backend mappába:<br>
-   `cd backend`<br>
-
-3. Telepítsd a függőségeket a backend mappába a következő parancs segítségével, amennyiben nincs node_modules mappa a backend mappában:<br>
-   `npm install`<br>
-
-4. Backend indítása fejlesztés alatt: _(Fájlok szerkesztésének az esetén újraindul a szerver.)_<br>
-   `npm run dev`<br>
-
-5. Backend indítása élesben: _(Fájlok szerkesztésének az esetén nem indul újra a szerver.)_<br>
-   `npm run start`<br>
-
-## NPM hiba esetén<br>
-
-Amennyiben a npm run start nem működik a következő hiba miatt:<br>
-
-```
-Cannot be loaded because running scripts is disabled on this system.
+```text
+Truechance/
+|- backend/
+|  |- api/
+|  |- sql/
+|  |- package.json
+|  |- server.js
+|  `- nodemon.json
+|- frontend/
+|  |- html/
+|  |- css/
+|  |- javascript/
+|  |- img/
+|  `- bootstrap/
+|- .gitignore
+|- .prettierrc
+`- readme.md
 ```
 
-#### Megoldás:<br>
+## Gyors indítás
 
-Át kell állítani a PowerShell végrehajtási házirendjét. Ezt rendszergazdai jogosultságokkal futó PowerShell-ben tudod megtenni:<br>
+### 1. Előfeltételek
 
-1. Nyisd meg a PowerShell-t.<br>
+- Node.js (ajánlott: LTS)
+- MySQL (pl. XAMPP MariaDB is jó)
 
-2. Állítsd be az Execution Policy-t a következő parancs segítségével:<br>
+### 2. Adatbázis létrehozása
 
+Importáld a sémát:
+
+- `backend/sql/truechance.sql`
+
+Opcióként teszt felhasználók:
+
+- `backend/sql/teszt-felhasznalok.sql`
+
+> A teszt felhasználók jelszava: `Teszt123!`
+
+### 3. Függőségek telepítése
+
+```bash
+cd backend
+npm install
 ```
+
+### 4. Szerver indítása
+
+Fejlesztés:
+
+```bash
+npm run dev
+```
+
+Éles mód:
+
+```bash
+npm start
+```
+
+### 5. Alkalmazás megnyitása
+
+- `http://127.0.0.1:3000`
+
+## Fontos oldalak
+
+- Publikus: `/html/index.html`, `/html/auth.html`
+- Védett: `/html/games.html`, `/html/slot.html`, `/html/roulette.html`, `/html/blackjack.html`, `/html/poker.html`, `/html/daily-cash.html`, `/html/statisztikaim.html`, `/html/ranglista.html`, `/html/profil.html`, `/html/admin.html`
+
+## API rövid áttekintés
+
+### Auth
+
+- `POST /api/auth/register`
+- `POST /api/auth/login`
+- `POST /api/auth/logout`
+- `GET /api/auth/me`
+
+### Játékok
+
+- Slot: `POST /api/slot/spin`, `GET /api/slot/statisztika`
+- Roulette: `POST /api/roulette/spin`
+- Blackjack: `GET /api/blackjack/user`, `POST /api/blackjack/init`, `POST /api/blackjack/hit`, `POST /api/blackjack/double`, `POST /api/blackjack/split`, `POST /api/blackjack/stand`
+- Poker: `GET /api/poker/statisztika`, `POST /api/poker/uj`, `GET /api/poker/allapot`, `POST /api/poker/check`, `POST /api/poker/call`, `POST /api/poker/raise`, `POST /api/poker/fold`
+
+### Egyéb
+
+- Daily Cash: `GET /api/daily-cash/allapot`, `POST /api/daily-cash/porgetes`
+- Profil: `GET /api/profile/adatok`, `PUT /api/profile/frissites`
+- Ranglista: `GET /api/ranglista/felhasznalok`
+- Statisztika: `GET /api/stats/jatekmenetek`
+- Admin: `GET /api/admin/felhasznalok`, `PUT /api/admin/felhasznalo/:id`
+
+## Jelenlegi fontos szabályok és működés
+
+- **Roulette:** Jelenleg kizárólag 1 összeggel lehet több tétet tenni
+- **Blackjack** Szigorú split (Teljesen egyező érték)
+
+## Gyakori hibák
+
+- PowerShell script tiltás esetén:
+
+```powershell
 Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
 ```
 
-3. Nyomj enter-t.
+- Foglalt port esetén:
 
-4. Zárd be és nyisd újra a VS Code-ot.
-
-## Használat:<br>
-
-Nyisd meg a böngésződben a **http://localhost:3000** címet.
-
-## Felhasznált npm package-ek backend-en:<br>
-
-`nodemon`<br>
-`express`<br>
-`express-session`<br>
-`multer`<br>
-`mysql2`<br>
-
-## nodemon.json felépítése:<br>
-
-1. **"watch": ["."]:** megadja, hogy a teljes projektmappát figyelje a nodemon.<br>
-
-2. **"ext": "js":** Ha bármely .js fájl változik → Nodemon újraindítja a szervert.<br>
-
-3. **"exec": "node server.js":** Ezt a parancsot futtatja a nodemon minden újraindításkor.<br>
-
-4. **"legacyWatch": true:** Engedélyezi a lassabb, de stabilabb fájlfigyelési módot.<br>
-
-5. **"usePolling": true:** Rendszeresen ellenőrzi, változott-e a fájl.<br>
-
-6. **"interval": 1000:** Meghatározza, hogy a polling milyen időközönként történjen az ellenőrzés.<br>
-
-```json
-{
-    "watch": ["."],
-    "ext": "js",
-    "exec": "node server.js",
-    "legacyWatch": true,
-    "watchOptions": {
-        "usePolling": true,
-        "interval": 1000
-    }
-}
+```bash
+npx kill-port 3000
 ```
-
-## .prettierrc fájl felépítése:<br>
-
-1. Létrehozunk a projektünkben a következő néven egy fájlt: .prettierrc<br>
-
-2. A fájlban nyitunk kapcsos zárójeleket, amelyek közé definiálhatjuk, hogy miket formázzon automatikusan a prettier<br>
-
-3. Beállítása annak, hogy minden idézőjel szimpla idézőjel legyen: ”singleQuote”: true (false értékkel minden szimpla rendes idézőjel lesz).<br>
-
-4. Annak beállítása, hogy legyen-e szóköz az objektum kapcsos zárójelei között: "bracketSpacing": true<br>
-
-5. Annak meghatározása, hogy maximum hány karakter hosszú lehet egy sor: "printWidth": 100<br>
-
-6. Beállítása annak, hogy a tabulátor hány szóközt érjen: "tabWidth": 4<br>
-
-7. Annak meghatározása, hogy egy objektum esetén az utolsó sor után ne szerepeljen vessző: "trailingComma": "none"<br>
-
-```
-{
-    "singleQuote": true,
-    "bracketSpacing": true,
-    "printWidth": 100,
-    "tabWidth": 4,
-    "trailingComma": "none"
-}
-```
-
-## .prettierrc használata:<br>
-
-1. Az Extensions fülben telepítsd a prettier-t.<br>
-
-2. Keresd meg a VS Code beállításokban az editor.defaultFormatter opciót és válasszuk ki a Prettiert, mint formázót.<br>
-
-3. Settings => Rákeresés a következőre: Format => Editor: Format On Save _(Ez legyen bekapcsolva)_<br>
-
-4. Keyboard shortcuts => Format document => CMD + P / CTRL + P<br>
-
-5. Egyéb: Prettier ignorálás: (sor elé) // prettier-ignore<br>
-
-## Amennyiben egy port-on továbbra is futna a szerver, viszont a terminal-t már bezártuk, így onnan nem tudjuk leállítani:<br>
-
-`npx kill-port port`<br>
-
-`npx kill-port 3000`<br>
