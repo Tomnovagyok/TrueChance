@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     const szerkesztesModal = new bootstrap.Modal(modalElem);
 
     let felhasznalok = [];
+    let aktualisAdminId = null;
 
     function uzenetMutat(szoveg, tipus) {
         adminUzenet.style.display = 'block';
@@ -98,6 +99,14 @@ document.addEventListener('DOMContentLoaded', async function () {
         modalFelhasznaloEmail.value = felhasznalo.email;
         modalFelhasznaloEgyenleg.value = Number(felhasznalo.egyenleg).toFixed(2);
         modalFelhasznaloAdminE.checked = !!felhasznalo.adminE;
+
+        const sajatFiokE = Number(felhasznalo.id) === Number(aktualisAdminId);
+        modalFelhasznaloAdminE.disabled = sajatFiokE;
+        if (sajatFiokE) {
+            modalFelhasznaloAdminE.title = 'Saját admin jogosultságod nem módosítható.';
+        } else {
+            modalFelhasznaloAdminE.removeAttribute('title');
+        }
     }
 
     async function felhasznalokBetolt() {
@@ -114,6 +123,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             window.location.replace('/html/games.html');
             return;
         }
+        aktualisAdminId = Number(aktualisFelhasznalo.id);
     } catch (error) {
         window.location.replace('/html/auth.html');
         return;
@@ -148,11 +158,25 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     mentesGomb.addEventListener('click', async function () {
         const felhasznaloId = Number(modalFelhasznaloId.value);
+        const szerkesztettFelhasznalo = felhasznalok.find(function (sor) {
+            return Number(sor.id) === felhasznaloId;
+        });
+
+        if (!szerkesztettFelhasznalo) {
+            uzenetMutat('A felhasználó már nem található.', 'hiba');
+            return;
+        }
+
+        let adminE = modalFelhasznaloAdminE.checked;
+        if (felhasznaloId === Number(aktualisAdminId)) {
+            adminE = !!szerkesztettFelhasznalo.adminE;
+        }
+
         const adat = {
             nev: modalFelhasznaloNev.value,
             email: modalFelhasznaloEmail.value,
             egyenleg: Number(modalFelhasznaloEgyenleg.value),
-            adminE: modalFelhasznaloAdminE.checked
+            adminE: adminE
         };
 
         mentesGomb.disabled = true;

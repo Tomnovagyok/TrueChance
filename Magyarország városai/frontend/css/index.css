@@ -1,0 +1,33 @@
+.imgSize {
+    width: 100%;
+    height: 600px;
+    object-fit: cover;
+}
+
+@media (max-width: 768px) {
+    .imgSize {
+        height: 200px;
+    }
+
+    td {
+        min-width: auto;
+    }
+
+    footer {
+        display: none;
+    }
+}
+
+.rowSize {
+    max-height: 512px;
+}
+
+.table-wrapper {
+    max-height: 512px;
+    overflow-x: auto;
+    overflow-y: auto;
+}
+
+td {
+    min-width: 100px;
+}

@@ -94,7 +94,12 @@ router.put('/felhasznalo/:id', async (request, response) => {
             return response.status(409).json({ uzenet: 'Ez az email cím már használatban van.' });
         }
 
-        await database.felhasznaloAdminFrissit(felhasznaloId, nev, email, egyenleg, adminE);
+        let vegalsoAdminE = adminE;
+        if (felhasznaloId === adminFelhasznalo.id) {
+            vegalsoAdminE = !!celFelhasznalo.admin_e;
+        }
+
+        await database.felhasznaloAdminFrissit(felhasznaloId, nev, email, egyenleg, vegalsoAdminE);
         const frissFelhasznalo = await database.felhasznaloIdAltal(felhasznaloId);
 
         response.status(200).json({

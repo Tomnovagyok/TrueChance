@@ -36,6 +36,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let aktualisTet = 10;
     let forogMost = false;
     let aktualisRotacio = 0;
+    let elozoKorTet = null;
 
     // HTML elemek referenciái
     const kerekElem = document.getElementById('rouletteKerek');
@@ -50,6 +51,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const porgetesHistoryLista = document.getElementById('porgetesHistoryLista');
     const tetSzekcio = document.querySelector('.tet-szekcio');
     const osszesTetLevetelBtn = document.getElementById('osszesTetLevetelBtn');
+    const elozoTetUjraBtn = document.getElementById('elozoTetUjraBtn');
+    const aktualisKorOsszTet = document.getElementById('aktualisKorOsszTet');
     const statsToggleBtn = document.getElementById('statsToggleBtn');
 
     const statisztikaAdatok = {
@@ -159,6 +162,12 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    if (elozoTetUjraBtn) {
+        elozoTetUjraBtn.addEventListener('click', function () {
+            elozoTetUjraRakasa();
+        });
+    }
+
     if (statsToggleBtn) {
         statsToggleBtn.addEventListener('click', function (event) {
             event.preventDefault();
@@ -184,6 +193,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
+        elozoTetElment(kivalasztottFogadasok, aktualisTet);
         forogMost = true;
 
         // Frontenden a tétet már spin indításkor levonjuk.
@@ -320,12 +330,53 @@ document.addEventListener('DOMContentLoaded', function () {
         return aktualisTet * kivalasztottFogadasok.length;
     }
 
+    function elozoTetElment(fogadasok, tetOsszeg) {
+        const masoltFogadasok = [];
+        for (let index = 0; index < fogadasok.length; index++) {
+            masoltFogadasok.push({
+                tipus: fogadasok[index].tipus,
+                ertek: fogadasok[index].ertek
+            });
+        }
+
+        elozoKorTet = {
+            tetOsszeg: tetOsszeg,
+            fogadasok: masoltFogadasok
+        };
+    }
+
+    function elozoTetUjraRakasa() {
+        if (forogMost || !elozoKorTet || !elozoKorTet.fogadasok || elozoKorTet.fogadasok.length === 0) {
+            return;
+        }
+
+        osszesTetLevetel();
+        aktualisTet = elozoKorTet.tetOsszeg;
+        tetOsszegInput.value = aktualisTet;
+
+        for (let index = 0; index < elozoKorTet.fogadasok.length; index++) {
+            const fogadas = elozoKorTet.fogadasok[index];
+            const gomb = tetSzekcio.querySelector(
+                '[data-tipus="' + fogadas.tipus + '"][data-ertek="' + fogadas.ertek + '"]'
+            );
+
+            if (!gomb) {
+                continue;
+            }
+
+            gomb.dataset.tet = 'true';
+            gomb.classList.add('kivalasztott');
+        }
+
+        kijelzesFrissites();
+    }
+
     function kijelzesFrissites() {
         const kivalasztottFogadasok = getKivalasztottFogadasok();
+        const osszesitettTet = osszTetKiszamol();
 
         if (kivalasztottFogadasok.length === 0) {
             kivalasztottTetSzoveg.innerHTML = 'Nincs kiválasztva';
-            infoPanelTet.innerHTML = '$0';
         } else {
             const fogadasSzovegek = [];
             for (let index = 0; index < kivalasztottFogadasok.length; index++) {
@@ -334,11 +385,19 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             kivalasztottTetSzoveg.innerHTML = fogadasSzovegek.join(', ');
-            infoPanelTet.innerHTML = '$' + osszTetKiszamol();
+        }
+
+        infoPanelTet.innerHTML = '$' + osszesitettTet;
+        if (aktualisKorOsszTet) {
+            aktualisKorOsszTet.textContent = '$' + osszesitettTet;
         }
 
         const nincsEgyenleg = egyenleg <= 0;
         porgetesBtnElem.disabled = forogMost || kivalasztottFogadasok.length === 0 || nincsEgyenleg;
+        if (elozoTetUjraBtn) {
+            const nincsElozoTet = !elozoKorTet || !elozoKorTet.fogadasok || elozoKorTet.fogadasok.length === 0;
+            elozoTetUjraBtn.disabled = forogMost || nincsElozoTet;
+        }
 
         frissitStatisztikak(kivalasztottFogadasok);
     }

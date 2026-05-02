@@ -254,6 +254,29 @@
     box-shadow: 0 0 8px rgba(140, 92, 255, 0.25);
 }
 
+.tet-torles-gomb:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.tet-osszesitett-blokk {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 8px;
+    min-height: 28px;
+    background: rgba(42, 44, 51, 0.5);
+    border: 1px solid #33353a;
+    border-radius: 6px;
+}
+
+.tet-osszesitett-ertek {
+    color: #8c5cff;
+    font-weight: 600;
+    font-size: 0.8rem;
+    line-height: 1;
+}
+
 /* Számok táblázat (kaszinó elrendezés) */
 .szamok-tabla {
     display: flex;

@@ -38,136 +38,254 @@ function kiert(jatekosKez, asztalLapok) {
     var aktivLapok = [jatekosKez[0], jatekosKez[1]];
     for (var i = 0; i < asztalLapok.length; i++) aktivLapok.push(asztalLapok[i]);
 
-    var eredmeny = { ertek: 0, nev: 'Magas lap' };
-    function ertekeles(szint, nev) {
-        if (szint > eredmeny.ertek) {
-            eredmeny.ertek = szint;
-            eredmeny.nev = nev;
-        }
-    }
-
-    // ---- Számok szerinti csoportosítás (összes lap) ----
     var szamSzamlalo = {};
     for (var i = 0; i < aktivLapok.length; i++) {
-        var sz = aktivLapok[i].szam;
-        szamSzamlalo[sz] = (szamSzamlalo[sz] || 0) + 1;
+        var ertek = aktivLapok[i].ertek;
+        szamSzamlalo[ertek] = (szamSzamlalo[ertek] || 0) + 1;
     }
 
-    // Csoportok: hány darab négyes, hármas, kettes van
-    var negyesek = 0,
-        harmasok = 0,
-        parok = 0;
-    for (var sz in szamSzamlalo) {
-        if (szamSzamlalo[sz] === 4) negyesek++;
-        else if (szamSzamlalo[sz] === 3) harmasok++;
-        else if (szamSzamlalo[sz] === 2) parok++;
-    }
-
-    // Póker (4 egyforma)
-    if (negyesek >= 1) ertekeles(8, 'Póker');
-
-    // Full House (legalább egy hármas + legalább egy pár, VAGY két hármas)
-    if (harmasok >= 2 || (harmasok >= 1 && parok >= 1)) ertekeles(7, 'Full House');
-
-    // Drill (pontosan egy hármas, nincs mellé pár ami full house lenne)
-    if (harmasok >= 1 && eredmeny.ertek < 7) ertekeles(4, 'Drill');
-
-    // Két pár
-    if (parok >= 2 && eredmeny.ertek < 4) ertekeles(3, 'Két Pár');
-
-    // Egy pár
-    if (parok >= 1 && eredmeny.ertek < 3) ertekeles(2, 'Pár');
-
-    // ---- Sor keresés (összes lap) ----
-    var ertekLista = aktivLapok.map(function (l) {
-        return l.ertek;
-    });
-    if (ertekLista.indexOf(14) !== -1) ertekLista.push(1); // Ász = 1 is
-    var egyediErtekek = [];
-    for (var i = 0; i < ertekLista.length; i++) {
-        if (egyediErtekek.indexOf(ertekLista[i]) === -1) egyediErtekek.push(ertekLista[i]);
-    }
-    egyediErtekek.sort(function (a, b) {
-        return a - b;
-    });
-
-    var vanesor = false,
-        sorDb = 1,
-        maxSorDb = 1;
-    for (var k = 1; k < egyediErtekek.length; k++) {
-        if (egyediErtekek[k] === egyediErtekek[k - 1] + 1) {
-            sorDb++;
-            if (sorDb > maxSorDb) maxSorDb = sorDb;
-        } else sorDb = 1;
-    }
-    if (maxSorDb >= 5) {
-        vanesor = true;
-        ertekeles(5, 'Sor');
-    }
-
-    // ---- Flöss keresés (összes lap) ----
-    var vanefloss = false,
-        flosslapok = [];
-    var szimbolumSzamlalo = { Pikk: 0, Treff: 0, Káró: 0, Kör: 0 };
-    aktivLapok.forEach(function (lap) {
-        szimbolumSzamlalo[lap.szimbolum]++;
-    });
-    var flossSzimbolum = null;
-    for (var szimb in szimbolumSzamlalo) {
-        if (szimbolumSzamlalo[szimb] >= 5) {
-            flossSzimbolum = szimb;
-            break;
-        }
-    }
-    if (flossSzimbolum) {
-        flosslapok = aktivLapok.filter(function (lap) {
-            return lap.szimbolum === flossSzimbolum;
+    var egyediErtekek = Object.keys(szamSzamlalo)
+        .map(function (kulcs) {
+            return Number(kulcs);
+        })
+        .sort(function (a, b) {
+            return b - a;
         });
-        vanefloss = true;
-        ertekeles(6, 'Flöss');
-    }
 
-    // ---- Szín Sor / Royal Flöss ----
-    if (vanefloss && vanesor) {
-        var flossErtekek = flosslapok.map(function (l) {
-            return l.ertek;
-        });
-        if (flossErtekek.indexOf(14) !== -1) flossErtekek.push(1);
-        var egyediFloss = [];
-        for (var i = 0; i < flossErtekek.length; i++) {
-            if (egyediFloss.indexOf(flossErtekek[i]) === -1) egyediFloss.push(flossErtekek[i]);
+    function legmagasabbSor(ertekek) {
+        var ertekLista = ertekek.slice();
+        if (ertekLista.indexOf(14) !== -1) {
+            ertekLista.push(1);
         }
-        egyediFloss.sort(function (a, b) {
+        ertekLista.sort(function (a, b) {
             return a - b;
         });
-        var fSorDb = 1,
-            maxFSorDb = 1;
-        for (var m = 1; m < egyediFloss.length; m++) {
-            if (egyediFloss[m] === egyediFloss[m - 1] + 1) {
-                fSorDb++;
-                if (fSorDb > maxFSorDb) maxFSorDb = fSorDb;
-            } else fSorDb = 1;
+
+        var egyedi = [];
+        for (var i = 0; i < ertekLista.length; i++) {
+            if (egyedi.indexOf(ertekLista[i]) === -1) {
+                egyedi.push(ertekLista[i]);
+            }
         }
-        if (maxFSorDb >= 5) {
-            var royal = [10, 11, 12, 13, 14].every(function (e) {
-                return egyediFloss.indexOf(e) !== -1;
-            });
-            if (royal) ertekeles(10, 'Royal flöss');
-            else ertekeles(9, 'Szín Sor');
+
+        var sorDb = 1;
+        var legmagasabb = 0;
+        for (var i = 1; i < egyedi.length; i++) {
+            if (egyedi[i] === egyedi[i - 1] + 1) {
+                sorDb++;
+                if (sorDb >= 5) {
+                    legmagasabb = egyedi[i];
+                }
+            } else {
+                sorDb = 1;
+            }
+        }
+
+        return legmagasabb;
+    }
+
+    function legmagasabbKiserok(kizarvaLista, darab) {
+        var kiserok = [];
+        for (var i = 0; i < egyediErtekek.length; i++) {
+            var ertek = egyediErtekek[i];
+            if (kizarvaLista.indexOf(ertek) !== -1) {
+                continue;
+            }
+            kiserok.push(ertek);
+            if (kiserok.length >= darab) {
+                break;
+            }
+        }
+        return kiserok;
+    }
+
+    function tieBreakerOsszehasonlit(elso, masodik) {
+        var maxHossz = Math.max(elso.length, masodik.length);
+        for (var i = 0; i < maxHossz; i++) {
+            var elsoErtek = i < elso.length ? elso[i] : 0;
+            var masodikErtek = i < masodik.length ? masodik[i] : 0;
+
+            if (elsoErtek > masodikErtek) {
+                return 1;
+            }
+            if (elsoErtek < masodikErtek) {
+                return -1;
+            }
+        }
+
+        return 0;
+    }
+
+    var negyesek = [];
+    var harmasok = [];
+    var parok = [];
+    for (var i = 0; i < egyediErtekek.length; i++) {
+        var ertek = egyediErtekek[i];
+        var db = szamSzamlalo[ertek];
+        if (db === 4) {
+            negyesek.push(ertek);
+        } else if (db === 3) {
+            harmasok.push(ertek);
+        } else if (db === 2) {
+            parok.push(ertek);
         }
     }
 
-    var elsoLapErtek = jatekosKez[0].ertek;
-    var masodikLapErtek = jatekosKez[1].ertek;
-    if (masodikLapErtek > elsoLapErtek) {
-        var tmp = elsoLapErtek;
-        elsoLapErtek = masodikLapErtek;
-        masodikLapErtek = tmp;
+    var szinSzerintiErtekek = {};
+    for (var i = 0; i < aktivLapok.length; i++) {
+        var lap = aktivLapok[i];
+        if (!szinSzerintiErtekek[lap.szimbolum]) {
+            szinSzerintiErtekek[lap.szimbolum] = [];
+        }
+        szinSzerintiErtekek[lap.szimbolum].push(lap.ertek);
     }
 
-    eredmeny.maxLap = elsoLapErtek;
-    eredmeny.masodikLap = masodikLapErtek;
-    return eredmeny;
+    var legerosebbFloss = [];
+    var legerosebbSzinSor = 0;
+    for (var szin in szinSzerintiErtekek) {
+        var ertekek = szinSzerintiErtekek[szin];
+        if (ertekek.length < 5) {
+            continue;
+        }
+
+        var rendezett = ertekek.slice().sort(function (a, b) {
+            return b - a;
+        });
+        if (tieBreakerOsszehasonlit(rendezett.slice(0, 5), legerosebbFloss) > 0) {
+            legerosebbFloss = rendezett.slice(0, 5);
+        }
+
+        var sorMagasLapFlossben = legmagasabbSor(rendezett);
+        if (sorMagasLapFlossben > legerosebbSzinSor) {
+            legerosebbSzinSor = sorMagasLapFlossben;
+        }
+    }
+
+    if (legerosebbSzinSor >= 14) {
+        return {
+            ertek: 10,
+            nev: 'Royal flöss',
+            tieBreaker: [14],
+            maxLap: 14,
+            masodikLap: 0
+        };
+    }
+
+    if (legerosebbSzinSor > 0) {
+        return {
+            ertek: 9,
+            nev: 'Szín Sor',
+            tieBreaker: [legerosebbSzinSor],
+            maxLap: legerosebbSzinSor,
+            masodikLap: 0
+        };
+    }
+
+    if (negyesek.length > 0) {
+        var pokerErtek = negyesek[0];
+        var pokerKisero = legmagasabbKiserok([pokerErtek], 1);
+        return {
+            ertek: 8,
+            nev: 'Póker',
+            tieBreaker: [pokerErtek].concat(pokerKisero),
+            maxLap: pokerErtek,
+            masodikLap: pokerKisero[0] || 0
+        };
+    }
+
+    if (harmasok.length > 0) {
+        var fullHarom = harmasok[0];
+        var fullParJeloltek = [];
+
+        for (var i = 0; i < harmasok.length; i++) {
+            if (harmasok[i] !== fullHarom) {
+                fullParJeloltek.push(harmasok[i]);
+            }
+        }
+        for (var i = 0; i < parok.length; i++) {
+            fullParJeloltek.push(parok[i]);
+        }
+        fullParJeloltek.sort(function (a, b) {
+            return b - a;
+        });
+
+        if (fullParJeloltek.length > 0) {
+            return {
+                ertek: 7,
+                nev: 'Full House',
+                tieBreaker: [fullHarom, fullParJeloltek[0]],
+                maxLap: fullHarom,
+                masodikLap: fullParJeloltek[0]
+            };
+        }
+    }
+
+    if (legerosebbFloss.length > 0) {
+        return {
+            ertek: 6,
+            nev: 'Flöss',
+            tieBreaker: legerosebbFloss,
+            maxLap: legerosebbFloss[0] || 0,
+            masodikLap: legerosebbFloss[1] || 0
+        };
+    }
+
+    var sorMagasLap = legmagasabbSor(egyediErtekek);
+    if (sorMagasLap > 0) {
+        return {
+            ertek: 5,
+            nev: 'Sor',
+            tieBreaker: [sorMagasLap],
+            maxLap: sorMagasLap,
+            masodikLap: 0
+        };
+    }
+
+    if (harmasok.length > 0) {
+        var drillErtek = harmasok[0];
+        var drillKiserok = legmagasabbKiserok([drillErtek], 2);
+        return {
+            ertek: 4,
+            nev: 'Drill',
+            tieBreaker: [drillErtek].concat(drillKiserok),
+            maxLap: drillErtek,
+            masodikLap: drillKiserok[0] || 0
+        };
+    }
+
+    if (parok.length >= 2) {
+        var ketParMagas = parok[0];
+        var ketParAlacsony = parok[1];
+        var ketParKisero = legmagasabbKiserok([ketParMagas, ketParAlacsony], 1);
+        return {
+            ertek: 3,
+            nev: 'Két Pár',
+            tieBreaker: [ketParMagas, ketParAlacsony].concat(ketParKisero),
+            maxLap: ketParMagas,
+            masodikLap: ketParAlacsony
+        };
+    }
+
+    if (parok.length === 1) {
+        var parErtek = parok[0];
+        var parKiserok = legmagasabbKiserok([parErtek], 3);
+        return {
+            ertek: 2,
+            nev: 'Pár',
+            tieBreaker: [parErtek].concat(parKiserok),
+            maxLap: parErtek,
+            masodikLap: parKiserok[0] || 0
+        };
+    }
+
+    var magasLapok = egyediErtekek.slice(0, 5);
+    return {
+        ertek: 0,
+        nev: 'Magas lap',
+        tieBreaker: magasLapok,
+        maxLap: magasLapok[0] || 0,
+        masodikLap: magasLapok[1] || 0
+    };
 }
 
 function nyertesMeghatarozas(jatekosEredmeny, ellenfelEredmeny) {
@@ -178,18 +296,18 @@ function nyertesMeghatarozas(jatekosEredmeny, ellenfelEredmeny) {
         return 'ellenfel';
     }
 
-    if (jatekosEredmeny.maxLap > ellenfelEredmeny.maxLap) {
-        return 'jatekos';
-    }
-    if (jatekosEredmeny.maxLap < ellenfelEredmeny.maxLap) {
-        return 'ellenfel';
-    }
+    var jatekosTieBreaker = jatekosEredmeny.tieBreaker || [];
+    var ellenfelTieBreaker = ellenfelEredmeny.tieBreaker || [];
+    var maxHossz = Math.max(jatekosTieBreaker.length, ellenfelTieBreaker.length);
 
-    if (jatekosEredmeny.ertek === 0 && ellenfelEredmeny.ertek === 0) {
-        if (jatekosEredmeny.masodikLap > ellenfelEredmeny.masodikLap) {
+    for (var i = 0; i < maxHossz; i++) {
+        var jatekosErtek = i < jatekosTieBreaker.length ? jatekosTieBreaker[i] : 0;
+        var ellenfelErtek = i < ellenfelTieBreaker.length ? ellenfelTieBreaker[i] : 0;
+
+        if (jatekosErtek > ellenfelErtek) {
             return 'jatekos';
         }
-        if (jatekosEredmeny.masodikLap < ellenfelEredmeny.masodikLap) {
+        if (jatekosErtek < ellenfelErtek) {
             return 'ellenfel';
         }
     }
@@ -384,7 +502,8 @@ function getJatek(session) {
             ellenfelTartottMar: false,
             ellenfelEmeltMar: false,
             utolsoJatekosEmelesArany: 0,
-            jatekosAllIn: false
+            jatekosAllIn: false,
+            riverCheckDb: 0
         };
     }
     return session.poker;
@@ -500,6 +619,7 @@ router.post('/poker/uj', async (req, res) => {
         jatek.ellenfelEmeltMar = false;
         jatek.utolsoJatekosEmelesArany = 0;
         jatek.jatekosAllIn = false;
+        jatek.riverCheckDb = 0;
 
         // Vakok befizetése
         var kisVak = NAGYVAK / 2;
@@ -545,6 +665,7 @@ router.post('/poker/check', async (req, res) => {
 
     jatek.aktualisTet = 0;
     jatek.varakozikDontesre = false;
+    jatek.riverCheckDb = (jatek.riverCheckDb || 0) + 1;
 
     // Ellenfél dönt
     var aiDontes = ellenfelAI(
@@ -573,7 +694,7 @@ router.post('/poker/check', async (req, res) => {
     }
 
     // Ha a játék még nem vége, következő fázis
-    if (!jatek.jatekVege) {
+    if (!jatek.jatekVege && !jatek.varakozikDontesre) {
         await kovetkezoFazis(jatek, req.session.felhasznaloId);
     } else if (req.session.felhasznaloId && jatek.uzenetTipus !== 'nyert') {
         // Játék vége, de nem fold (showdown volt már rögzítve)
@@ -600,6 +721,7 @@ router.post('/poker/call', async (req, res) => {
         jatek.pot += osszeg;
         jatek.aktualisTet = 0;
         jatek.varakozikDontesre = false;
+        jatek.riverCheckDb = 0;
         jatek.jatekosOsszesBetje += osszeg;
         jatek.jatekosAllIn = jatek.jatekosZseton <= 0;
 
@@ -646,7 +768,7 @@ router.post('/poker/call', async (req, res) => {
         }
 
         // Ha a játék még nem vége, következő fázis
-        if (!jatek.jatekVege) {
+        if (!jatek.jatekVege && !jatek.varakozikDontesre) {
             await kovetkezoFazis(jatek, req.session.felhasznaloId);
         } else if (req.session.felhasznaloId && jatek.uzenetTipus !== 'nyert') {
             // Játék vége, de nem fold (showdown volt már rögzítve)
@@ -688,6 +810,7 @@ router.post('/poker/raise', async (req, res) => {
     jatek.pot += osszeg;
     jatek.aktualisTet = tenylegesEmeles;
     jatek.varakozikDontesre = false;
+    jatek.riverCheckDb = 0;
     jatek.jatekosOsszesBetje += osszeg;
     jatek.jatekosAllIn = jatek.jatekosZseton <= 0;
 
@@ -784,12 +907,14 @@ function vegrehajtEllenfelet(jatek, dontes) {
     if (dontes === 'check') {
         jatek.uzenet = 'Ellenfél: Passz (Check)';
         jatek.uzenetTipus = '';
+        jatek.riverCheckDb = (jatek.riverCheckDb || 0) + 1;
         // Ne hívd meg itt a kovetkezoFazis-t, az az endpoint végzi
     } else if (dontes === 'call') {
         jatek.pot += jatek.aktualisTet;
         jatek.aktualisTet = 0;
         jatek.uzenet = 'Ellenfél: Tartás (Call) 💰';
         jatek.uzenetTipus = '';
+        jatek.riverCheckDb = 0;
         jatek.ellenfelTartottMar = true;
         // Ne hívd meg itt a kovetkezoFazis-t, az az endpoint végzi
     } else if (dontes === 'raise') {
@@ -799,6 +924,7 @@ function vegrehajtEllenfelet(jatek, dontes) {
             jatek.aktualisTet = 0;
             jatek.uzenet = 'Ellenfél: Tartás (Call) 💰';
             jatek.uzenetTipus = '';
+            jatek.riverCheckDb = 0;
             jatek.ellenfelTartottMar = true;
             return;
         }
@@ -807,6 +933,7 @@ function vegrehajtEllenfelet(jatek, dontes) {
         jatek.aktualisTet = NAGYVAK;
         jatek.uzenet = 'Ellenfél: Emelés (Raise) 💰';
         jatek.uzenetTipus = '';
+        jatek.riverCheckDb = 0;
         jatek.ellenfelTartottMar = true;
         jatek.ellenfelEmeltMar = true;
         // Játékosnak kell válaszolnia az emelésre
@@ -817,6 +944,7 @@ function vegrehajtEllenfelet(jatek, dontes) {
         jatek.jatekVege = true;
         jatek.uzenet = '🏆 Az ellenfél bedobta!';
         jatek.uzenetTipus = 'nyert';
+        jatek.riverCheckDb = 0;
     }
 }
 
@@ -829,18 +957,19 @@ async function kovetkezoFazis(jatek, felhasznaloId) {
             jatek.felforditottDb = 3; // Flop
         else jatek.felforditottDb++; // Turn / River
 
-        if (jatek.felforditottDb === 5) {
-            // Showdown
+        // Következő tét-kör (river után is)
+        jatek.aktualisTet = 0;
+        jatek.varakozikDontesre = true;
+        jatek.riverCheckDb = 0;
+    } else {
+        // Riveren addig mehet a kör, amíg nincs két egymás utáni check
+        if ((jatek.riverCheckDb || 0) >= 2) {
             jatek.jatekVege = true;
             await showdown(jatek, felhasznaloId);
         } else {
-            // Következő tét-kör
             jatek.aktualisTet = 0;
             jatek.varakozikDontesre = true;
         }
-    } else {
-        jatek.jatekVege = true;
-        await showdown(jatek, felhasznaloId);
     }
 }
 
@@ -848,6 +977,7 @@ async function allInAzonnaliShowdown(jatek, felhasznaloId) {
     jatek.felforditottDb = 5;
     jatek.aktualisTet = 0;
     jatek.varakozikDontesre = false;
+    jatek.riverCheckDb = 0;
     jatek.jatekVege = true;
     await showdown(jatek, felhasznaloId);
 }
