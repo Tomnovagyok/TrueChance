@@ -428,17 +428,25 @@
 }
 
 @media (max-width: 992px) {
-    .statisztika-panel { display: none !important; }
+    .statisztika-panel {
+        width: 100%;
+        margin-top: 12px;
+        display: none;
+    }
+
+    .jatek-terulet.statisztika-aktiv .statisztika-panel {
+        display: flex;
+    }
 }
 
 /* Reszponzív */
 @media (max-width: 992px) {
     .blackjack-asztal {
         width: 100%;
-        transform: scale(1.3);
+        transform: scale(1);
         transform-origin: center center;
-        margin-top: 20px;
-        margin-bottom: 20px;
+        margin-top: 0;
+        margin-bottom: 0;
     }
 
     .kartya {
@@ -456,6 +464,152 @@
     .jatek-info-panel {
         flex-direction: column;
         gap: 0.5rem;
+    }
+
+    .jatek-terulet {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .statisztika-panel {
+        width: 100%;
+        max-width: 600px;
+    }
+}
+
+@media screen and (max-width: 1024px) and (orientation: landscape) {
+    .blackjack-szekcio {
+        padding: 88px 10px 20px;
+    }
+
+    .blackjack-kontener {
+        gap: 12px;
+    }
+
+    .jatek-info-panel {
+        width: 100%;
+        padding: 0.6rem 0.9rem;
+        gap: 0.8rem;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .info-elem i {
+        font-size: 0.95rem;
+    }
+
+    .info-cimke {
+        font-size: 0.74rem;
+    }
+
+    .info-ertek {
+        font-size: 0.88rem;
+    }
+
+    .jatek-terulet {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .bal-panel {
+        width: 188px;
+        gap: 10px;
+    }
+
+    .gombok-szamok {
+        gap: 8px;
+    }
+
+    .gomb-oszlop {
+        width: 88px;
+        gap: 6px;
+    }
+
+    .gomb-oszlop .btn {
+        padding: 7px 6px;
+        font-size: 0.78rem;
+    }
+
+    .szam-oszlop {
+        width: 84px;
+        gap: 8px;
+    }
+
+    .pont-doboz {
+        padding: 10px 6px;
+    }
+
+    .pont-cimke {
+        font-size: 0.62rem;
+    }
+
+    .pont-ertek {
+        font-size: 1.05rem;
+    }
+
+    .tet-panel {
+        padding: 10px;
+    }
+
+    .tet-cimke,
+    .tet-egyenleg {
+        font-size: 0.68rem;
+        margin-bottom: 6px;
+    }
+
+    .tet-slider {
+        margin-bottom: 8px;
+    }
+
+    .tet-input {
+        padding: 6px;
+        font-size: 0.8rem;
+        margin-bottom: 8px;
+    }
+
+    .tet-gomb {
+        padding: 8px;
+        font-size: 0.8rem;
+    }
+
+    .asztal-wrapper {
+        max-width: 520px;
+    }
+
+    .blackjack-asztal {
+        max-width: 520px;
+    }
+
+    .kartya {
+        width: 48px;
+        margin-left: -19px;
+    }
+
+    .statisztika-panel {
+        width: 210px;
+        max-width: 210px;
+        margin-top: 0;
+    }
+
+    .statisztika-info-doboz {
+        min-height: 0;
+        padding: 0.8rem;
+        gap: 0.6rem;
+    }
+
+    .statisztika-fejlec h3 {
+        font-size: 1rem;
+    }
+
+    .lepesajanlo-kartya {
+        padding: 0.65rem;
+    }
+
+    .lepesajanlo-cimke,
+    .statisztika-ertekek p {
+        font-size: 0.68rem;
     }
 }
 

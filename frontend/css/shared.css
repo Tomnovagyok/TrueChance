@@ -113,8 +113,28 @@ p {
 
 /* Reszponzív viselkedés */
 @media (max-width: 768px) {
+  .navbar-truechance,
+  .navbar-bejelentkezes,
+  .navbar-jatekok,
+  .navbar-poker,
+  .navbar-blackjack,
+  .navbar-roulette,
+  .navbar-slot {
+    padding: 0.1rem 0;
+  }
+
+  .navbar .container-fluid {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+
+  .navbar-brand {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
   .navbar-egyenleg {
-    padding: 6px 12px;
+    padding: 5px 10px;
     font-size: 0.85rem;
   }
   
@@ -280,23 +300,124 @@ p {
 /* Reszponzív */
 @media (max-width: 991px) {
   .felhasznalo-szekcio {
-    margin-top: 1rem;
-    padding-top: 1rem;
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
     border-top: 1px solid #33353a;
     justify-content: center;
     flex-wrap: wrap;
     width: 100%;
+    gap: 0.5rem;
+  }
+
+  .statisztika-gomb {
+    padding: 6px 12px;
+    font-size: 0.82rem;
+  }
+
+  .profil-gomb {
+    padding: 5px 10px 5px 5px;
+  }
+
+  .profil-avatar {
+    width: 28px;
+    height: 28px;
   }
 }
 
 @media (max-width: 768px) {
   .navbar-logo-img {
-    height: 55px;
+    height: 52px;
+    width: auto;
   }
 }
 
 @media (max-width: 576px) {
   .navbar-logo-img {
-    height: 45px;
+    height: 44px;
+    width: auto;
   }
+}
+
+/* Mobil portrait overlay */
+.portrait-lock-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: radial-gradient(circle at top, rgba(140, 92, 255, 0.3), rgba(8, 9, 12, 0.95) 55%);
+  backdrop-filter: blur(8px);
+}
+
+.portrait-lock-kartya {
+  width: min(100%, 420px);
+  padding: 1.75rem 1.5rem;
+  border-radius: 1rem;
+  border: 1px solid #33353a;
+  background: rgba(26, 27, 30, 0.95);
+  text-align: center;
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.45);
+}
+
+.portrait-lock-ikon {
+  position: relative;
+  width: 110px;
+  height: 110px;
+  margin: 0 auto 1rem;
+  display: grid;
+  place-items: center;
+}
+
+.portrait-lock-ikon .fa-mobile-screen-button {
+  font-size: 3rem;
+  color: #f0f0f0;
+}
+
+.portrait-lock-ikon .fa-rotate-right {
+  position: absolute;
+  right: 8px;
+  top: 12px;
+  color: #8c5cff;
+  font-size: 1.2rem;
+  transform: rotate(-25deg);
+}
+
+.portrait-lock-kartya h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.2rem;
+  color: #f0f0f0;
+}
+
+.portrait-lock-kartya p {
+  margin: 0;
+  color: #c2c2c2;
+}
+
+body.portrait-lock-active {
+  overflow: hidden;
+}
+
+@media screen and (orientation: portrait) {
+  body.portrait-lock-active .portrait-lock-overlay {
+    display: flex;
+  }
+}
+
+/* Jelszó szem gomb - közös stílus */
+.jelszo-szem-gomb {
+    background: #2a2c33;
+    border: 1px solid #33353a;
+    border-left: none;
+    color: #a0a0a0;
+    padding: 10px 14px;
+    border-radius: 0 8px 8px 0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.jelszo-szem-gomb:hover {
+    background: #33353a;
+    color: #8c5cff;
 }

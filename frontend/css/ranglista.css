@@ -110,6 +110,23 @@
     }
 
     .ranglista-kartya {
-        padding: 1.5rem;
+        padding: 1rem;
+        overflow: hidden;
+    }
+
+    .ranglista-kartya .table-responsive {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .ranglista-tabla {
+        min-width: 520px;
+    }
+
+    .ranglista-tabla thead th,
+    .ranglista-tabla tbody td {
+        padding: 10px 8px;
+        font-size: 0.82rem;
     }
 }

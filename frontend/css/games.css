@@ -194,7 +194,6 @@ body.stats-hidden .jatek-eselyek {
 /* Reszponzív */
 @media (max-width: 991px) {
     .statisztika-gomb {
-        flex: 1;
         max-width: 250px;
     }
 }

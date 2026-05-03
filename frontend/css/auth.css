@@ -147,6 +147,11 @@
     margin-bottom: 1.25rem;
 }
 
+/* Jelszó input border radius */
+.jelszo-input {
+    border-radius: 0.375rem 0 0 0.375rem !important;
+}
+
 @media (max-width: 576px) {
     .bejelentkezes-kartya {
         padding: 1.5rem;

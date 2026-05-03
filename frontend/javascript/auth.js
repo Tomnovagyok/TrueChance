@@ -115,4 +115,24 @@ document.addEventListener('DOMContentLoaded', function () {
             hibaElem.style.display = 'none';
         }
     }
+
+    //! Jelszó szem ikon működése
+    const jelszoSzemGombok = document.querySelectorAll('.jelszo-szem-gomb');
+    for (let i = 0; i < jelszoSzemGombok.length; i++) {
+        jelszoSzemGombok[i].addEventListener('click', function () {
+            const targetId = this.getAttribute('data-target');
+            const input = document.getElementById(targetId);
+            const ikon = this.querySelector('i');
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                ikon.classList.remove('fa-eye');
+                ikon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                ikon.classList.remove('fa-eye-slash');
+                ikon.classList.add('fa-eye');
+            }
+        });
+    }
 });

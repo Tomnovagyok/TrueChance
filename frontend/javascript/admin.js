@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     const modalFelhasznaloEmail = document.getElementById('modalFelhasznaloEmail');
     const modalFelhasznaloEgyenleg = document.getElementById('modalFelhasznaloEgyenleg');
     const modalFelhasznaloAdminE = document.getElementById('modalFelhasznaloAdminE');
+    const modalFelhasznaloJelszo = document.getElementById('modalFelhasznaloJelszo');
 
     const modalElem = document.getElementById('felhasznaloSzerkesztesModal');
     const szerkesztesModal = new bootstrap.Modal(modalElem);
@@ -99,6 +100,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         modalFelhasznaloEmail.value = felhasznalo.email;
         modalFelhasznaloEgyenleg.value = Number(felhasznalo.egyenleg).toFixed(2);
         modalFelhasznaloAdminE.checked = !!felhasznalo.adminE;
+        modalFelhasznaloJelszo.value = '';
 
         const sajatFiokE = Number(felhasznalo.id) === Number(aktualisAdminId);
         modalFelhasznaloAdminE.disabled = sajatFiokE;
@@ -176,7 +178,8 @@ document.addEventListener('DOMContentLoaded', async function () {
             nev: modalFelhasznaloNev.value,
             email: modalFelhasznaloEmail.value,
             egyenleg: Number(modalFelhasznaloEgyenleg.value),
-            adminE: adminE
+            adminE: adminE,
+            jelszo: modalFelhasznaloJelszo.value
         };
 
         mentesGomb.disabled = true;
@@ -194,4 +197,24 @@ document.addEventListener('DOMContentLoaded', async function () {
         mentesGomb.disabled = false;
         mentesGomb.innerHTML = '<i class="fas fa-save me-2"></i>Mentés';
     });
+
+    //! Jelszó szem ikon működése
+    const jelszoSzemGombok = document.querySelectorAll('.jelszo-szem-gomb');
+    for (let i = 0; i < jelszoSzemGombok.length; i++) {
+        jelszoSzemGombok[i].addEventListener('click', function () {
+            const targetId = this.getAttribute('data-target');
+            const input = document.getElementById(targetId);
+            const ikon = this.querySelector('i');
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                ikon.classList.remove('fa-eye');
+                ikon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                ikon.classList.remove('fa-eye-slash');
+                ikon.classList.add('fa-eye');
+            }
+        });
+    }
 });

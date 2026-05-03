@@ -244,6 +244,22 @@
     border-width: 0.3rem;
 }
 
+/* Jelszó inputok border radius */
+.profil-input[type="password"],
+.profil-input[type="text"] {
+    border-radius: 8px 0 0 8px;
+}
+
+/* Placeholder szín javítása */
+.profil-input::placeholder {
+    color: #6c757d;
+}
+
+/* Text-muted javítása */
+.text-muted {
+    color: #a0a0a0 !important;
+}
+
 /* Reszponzív */
 @media (max-width: 768px) {
     .profil-cim {

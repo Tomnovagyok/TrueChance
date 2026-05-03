@@ -1,5 +1,14 @@
 /* Admin oldal CSS */
 
+/* Jelszó input border radius és placeholder */
+#modalFelhasznaloJelszo {
+    border-radius: 8px 0 0 8px;
+}
+
+#modalFelhasznaloJelszo::placeholder {
+    color: #6c757d;
+}
+
 .admin-szekcio {
     min-height: 100vh;
     padding-top: 120px;
@@ -157,6 +166,16 @@
 .form-label,
 .form-check-label {
     color: #a0a0a0;
+}
+
+/* Placeholder szín javítása */
+.admin-input::placeholder {
+    color: #6c757d;
+}
+
+/* Text-muted javítása */
+.text-muted {
+    color: #909090 !important;
 }
 
 @media (max-width: 768px) {

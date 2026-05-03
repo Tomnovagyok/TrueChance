@@ -4,6 +4,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>TrueChance - Blackjack</title>
+        <link rel="icon" type="image/x-icon" href="../favicon.ico" />
 
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
         <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet" />
@@ -13,6 +14,16 @@
     </head>
 
     <body>
+        <div id="portraitLockOverlay" class="portrait-lock-overlay" aria-hidden="true">
+            <div class="portrait-lock-kartya">
+                <div class="portrait-lock-ikon">
+                    <i class="fas fa-mobile-screen-button"></i>
+                    <i class="fas fa-rotate-right"></i>
+                </div>
+                <h2>Kérjük, fordítsd el a készüléked</h2>
+                <p>A TrueChance játékélménye fekvő nézetben érhető el.</p>
+            </div>
+        </div>
         <nav class="navbar navbar-expand-lg navbar-blackjack fixed-top">
             <div class="container-fluid px-5">
                 <a class="navbar-brand" href="games.html">
@@ -196,6 +207,7 @@
         </footer>
 
         <script src="../bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="../javascript/orientation-overlay.js"></script>
         <script src="../javascript/auth-check.js"></script>
         <script src="../javascript/blackjack.js"></script>
     </body>

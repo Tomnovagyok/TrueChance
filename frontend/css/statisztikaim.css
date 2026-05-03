@@ -140,13 +140,24 @@
     
     .stats-tabla-tabla thead th,
     .stats-tabla-tabla tbody td {
-        padding: 12px 8px;
-        font-size: 0.85rem;
+        padding: 10px 8px;
+        font-size: 0.82rem;
+        white-space: nowrap;
     }
-    
-    /* Mobil táblázat görgethetővé tétele */
+
+    .stats-tabla {
+        width: 100%;
+        overflow: hidden;
+    }
+
     .table-responsive {
+        width: 100%;
         overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .stats-tabla-tabla {
+        min-width: 760px;
     }
 }
 

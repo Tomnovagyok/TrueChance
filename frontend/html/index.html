@@ -4,6 +4,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>TrueChance - Casino Szimulátor</title>
+        <link rel="icon" type="image/x-icon" href="../favicon.ico" />
 
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
         <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet" />
@@ -12,6 +13,16 @@
         <link rel="stylesheet" href="../css/index.css" />
     </head>
     <body>
+        <div id="portraitLockOverlay" class="portrait-lock-overlay" aria-hidden="true">
+            <div class="portrait-lock-kartya">
+                <div class="portrait-lock-ikon">
+                    <i class="fas fa-mobile-screen-button"></i>
+                    <i class="fas fa-rotate-right"></i>
+                </div>
+                <h2>Kérjük, fordítsd el a készüléked</h2>
+                <p>A TrueChance játékélménye fekvő nézetben érhető el.</p>
+            </div>
+        </div>
         <nav class="navbar navbar-expand-lg navbar-truechance fixed-top">
             <div class="container">
                 <a class="navbar-brand" href="#">
@@ -75,40 +86,52 @@
                 <h2 class="section-title text-center mb-4">Játékok</h2>
                 <p class="section-subtitle text-center mx-auto mb-4">Próbáld ki a legnépszerűbb casino játékokat szimulált környezetben, és lásd élőben, milyen alacsonyak a valódi nyerési esélyek.</p>
 
-                <div class="row g-4">
-                    <div class="col-md-4">
+                <div class="row g-4 justify-content-center">
+                    <div class="col-md-6">
                         <div class="card-glass game-card h-100 text-center p-4">
                             <i class="fa-solid fa-diamond game-card-icon fs-1 mb-3 d-block"></i>
                             <div class="game-card-image mb-3">
-                                <span>BlackJack<br />Placeholder</span>
+                                <img src="../img/previews/Blackjack Preview.png" alt="BlackJack játék előnézete" class="img-fluid rounded-3" style="width: 100%; height: 100%; object-fit: cover;" />
                             </div>
                             <h3>BlackJack</h3>
                             <p>A klasszikus kártyajáték, ahol a 21-hez kell a legközelebb kerülnöd anélkül, hogy túllépnéd.</p>
-                            <p class="game-odd fst-italic small">Átlagos nyerési esély: ~42-49%</p>
+                            <p class="game-odd fst-italic small">Átlagos nyerési esély: ~40.95%</p>
                         </div>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <div class="card-glass game-card h-100 text-center p-4">
                             <i class="fas fa-heart game-card-icon fs-1 mb-3 d-block"></i>
                             <div class="game-card-image mb-3">
-                                <span>Texas Hold'em<br />Placeholder</span>
+                                <img src="../img/previews/Poker Preview.png" alt="Poker játék előnézete" class="img-fluid rounded-3" style="width: 100%; height: 100%; object-fit: cover;" />
                             </div>
                             <h3>Texas Hold'em Poker</h3>
                             <p>Stratégia és szerencse keveréke. Tedd próbára a készségeidet virtuális ellenfelekkel szemben.</p>
-                            <p class="game-odd fst-italic small">Átlagos nyerési esély: ~25-35%</p>
+                            <p class="game-odd fst-italic small">Átlagos nyerési esély: ~48.22%</p>
                         </div>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-md-6">
+                        <div class="card-glass game-card h-100 text-center p-4">
+                            <i class="fas fa-circle-notch game-card-icon fs-1 mb-3 d-block"></i>
+                            <div class="game-card-image mb-3">
+                                <img src="../img/previews/Roulette Preview.png" alt="Roulette játék előnézete" class="img-fluid rounded-3" style="width: 100%; height: 100%; object-fit: cover;" />
+                            </div>
+                            <h3>Roulette</h3>
+                            <p>A casino klasszikus kereke. Tedd a téted piros vagy fekete színre, számokra, vagy kombinációkra.</p>
+                            <p class="game-odd fst-italic small">Átlagos nyerési esély: ~48.65% (szín/páros)</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
                         <div class="card-glass game-card h-100 text-center p-4">
                             <i class="fas fa-dice game-card-icon fs-1 mb-3 d-block"></i>
                             <div class="game-card-image mb-3">
-                                <span>Slot Machine<br />Placeholder</span>
+                                <img src="../img/previews/Slot Preview.png" alt="Slot Machine játék előnézete" class="img-fluid rounded-3" style="width: 100%; height: 100%; object-fit: cover;" />
                             </div>
                             <h3>Slot Machine</h3>
                             <p>A legegyszerűbb, de legkockázatosabb játék. Egy gombnyomás, és a szerencse dönt.</p>
-                            <p class="game-odd fst-italic small">Átlagos nyerési esély: ~5-15%</p>
+                            <p class="game-odd fst-italic small">Átlagos nyerési esély: ~21.88%</p>
                         </div>
                     </div>
                 </div>
@@ -256,6 +279,7 @@
         </footer>
 
         <script src="../bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="../javascript/orientation-overlay.js"></script>
         <script src="../javascript/index.js"></script>
     </body>
 </html>

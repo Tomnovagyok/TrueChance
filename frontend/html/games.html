@@ -4,6 +4,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>TrueChance - Játékválasztó</title>
+        <link rel="icon" type="image/x-icon" href="../favicon.ico" />
 
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
         <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet" />
@@ -13,7 +14,17 @@
     </head>
 
     <body>
-        <nav class="navbar navbar-expand-lg navbar-jatekok fixed-top">
+        <div id="portraitLockOverlay" class="portrait-lock-overlay" aria-hidden="true">
+            <div class="portrait-lock-kartya">
+                <div class="portrait-lock-ikon">
+                    <i class="fas fa-mobile-screen-button"></i>
+                    <i class="fas fa-rotate-right"></i>
+                </div>
+                <h2>Kérjük, fordítsd el a készüléked</h2>
+                <p>A TrueChance játékélménye fekvő nézetben érhető el.</p>
+            </div>
+        </div>
+        <nav class="navbar navbar-expand-lg navbar-slot fixed-top">
             <div class="container-fluid px-5">
                 <a class="navbar-brand" href="games.html">
                     <img src="../img/logo.png" alt="TrueChance logo" class="navbar-logo-img" />
@@ -27,13 +38,12 @@
                     <div class="felhasznalo-szekcio ms-auto">
                         <a href="ranglista.html" class="statisztika-gomb text-decoration-none">
                             <i class="fas fa-trophy me-2"></i>
-                            <span class="d-none d-lg-inline">Ranglista</span>
+                            <span>Ranglista</span>
                         </a>
 
                         <button type="button" id="statsToggleBtn" class="statisztika-gomb" title="Statisztikai Betekintő">
                             <i class="fas fa-chart-bar me-2"></i>
-                            <span class="d-none d-lg-inline">Statisztikai Betekintő</span>
-                            <!--d-lg-inline = csak nagy kijelzőkön látszik a szöveg-->
+                            <span>Statisztikai Betekintő</span>
                         </button>
 
                         <div class="navbar-egyenleg">
@@ -46,9 +56,7 @@
                                 <div class="profil-avatar">
                                     <i class="fas fa-user"></i>
                                 </div>
-                                <span class="profil-nev d-none d-md-inline">Felhasználó</span> <!--itt később majd maga a felhasználó neve fog szerepelni-->
-                                <!--d-none = kisebb kijelzőkön nem látszik a név, csak a felhasználó ikonja-->
-                                <!--d-md-inline = csak közepes és nagyobb kijelzőkön látszik a szöveg-->
+                                <span class="profil-nev">Felhasználó</span> <!--itt később majd maga a felhasználó neve fog szerepelni-->
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end dropdown-lista">
                                 <li>
@@ -189,6 +197,7 @@
         </footer>
 
         <script src="../bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="../javascript/orientation-overlay.js"></script>
         <script src="../javascript/auth-check.js"></script>
         <script src="../javascript/games.js"></script>
     </body>

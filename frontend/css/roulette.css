@@ -719,7 +719,15 @@
 
 @media (max-width: 1200px) {
     .statisztika-panel {
-        display: none !important;
+        position: static;
+        transform: none;
+        width: 100%;
+        margin-top: 12px;
+        display: none;
+    }
+
+    .roulette-kontener.statisztika-aktiv .statisztika-panel {
+        display: block;
     }
 
     .roulette-kontener.statisztika-aktiv .roulette-asztal {
@@ -728,3 +736,148 @@
 }
 
 /* Navbar roulette stílusa a shared.css-ben van definiálva (.navbar-roulette) */
+
+@media screen and (max-width: 1024px) and (orientation: landscape) {
+    .roulette-szekcio {
+        padding: 72px 0 18px;
+    }
+
+    .roulette-kontener {
+        max-width: 940px;
+    }
+
+    .roulette-asztal {
+        width: 100%;
+        max-width: 900px;
+    }
+
+    .asztal-tartalom {
+        padding: 17% 13% 6% 15%;
+        align-items: flex-start;
+    }
+
+    .kerek-szekcio {
+        width: 32%;
+    }
+
+    .roulette-nyil {
+        width: 15%;
+    }
+
+    .porgetes-gomb {
+        font-size: 0.82rem;
+        padding: 6px 14px;
+    }
+
+    .eredmeny-kijelzo {
+        width: 40px;
+        height: 40px;
+    }
+
+    .eredmeny-szam {
+        font-size: 1rem;
+    }
+
+    .tet-szekcio {
+        gap: 3px;
+        margin-right: 1rem;
+        margin-top: 1rem;
+        margin-bottom: 0;
+    }
+
+    .tet-osszeg-sor {
+        flex-wrap: nowrap;
+        gap: 4px;
+        margin-bottom: 2px;
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+
+    .tet-label {
+        font-size: 0.65rem;
+    }
+
+    .tet-input-csoport {
+        gap: 2px;
+    }
+
+    .tet-gyors-gomb {
+        font-size: 0.62rem;
+        padding: 2px 5px;
+    }
+
+    .tet-input {
+        width: 52px;
+        font-size: 0.72rem;
+        padding: 2px 4px;
+    }
+
+    .tet-torles-gomb {
+        font-size: 0.62rem;
+        padding: 2px 5px;
+    }
+
+    .tet-osszesitett-blokk {
+        gap: 4px;
+        padding: 2px 5px;
+        min-height: 24px;
+    }
+
+    .tet-osszesitett-ertek {
+        font-size: 0.72rem;
+    }
+
+    .szamok-grid {
+        grid-template-rows: repeat(3, 24px);
+    }
+
+    .nulla-cella .szam-gomb {
+        height: 76px;
+        font-size: 0.7rem;
+    }
+
+    .szam-gomb {
+        font-size: 0.62rem;
+    }
+
+    .sor-gomb {
+        font-size: 0.52rem;
+        padding: 1px 3px;
+    }
+
+    .also-gomb {
+        font-size: 0.62rem;
+        padding: 3px 2px;
+    }
+
+    .kivalasztott-tet,
+    .porgetes-history {
+        padding: 3px 8px;
+    }
+
+    .tet-ertek {
+        font-size: 0.72rem;
+    }
+
+    .history-szam {
+        width: 20px;
+        height: 20px;
+        font-size: 0.65rem;
+    }
+
+    .jatek-info-panel {
+        margin-top: 8px;
+        padding: 0.6rem 0.9rem;
+        gap: 0.8rem;
+        flex-wrap: wrap;
+        max-width: 540px;
+    }
+
+    .info-cimke {
+        font-size: 0.75rem;
+    }
+
+    .info-ertek {
+        font-size: 0.9rem;
+    }
+}

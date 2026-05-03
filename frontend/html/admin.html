@@ -4,6 +4,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>TrueChance - Admin</title>
+        <link rel="icon" type="image/x-icon" href="../favicon.ico" />
 
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
         <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet" />
@@ -13,6 +14,16 @@
     </head>
 
     <body>
+        <div id="portraitLockOverlay" class="portrait-lock-overlay" aria-hidden="true">
+            <div class="portrait-lock-kartya">
+                <div class="portrait-lock-ikon">
+                    <i class="fas fa-mobile-screen-button"></i>
+                    <i class="fas fa-rotate-right"></i>
+                </div>
+                <h2>Kérjük, fordítsd el a készüléked</h2>
+                <p>A TrueChance játékélménye fekvő nézetben érhető el.</p>
+            </div>
+        </div>
         <nav class="navbar navbar-expand-lg navbar-jatekok fixed-top">
             <div class="container-fluid px-5">
                 <a class="navbar-brand" href="games.html">
@@ -112,21 +123,30 @@
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Bezárás"></button>
                     </div>
                     <div class="modal-body">
-                        <input type="hidden" id="modalFelhasznaloId" />
+                        <input type="hidden" id="modalFelhasznaloId" name="user_id" />
                         <div class="mb-3">
                             <label for="modalFelhasznaloNev" class="form-label">Név</label>
-                            <input type="text" id="modalFelhasznaloNev" class="form-control admin-input" />
+                            <input type="text" id="modalFelhasznaloNev" name="name" class="form-control admin-input" />
                         </div>
                         <div class="mb-3">
                             <label for="modalFelhasznaloEmail" class="form-label">Email</label>
-                            <input type="email" id="modalFelhasznaloEmail" class="form-control admin-input" />
+                            <input type="email" id="modalFelhasznaloEmail" name="email" class="form-control admin-input" />
                         </div>
                         <div class="mb-3">
                             <label for="modalFelhasznaloEgyenleg" class="form-label">Egyenleg</label>
-                            <input type="number" id="modalFelhasznaloEgyenleg" class="form-control admin-input" min="0" step="0.01" />
+                            <input type="number" id="modalFelhasznaloEgyenleg" name="balance" class="form-control admin-input" min="0" step="0.01" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="modalFelhasznaloJelszo" class="form-label">Új jelszó <small class="text-muted">(csak ha változtatni szeretnéd)</small></label>
+                            <div class="input-group">
+                                <input type="password" id="modalFelhasznaloJelszo" name="password" class="form-control admin-input" placeholder="Minimum 6 karakter" />
+                                <button type="button" class="btn jelszo-szem-gomb" data-target="modalFelhasznaloJelszo">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="modalFelhasznaloAdminE" />
+                            <input class="form-check-input" type="checkbox" id="modalFelhasznaloAdminE" name="admin" />
                             <label class="form-check-label" for="modalFelhasznaloAdminE">Admin jogosultság</label>
                         </div>
                     </div>
@@ -154,6 +174,7 @@
         </footer>
 
         <script src="../bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="../javascript/orientation-overlay.js"></script>
         <script src="../javascript/auth-check.js"></script>
         <script src="../javascript/admin.js"></script>
     </body>

@@ -243,4 +243,73 @@ document.addEventListener('DOMContentLoaded', async function () {
             profilUzenet.style.display = 'none';
         }, 4000);
     }
+
+    //! Jelszó mentés gomb
+    const jelszoMentesGomb = document.getElementById('jelszoMentesGomb');
+    const jelenlegiJelszo = document.getElementById('jelenlegiJelszo');
+    const ujJelszo = document.getElementById('ujJelszo');
+    const ujJelszoIsmet = document.getElementById('ujJelszoIsmet');
+
+    jelszoMentesGomb.addEventListener('click', async function () {
+        const jelenlegi = jelenlegiJelszo.value;
+        const uj = ujJelszo.value;
+        const ujIsmet = ujJelszoIsmet.value;
+
+        if (!jelenlegi || !uj) {
+            uzenetMutat('A jelenlegi és az új jelszó megadása is kötelező.', 'hiba');
+            return;
+        }
+
+        if (uj.length < 6) {
+            uzenetMutat('Az új jelszónak legalább 6 karakter hosszúnak kell lennie.', 'hiba');
+            return;
+        }
+
+        if (uj !== ujIsmet) {
+            uzenetMutat('A két új jelszó nem egyezik meg.', 'hiba');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('jelenlegiJelszo', jelenlegi);
+        formData.append('ujJelszo', uj);
+
+        jelszoMentesGomb.disabled = true;
+        jelszoMentesGomb.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Mentés...';
+
+        try {
+            const valasz = await meghiv('/api/profile/jelszo-valtoztatas', 'PUT', formData);
+            uzenetMutat(valasz.uzenet, 'siker');
+
+            // Mezők törlése sikeres mentés után
+            jelenlegiJelszo.value = '';
+            ujJelszo.value = '';
+            ujJelszoIsmet.value = '';
+        } catch (error) {
+            uzenetMutat(error.message, 'hiba');
+        }
+
+        jelszoMentesGomb.disabled = false;
+        jelszoMentesGomb.innerHTML = '<i class="fas fa-key me-2"></i>Jelszó mentése';
+    });
+
+    //! Jelszó szem ikon működése
+    const jelszoSzemGombok = document.querySelectorAll('.jelszo-szem-gomb');
+    for (let i = 0; i < jelszoSzemGombok.length; i++) {
+        jelszoSzemGombok[i].addEventListener('click', function () {
+            const targetId = this.getAttribute('data-target');
+            const input = document.getElementById(targetId);
+            const ikon = this.querySelector('i');
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                ikon.classList.remove('fa-eye');
+                ikon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                ikon.classList.remove('fa-eye-slash');
+                ikon.classList.add('fa-eye');
+            }
+        });
+    }
 });

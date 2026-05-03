@@ -4,6 +4,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>TrueChance - Profilom</title>
+        <link rel="icon" type="image/x-icon" href="../favicon.ico" />
 
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
         <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet" />
@@ -13,6 +14,16 @@
     </head>
 
     <body>
+        <div id="portraitLockOverlay" class="portrait-lock-overlay" aria-hidden="true">
+            <div class="portrait-lock-kartya">
+                <div class="portrait-lock-ikon">
+                    <i class="fas fa-mobile-screen-button"></i>
+                    <i class="fas fa-rotate-right"></i>
+                </div>
+                <h2>Kérjük, fordítsd el a készüléked</h2>
+                <p>A TrueChance játékélménye fekvő nézetben érhető el.</p>
+            </div>
+        </div>
         <nav class="navbar navbar-expand-lg navbar-jatekok fixed-top">
             <div class="container-fluid px-5">
                 <a class="navbar-brand" href="games.html">
@@ -81,10 +92,10 @@
                 <!-- Profil tartalom - JS tölti fel -->
                 <div id="profilTartalom" style="display: none;">
 
-                    <div class="row g-4">
+                    <div class="row g-4 align-items-stretch">
                         <!-- Bal oldal: Személyes adatok form -->
-                        <div class="col-lg-5">
-                            <div class="card-glass profil-kartya">
+                        <div class="col-lg-5 d-flex">
+                            <div class="card-glass profil-kartya w-100">
                                 <div class="kartya-fejlec">
                                     <i class="fas fa-user-edit me-2"></i>Személyes adatok
                                 </div>
@@ -107,11 +118,45 @@
                                         <input type="text" id="profilRegNapok" class="form-control profil-input" disabled />
                                     </div>
 
+                                    <hr class="my-2" style="border-color: #3b3d44;" />
+
+                                    <!-- Jelszó változtatás -->
+                                    <div class="mb-3">
+                                        <label for="jelenlegiJelszo" class="form-label">Jelenlegi jelszó</label>
+                                        <div class="input-group">
+                                            <input type="password" id="jelenlegiJelszo" name="jelenlegi_jelszo" class="form-control profil-input" placeholder="A jelenlegi jelszavad" />
+                                            <button type="button" class="btn jelszo-szem-gomb" data-target="jelenlegiJelszo">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="ujJelszo" class="form-label">Új jelszó</label>
+                                        <div class="input-group">
+                                            <input type="password" id="ujJelszo" name="uj_jelszo" class="form-control profil-input" placeholder="Minimum 6 karakter" />
+                                            <button type="button" class="btn jelszo-szem-gomb" data-target="ujJelszo">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="ujJelszoIsmet" class="form-label">Új jelszó megerősítése</label>
+                                        <div class="input-group">
+                                            <input type="password" id="ujJelszoIsmet" name="uj_jelszo_ismet" class="form-control profil-input" placeholder="Írd be újra az új jelszót" />
+                                            <button type="button" class="btn jelszo-szem-gomb" data-target="ujJelszoIsmet">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
                                     <!-- Üzenet mező -->
                                     <div id="profilUzenet" class="profil-uzenet" style="display: none;"></div>
 
                                     <button type="button" id="mentesGomb" class="btn btn-glass-primary w-100 mt-2">
-                                        <i class="fas fa-save me-2"></i>Mentés
+                                        <i class="fas fa-save me-2"></i>Adatok mentése
+                                    </button>
+                                    <button type="button" id="jelszoMentesGomb" class="btn btn-glass-primary w-100 mt-2" style="background: rgba(140, 92, 255, 0.2); border-color: #8c5cff;">
+                                        <i class="fas fa-key me-2"></i>Jelszó mentése
                                     </button>
                                 </form>
                             </div>
@@ -223,6 +268,7 @@
         </footer>
 
         <script src="../bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="../javascript/orientation-overlay.js"></script>
         <script src="../javascript/auth-check.js"></script>
         <script src="../javascript/profil.js"></script>
     </body>
