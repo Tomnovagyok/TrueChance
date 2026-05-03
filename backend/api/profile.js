@@ -1,5 +1,6 @@
 const express = require('express');
 const multer = require('multer');
+const bcrypt = require('bcrypt');
 const router = express.Router();
 const database = require('../sql/database.js');
 
@@ -121,6 +122,49 @@ router.put('/frissites', upload.none(), async (request, response) => {
         });
     } catch (hiba) {
         console.error('Profil mentési hiba:', hiba);
+        response.status(500).json({ uzenet: 'Szerverhiba. Próbáld újra később.' });
+    }
+});
+
+//! Jelszó változtatás - PUT /api/profile/jelszo-valtoztatas (FormData)
+router.put('/jelszo-valtoztatas', upload.none(), async (request, response) => {
+    if (!request.session.felhasznaloId) {
+        return response.status(401).json({ uzenet: 'Nincs bejelentkezve.' });
+    }
+
+    const jelenlegiJelszo = request.body.jelenlegiJelszo || '';
+    const ujJelszo = request.body.ujJelszo || '';
+
+    if (!jelenlegiJelszo || !ujJelszo) {
+        return response.status(400).json({ uzenet: 'A jelenlegi és az új jelszó megadása is kötelező.' });
+    }
+
+    if (ujJelszo.length < 6) {
+        return response.status(400).json({ uzenet: 'Az új jelszónak legalább 6 karakter hosszúnak kell lennie.' });
+    }
+
+    try {
+        // Lekérjük a felhasználót a jelszó hash-sel
+        const felhasznalo = await database.felhasznaloIdAltalJelszovel(request.session.felhasznaloId);
+        if (!felhasznalo) {
+            return response.status(404).json({ uzenet: 'Felhasználó nem található.' });
+        }
+
+        // Ellenőrizzük a jelenlegi jelszót bcrypt-tel
+        const jelszoHelyes = await bcrypt.compare(jelenlegiJelszo, felhasznalo.jelszo_hash);
+        if (!jelszoHelyes) {
+            return response.status(401).json({ uzenet: 'A jelenlegi jelszó nem helyes.' });
+        }
+
+        // Titkosítjuk az új jelszót
+        const ujJelszoHash = await bcrypt.hash(ujJelszo, 10);
+
+        // Frissítjük a jelszót az adatbázisban
+        await database.felhasznaloJelszoFrissit(request.session.felhasznaloId, ujJelszoHash);
+
+        response.status(200).json({ uzenet: 'Jelszó sikeresen megváltoztatva.' });
+    } catch (hiba) {
+        console.error('Jelszó változtatási hiba:', hiba);
         response.status(500).json({ uzenet: 'Szerverhiba. Próbáld újra később.' });
     }
 });

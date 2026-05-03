@@ -45,6 +45,19 @@ async function felhasznaloIdAltal(id) {
     return sorok[0];
 }
 
+//?  Jelszó ellenőrzéshez: id alapján lekéri a jelszó hash-t is
+async function felhasznaloIdAltalJelszovel(id) {
+    const query = 'SELECT id, jelszo_hash FROM felhasznalok WHERE id = ?';
+    const [sorok] = await pool.execute(query, [id]);
+    return sorok[0];
+}
+
+//?  Jelszó frissítése
+async function felhasznaloJelszoFrissit(felhasznaloId, ujJelszoHash) {
+    const query = 'UPDATE felhasznalok SET jelszo_hash = ? WHERE id = ?';
+    await pool.execute(query, [ujJelszoHash, felhasznaloId]);
+}
+
 //?  Egyenleg frissítésekor (nyerés/veszteség után)
 async function egyenlegFrissit(felhasznaloId, ujEgyenleg) {
     const query = 'UPDATE felhasznalok SET egyenleg = ? WHERE id = ?';
@@ -209,6 +222,8 @@ module.exports = {
     felhasznaloLetrehoz,
     felhasznaloEmailAltal,
     felhasznaloIdAltal,
+    felhasznaloIdAltalJelszovel,
+    felhasznaloJelszoFrissit,
     egyenlegFrissit,
     jatekmentNaploz,
     jatekmenetekLekerese,

@@ -1,4 +1,5 @@
 const express = require('express');
+const bcrypt = require('bcrypt');
 const router = express.Router();
 const database = require('../sql/database.js');
 
@@ -61,6 +62,7 @@ router.put('/felhasznalo/:id', async (request, response) => {
     const email = request.body.email ? request.body.email.trim() : '';
     const egyenleg = Number(request.body.egyenleg);
     const adminE = !!request.body.adminE;
+    const ujJelszo = request.body.jelszo || '';
 
     if (!Number.isInteger(felhasznaloId) || felhasznaloId <= 0) {
         return response.status(400).json({ uzenet: 'Érvénytelen felhasználó azonosító.' });
@@ -76,6 +78,9 @@ router.put('/felhasznalo/:id', async (request, response) => {
     }
     if (!Number.isFinite(egyenleg) || egyenleg < 0) {
         return response.status(400).json({ uzenet: 'Az egyenleg csak 0 vagy pozitív szám lehet.' });
+    }
+    if (ujJelszo && ujJelszo.length < 6) {
+        return response.status(400).json({ uzenet: 'Az új jelszónak legalább 6 karakter hosszúnak kell lennie.' });
     }
 
     try {
@@ -100,6 +105,13 @@ router.put('/felhasznalo/:id', async (request, response) => {
         }
 
         await database.felhasznaloAdminFrissit(felhasznaloId, nev, email, egyenleg, vegalsoAdminE);
+
+        // Ha van új jelszó, frissítjük azt is
+        if (ujJelszo) {
+            const ujJelszoHash = await bcrypt.hash(ujJelszo, 10);
+            await database.felhasznaloJelszoFrissit(felhasznaloId, ujJelszoHash);
+        }
+
         const frissFelhasznalo = await database.felhasznaloIdAltal(felhasznaloId);
 
         response.status(200).json({
