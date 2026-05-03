@@ -3,7 +3,7 @@
 * {
   margin: 0;
   padding: 0;
-  box-sizing: border-box; /* ez biztosítja, hogy a padding és margin ne befolyásolja a szélességet */
+  box-sizing: border-box;
 }
 
 body {
@@ -36,7 +36,7 @@ p {
 .navbar-roulette,
 .navbar-slot {
   background: rgba(42, 44, 51, 0.8);
-  backdrop-filter: blur(12px); /* ez adja az üveg/átlátszó hatást */
+  backdrop-filter: blur(12px);
   border-bottom: 1px solid #33353a;
   padding: 0.25rem 0;
 }
@@ -52,7 +52,7 @@ p {
   color: #a0a0a0;
   font-weight: 500;
   padding: 0.5rem 1.5rem;
-  text-decoration: none; /*a linkek aláhúzottak voltak, ezt eltávolítottam */
+  text-decoration: none;
 }
 
 .nav-elem:hover {
@@ -254,8 +254,8 @@ p {
   background: #2a2c33;
   border-color: #8c5cff;
   box-shadow:
-    0 4px 16px rgba(0, 0, 0, 0.4), /* ez adja a mélység hatását */ 
-    0 0 20px rgba(140, 92, 255, 0.4); /* ez adja a lila fényhatást */
+    0 4px 16px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(140, 92, 255, 0.4);
 }
 
 /* Üveg-style primary gomb */

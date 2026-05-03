@@ -1,44 +1,38 @@
+// Bejelentkezés, regisztráció és session kezelés
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcrypt'); //?  npm install bcrypt - jelszó titkosításhoz kell
+const bcrypt = require('bcrypt'); // Jelszavak biztonságos titkosítására és ellenőrzésére
 const database = require('../sql/database.js');
 
-//! Regisztráció - POST /api/auth/register
+// Regisztráció - POST /api/auth/register
+// 1. Megnézi, létezik-e már az email
+// 2. Ha nem, jelszót hashel, lementi az adatbázisba
+// 3. Automatikusan be is jelentkezteti a felhasználót (session ID beállításával)
 router.post('/register', async (request, response) => {
-    //?  Az adatok a request.body-ban érkeznek JSON formátumban
     const { nev, email, jelszo } = request.body;
 
-    //?  Alap validáció - mindhárom mező kötelező
     if (!nev || !email || !jelszo) {
         return response.status(400).json({ uzenet: 'Minden mező kitöltése kötelező.' });
     }
 
-    //?  Jelszó minimális hossza
     if (jelszo.length < 6) {
         return response.status(400).json({ uzenet: 'A jelszónak legalább 6 karakter hosszúnak kell lennie.' });
     }
 
     try {
-        //?  Megnézzük, hogy ez az email már foglalt-e
         const meglevoFelhasznalo = await database.felhasznaloEmailAltal(email);
         if (meglevoFelhasznalo) {
             return response.status(409).json({ uzenet: 'Ez az email cím már regisztrálva van.' });
-            //?  409 Conflict - az erőforrás már létezik
         }
 
-        //?  A jelszót bcrypt-tel titkosítjuk, mielőtt adatbázisba kerül
-        //?  A 10-es szám a "salt rounds" - minél nagyobb, annál biztonságosabb, de annál lassabb is
-        //?  10 egy jó kompromisszum: biztonságos és még gyors
+        // A jelszót titkosítjuk mielőtt eltároljuk (10-es erősség = biztonságos, de nem túl lassú)
         const jelszoHash = await bcrypt.hash(jelszo, 10);
 
-        //?  Felhasználó létrehozása az adatbázisban
         const ujFelhasznaloId = await database.felhasznaloLetrehoz(nev, email, jelszoHash);
 
-        //?  Session indítása - a felhasználó automatikusan be van jelentkezve regisztráció után
         request.session.felhasznaloId = ujFelhasznaloId;
 
         response.status(201).json({ uzenet: 'Sikeres regisztráció!', nev: nev });
-        //?  201 Created - sikeresen létrejött az erőforrás
 
     } catch (hiba) {
         console.error('Regisztrációs hiba:', hiba);
@@ -46,7 +40,10 @@ router.post('/register', async (request, response) => {
     }
 });
 
-//! Bejelentkezés - POST /api/auth/login
+// Bejelentkezés - POST /api/auth/login
+// 1. Felhasználó keresése email alapján
+// 2. Bcrypt.compare segítségével a megadott jelszó és a hashelt jelszó összehasonlítása
+// 3. Ha helyes, session létrehozása
 router.post('/login', async (request, response) => {
     const { email, jelszo } = request.body;
 
@@ -55,24 +52,20 @@ router.post('/login', async (request, response) => {
     }
 
     try {
-        //?  Email alapján megkeressük a felhasználót az adatbázisban
         const felhasznalo = await database.felhasznaloEmailAltal(email);
 
-        //?  Ha nincs ilyen felhasználó, UGYANAZT az üzenetet küldjük, mint rossz jelszónál
-        //?  Biztonsági ok: ne derüljön ki, hogy melyik email van regisztrálva és melyik nincs
         if (!felhasznalo) {
             return response.status(401).json({ uzenet: 'Hibás email cím vagy jelszó.' });
         }
 
-        //?  bcrypt.compare összehasonlítja a beírt jelszót a tárolt hash-sel
-        //?  Nem kell magunknak visszafejtenük - a bcrypt csinálja
+        // A beírt jelszót összehasonlítjuk az adatbázisban tárolt titkosított változatával
         const jelszoHelyes = await bcrypt.compare(jelszo, felhasznalo.jelszo_hash);
 
         if (!jelszoHelyes) {
             return response.status(401).json({ uzenet: 'Hibás email cím vagy jelszó.' });
         }
 
-        //?  Session-be mentjük a felhasználó id-ját - ettől fog "bejelentkezettnek" számítani
+        // A felhasználó azonosítóját eltároljuk a session-ben (így marad bejelentkezve)
         request.session.felhasznaloId = felhasznalo.id;
 
         response.status(200).json({ uzenet: 'Sikeres bejelentkezés!', nev: felhasznalo.nev });
@@ -83,10 +76,9 @@ router.post('/login', async (request, response) => {
     }
 });
 
-//! Kijelentkezés - POST /api/auth/logout
+// Kijelentkezés - POST /api/auth/logout
 router.post('/logout', (request, response) => {
-    //?  A session törlése = kijelentkezés
-    //?  A destroy() eltávolítja a session-t a szerverről teljesen
+    // A session teljes törlése zárja le a bejelentkezést
     request.session.destroy((hiba) => {
         if (hiba) {
             return response.status(500).json({ uzenet: 'Kijelentkezési hiba.' });
@@ -95,20 +87,18 @@ router.post('/logout', (request, response) => {
     });
 });
 
-//! Session ellenőrzés - GET /api/auth/me
-//?  Ezt hívja meg a frontend minden védett oldalon, hogy eldöntse: be van-e a felhasználó jelentkezve
+// Session ellenőrzés - GET /api/auth/me
+// A frontend ezt a végpontot hívja meg oldalbetöltéskor, hogy megnézze: be van-e jelentkezve a user.
+// Visszaadja a user alapvető adatait, ha van érvényes session.
 router.get('/me', async (request, response) => {
-    //?  Ha nincs session, nincs bejelentkezve
     if (!request.session.felhasznaloId) {
         return response.status(401).json({ uzenet: 'Nincs bejelentkezve.' });
     }
 
     try {
-        //?  Session-ből lekérjük az aktuális felhasználó adatait
         const felhasznalo = await database.felhasznaloIdAltal(request.session.felhasznaloId);
 
         if (!felhasznalo) {
-            //?  Ha a session létezik, de a felhasználó már nem létezik az adatbázisban
             request.session.destroy(() => {});
             return response.status(401).json({ uzenet: 'Érvénytelen session.' });
         }

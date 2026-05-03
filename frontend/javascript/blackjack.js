@@ -1,4 +1,4 @@
-// ==================== UI & API KOMMUNIKÁCIÓ ====================
+// Ui & api kommunikáció:
 
 const PostMethodFetch = {
     post: async (url, data = {}) => {

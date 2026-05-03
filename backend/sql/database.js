@@ -1,73 +1,69 @@
 const mysql = require('mysql2/promise');
 
-//! Adatbázis kapcsolat pool
-//?  A "pool" azt jelenti, hogy nem nyitunk-zárunk minden lekérdezésnél új kapcsolatot,
-//?  hanem fenntartunk egy készletet (max 10 db), és abból kölcsönözzük ki-be a kapcsolatokat.
-//?  Ez sokkal gyorsabb és stabilabb, mint minden alkalommal új kapcsolatot létrehozni.
+// Adatbázis kapcsolat készlet (pool): több párhuzamos kérést kezel egyszerre, nem kell minden alkalommal új kapcsolatot nyitni
 const pool = mysql.createPool({
     host: '127.0.0.1',
     user: 'root',
-    password: '', //?  XAMPP alapból jelszó nélkül fut, éles szerveren ezt változtasd meg!
+    password: '',
     database: 'truechance',
-    waitForConnections: true,
-    connectionLimit: 10, //?  Maximum 10 párhuzamos adatbázis kapcsolat
-    queueLimit: 0 //?  0 = korlátlan várakozási sor
+    waitForConnections: true,  // Ha minden kapcsolat foglalt, várjon szabad helyre
+    connectionLimit: 10,       // Legfeljebb 10 párhuzamos adatbázis kapcsolat
+    queueLimit: 0              // Korlátlan várakozó sor (0 = nincs limit)
 });
 
-//! Felhasználó lekérdezések
-//?  Regisztrációhoz: új felhasználó beszúrása
+// Felhasználó műveletek
+
+// Regisztrációkor automatikusan 24 órával visszadátumozódik az utolsó daily cash porgétés,
+// hogy az új játékos azonnal tudjon porgétni
 async function felhasznaloLetrehoz(nev, email, jelszoHash) {
     const query = `
         INSERT INTO felhasznalok (nev, email, jelszo_hash, daily_cash_utolso_porgetes)
         VALUES (?, ?, ?, DATE_SUB(NOW(), INTERVAL 24 HOUR))
     `;
-    //?  A ? helyőrzők megvédik az SQL injection ellen - sosem fűzzük össze stringként!
     const [eredmeny] = await pool.execute(query, [nev, email, jelszoHash]);
-    return eredmeny.insertId; //?  Visszaadja az újonnan létrehozott felhasználó id-ját
+    return eredmeny.insertId; // Az új sor ID-ját adja vissza
 }
 
-//?  Bejelentkezéshez: email alapján megkeresi a felhasználót (jelszó ellenőrzéshez kell)
+// Felhasználó keresése email alapján (bejelentkezéshez és regisztrációhoz)
 async function felhasznaloEmailAltal(email) {
     const query = 'SELECT * FROM felhasznalok WHERE email = ?';
     const [sorok] = await pool.execute(query, [email]);
-    return sorok[0]; //?  Ha nincs ilyen email, undefined-ot ad vissza
+    return sorok[0];
 }
 
-//?  Session-ből való felhasználó lekéréshez: id alapján keres
+// Felhasználó biztonságos adatainak lekérése ID alapján (a jelszó hash szándékosan ki van hagyva)
 async function felhasznaloIdAltal(id) {
     const query = `
         SELECT id, nev, email, admin_e, egyenleg, letrehozva, daily_cash_utolso_porgetes
         FROM felhasznalok
         WHERE id = ?
     `;
-    //?  Szándékosan NEM kérjük le a jelszo_hash mezőt - nem kell sehova, biztonságosabb nélküle
     const [sorok] = await pool.execute(query, [id]);
-    return sorok[0];
+    return sorok[0]; // undefined ha nem talált
 }
 
-//?  Jelszó ellenőrzéshez: id alapján lekéri a jelszó hash-t is
+// Felhasználó hitelesítési adatainak lekérése (jelszó csere vagy ellenőrzés)
 async function felhasznaloIdAltalJelszovel(id) {
     const query = 'SELECT id, jelszo_hash FROM felhasznalok WHERE id = ?';
     const [sorok] = await pool.execute(query, [id]);
     return sorok[0];
 }
 
-//?  Jelszó frissítése
+// Jelszó frissítése a profil oldalon
 async function felhasznaloJelszoFrissit(felhasznaloId, ujJelszoHash) {
     const query = 'UPDATE felhasznalok SET jelszo_hash = ? WHERE id = ?';
     await pool.execute(query, [ujJelszoHash, felhasznaloId]);
 }
 
-//?  Egyenleg frissítésekor (nyerés/veszteség után)
+// Játékos egyenlegének azonnali frissítése a játékok után
 async function egyenlegFrissit(felhasznaloId, ujEgyenleg) {
     const query = 'UPDATE felhasznalok SET egyenleg = ? WHERE id = ?';
     await pool.execute(query, [ujEgyenleg, felhasznaloId]);
 }
 
-//! Játékmenet naplózás
+// Statisztika és naplózás
 
-//?  Minden játék végén meghívjuk, hogy naplózzuk a történteket
-//?  Ebből lesz majd a valós statisztika (nyerési %, ház előny, stb.)
+// Minden játékmenet (pörgetés, leosztás) bejegyzése az adatbázisba
 async function jatekmentNaploz(felhasznaloId, jatekTipus, tetOsszeg, nyeremeny, egyenlegUtan) {
     const query = `
         INSERT INTO jatekmenetek (felhasznalo_id, jatek_tipus, tet_osszeg, nyeremeny, egyenleg_utan)
@@ -76,7 +72,7 @@ async function jatekmentNaploz(felhasznaloId, jatekTipus, tetOsszeg, nyeremeny, 
     await pool.execute(query, [felhasznaloId, jatekTipus, tetOsszeg, nyeremeny, egyenlegUtan]);
 }
 
-//?  Felhasználó összes játékmenetének lekérése (legújabb elől)
+// Játékos korábbi játékmeneteinek listázása időrendben
 async function jatekmenetekLekerese(felhasznaloId) {
     const query = `
         SELECT 
@@ -90,26 +86,26 @@ async function jatekmenetekLekerese(felhasznaloId) {
         WHERE felhasznalo_id = ?
         ORDER BY jatszva DESC
     `;
-    //?  ORDER BY jatszva DESC = legújabb játékok elől
     const [sorok] = await pool.execute(query, [felhasznaloId]);
-    return sorok; //?  Visszaad egy tömböt az összes játékmenettel  
+    return sorok;
 }
 
-//! Profil lekérdezések
-//?  Profil szerkesztéshez: név és email frissítése
+// Profil és Admin lekérdezések
+
+// Felhasználó alap adatainak módosítása
 async function felhasznaloProfilFrissit(felhasznaloId, nev, email) {
     const query = 'UPDATE felhasznalok SET nev = ?, email = ? WHERE id = ?';
     await pool.execute(query, [nev, email, felhasznaloId]);
 }
 
-//?  Ellenőrzi, hogy az emailt másik felhasználó használja-e
+// Ellenőrzi, hogy foglalt-e az új email cím profil szerkesztéskor
 async function felhasznaloEmailMasAltal(email, aktualisFelhasznaloId) {
     const query = 'SELECT id FROM felhasznalok WHERE email = ? AND id <> ? LIMIT 1';
     const [sorok] = await pool.execute(query, [email, aktualisFelhasznaloId]);
     return !!sorok[0];
 }
 
-//?  Profil oldalhoz összesített statisztikák lekérése
+// Részletes statisztikai adatok (Win rate, ROI, profit) lekérése a profilhoz
 async function felhasznaloProfilAdatokLekerese(felhasznaloId) {
     const felhasznalo = await felhasznaloIdAltal(felhasznaloId);
     if (!felhasznalo) {
@@ -120,13 +116,26 @@ async function felhasznaloProfilAdatokLekerese(felhasznaloId) {
         SELECT
             COUNT(*) AS osszes_kor,
             COALESCE(SUM(tet_osszeg), 0) AS osszes_eljatszott_penz,
-            COALESCE(SUM(CASE WHEN nyeremeny > 0 THEN nyeremeny ELSE 0 END), 0) AS osszes_nyert_penz,
             COALESCE(
                 SUM(
                     CASE
+                        -- Pókernél a nyeremény negatív lehet (nettó veszteség), pozitív esetén az a valódi nyeremény
+                        WHEN jatek_tipus = 'poker' AND nyeremeny > 0 THEN nyeremeny
+                        -- Nem-póker: csak akkor nyert, ha a nyeremény TÖBB mint a tét (valódi profit rész)
+                        WHEN jatek_tipus <> 'poker' AND nyeremeny > tet_osszeg THEN nyeremeny - tet_osszeg
+                        ELSE 0
+                    END
+                ),
+                0
+            ) AS osszes_nyert_penz,
+            COALESCE(
+                SUM(
+                    CASE
+                        -- Póker: csak a negatív nyeremény számít veszteségnek
                         WHEN jatek_tipus = 'poker' AND nyeremeny < 0 THEN ABS(nyeremeny)
-                        WHEN jatek_tipus = 'poker' THEN 0
-                        ELSE GREATEST(tet_osszeg - nyeremeny, 0)
+                        -- Nem-póker: csak ha a nyeremény kisebb mint a tét (veszteség = tét - visszakapott)
+                        WHEN jatek_tipus <> 'poker' AND nyeremeny < tet_osszeg THEN tet_osszeg - nyeremeny
+                        ELSE 0
                     END
                 ),
                 0
@@ -136,6 +145,7 @@ async function felhasznaloProfilAdatokLekerese(felhasznaloId) {
     `;
     const [osszesitettSorok] = await pool.execute(osszesitettQuery, [felhasznaloId]);
 
+    // Játékonként csoportosítva: hány kört játszott és hányszor nyert az egyes játékokban
     const jatekonkentiQuery = `
         SELECT
             jatek_tipus,
@@ -160,6 +170,7 @@ async function felhasznaloProfilAdatokLekerese(felhasznaloId) {
     };
 }
 
+// Az összes regisztrált felhasználó adatainak betöltése az admin panelhez
 async function felhasznalokAdminLekerese() {
     const query = `
         SELECT id, nev, email, admin_e, egyenleg, letrehozva
@@ -170,6 +181,7 @@ async function felhasznalokAdminLekerese() {
     return sorok;
 }
 
+// Legjobb játékosok listázása egyenleg alapján csökkenő sorrendben a ranglistához
 async function ranglistaFelhasznalokLekerese() {
     const query = `
         SELECT id, nev, egyenleg
@@ -180,6 +192,7 @@ async function ranglistaFelhasznalokLekerese() {
     return sorok;
 }
 
+// Admin jogú módosítás egy adott felhasználó adatain
 async function felhasznaloAdminFrissit(felhasznaloId, nev, email, egyenleg, adminE) {
     const query = `
         UPDATE felhasznalok
@@ -189,6 +202,9 @@ async function felhasznaloAdminFrissit(felhasznaloId, nev, email, egyenleg, admi
     await pool.execute(query, [nev, email, egyenleg, adminE ? 1 : 0, felhasznaloId]);
 }
 
+// Daily Cash lekérdezések
+
+// Ellenőrzi az egyenleget és az utolsó pörgetés idejét
 async function dailyCashAllapotLekeres(felhasznaloId) {
     const query = `
         SELECT id, egyenleg, daily_cash_utolso_porgetes
@@ -199,6 +215,8 @@ async function dailyCashAllapotLekeres(felhasznaloId) {
     return sorok[0];
 }
 
+// Napi bónusz jóváírása – az UPDATE csak akkor fut le, ha valóban eltelt 24 óra
+// Ha más kérés már előbb frissített (versenyhelyzet), az affectedRows 0 lesz, és null-t adunk vissza
 async function dailyCashPorgetesJovairas(felhasznaloId, nyeremeny) {
     const frissitesQuery = `
         UPDATE felhasznalok
@@ -211,13 +229,13 @@ async function dailyCashPorgetesJovairas(felhasznaloId, nyeremeny) {
     const [frissitesEredmeny] = await pool.execute(frissitesQuery, [nyeremeny, felhasznaloId]);
 
     if (!frissitesEredmeny.affectedRows) {
-        return null;
+        return null; // A feltétel nem teljesült (még nem telt el 24 óra)
     }
 
-    return dailyCashAllapotLekeres(felhasznaloId);
+    return dailyCashAllapotLekeres(felhasznaloId); // Friss adatokkal tér vissza
 }
 
-//! Export
+// Export
 module.exports = {
     felhasznaloLetrehoz,
     felhasznaloEmailAltal,

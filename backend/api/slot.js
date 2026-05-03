@@ -50,6 +50,7 @@ function getSzimbolumByNev(nev) {
     return null;
 }
 
+// Minden szimbólum valószínűségét kiszámolja (súly / összes súly) – az RTP számításhoz kell
 function szimbolumValoszinusegek() {
     let osszesSuly = 0;
     for (let index = 0; index < szimbolumok.length; index++) {
@@ -62,47 +63,56 @@ function szimbolumValoszinusegek() {
         valoszinusegek.push({
             nev: szimbolum.nev,
             szorzo: szimbolum.szorzo,
-            valoszinuseg: szimbolum.suly / osszesSuly
+            valoszinuseg: szimbolum.suly / osszesSuly // arány 0 és 1 között
         });
     }
 
     return valoszinusegek;
 }
 
+// Megadja a nyeremény szorzóját az egyező szimbólumok száma alapján
+// (pl. 2 egyező = 0.4x, 3 = 1x, 4 = 2x, 5 = 4x általánosan)
 function szorzoEgyezesDbAlapjan(szimbolum, egyezoDb) {
     if (egyezoDb < 2) {
-        return 0;
+        return 0; // 0 vagy 1 egyező szimbólum: nincs nyeremény
     }
 
     if (szimbolum.nev === 'seven' && egyezoDb === 2) {
-        return 15;
+        return 15; // 2 hetes kivételes szorzja: 15x
     }
 
+    // Általános szorzó tábla: index = egyező szimbólumok száma
     const szorzatSzamal = [0, 0, 0.4, 1, 2, 4];
     return szimbolum.szorzo * szorzatSzamal[egyezoDb];
 }
 
+// Az elméleti RTP-t (Return to Player), house edge-et és ROI-t számolja ki matematikai úton
+// Ez nem szimuláció, hanem közvetlen valószínűség-számítás a szimbólumok súlya alapján
 function slotElmeletiAdatokSzamol() {
     const valoszinusegek = szimbolumValoszinusegek();
-    let alapRtpSzoro = 0;
-    let alapNyeresiEsely = 0;
+    let alapRtpSzoro = 0;      // Várható nyeremény szorzó (1.0 = nullszaldós)
+    let alapNyeresiEsely = 0;  // Valószinűsége annak, hogy legalább 2 egyező szimbólum lesz
 
     for (let szimbolumIndex = 0; szimbolumIndex < valoszinusegek.length; szimbolumIndex++) {
         const szimbolum = valoszinusegek[szimbolumIndex];
-        const p = szimbolum.valoszinuseg;
+        const p = szimbolum.valoszinuseg; // az adott szimbólum megelőfordulási aránya
 
+        // Végigmegyünk 2-től 5 egyező szimbólumig
         for (let egyezoDb = 2; egyezoDb <= OSZLOP_SZAM; egyezoDb++) {
+            // p^egyezoDb = pontosan ennyi azonos szimbólum valószínűsége egymás után
             let valoszinuseg = Math.pow(p, egyezoDb);
             if (egyezoDb < OSZLOP_SZAM) {
+                // Ha nem az utolsó oszlopig tart, az (1-p) faktort is számítjuk
                 valoszinuseg = valoszinuseg * (1 - p);
             }
 
             alapRtpSzoro = alapRtpSzoro + valoszinuseg * szorzoEgyezesDbAlapjan(szimbolum, egyezoDb);
         }
 
-        alapNyeresiEsely = alapNyeresiEsely + p * p;
+        alapNyeresiEsely = alapNyeresiEsely + p * p; // P(legalább 2 egyező) becsült értéke
     }
 
+    // A kis nyeresek (citrom/eper) hatása a teljes RTP-re
     const alapVesztesEsely = Math.max(0, 1 - alapNyeresiEsely);
     const citromSzimbolum = getSzimbolumByNev('citrom');
     const eperSzimbolum = getSzimbolumByNev('eper');
@@ -110,9 +120,9 @@ function slotElmeletiAdatokSzamol() {
     const eperSzorzo = eperSzimbolum ? szorzoEgyezesDbAlapjan(eperSzimbolum, 2) : 0;
     const kisNyeresAtlagSzorzo = KIS_NYERES_CITROM_ARANY * citromSzorzo + (1 - KIS_NYERES_CITROM_ARANY) * eperSzorzo;
     const kisNyeresRtpSzoro = alapVesztesEsely * KIS_NYERES_ESELY * kisNyeresAtlagSzorzo;
-    const sessionRtpSzazalek = (alapRtpSzoro + kisNyeresRtpSzoro) * 100;
-    const statikusHouseEdgeSzazalek = 100 - sessionRtpSzazalek;
-    const statikusRoiSzazalek = -statikusHouseEdgeSzazalek;
+    const sessionRtpSzazalek = (alapRtpSzoro + kisNyeresRtpSzoro) * 100; // százalékos formára alakítjuk
+    const statikusHouseEdgeSzazalek = 100 - sessionRtpSzazalek; // ház hátrány = 100% - RTP%
+    const statikusRoiSzazalek = -statikusHouseEdgeSzazalek;     // ROI a játékos szemszögéből negatív
 
     return {
         sessionRtpSzazalek: Number(sessionRtpSzazalek.toFixed(2)),
@@ -190,19 +200,21 @@ function kisNyeresSzimbolumValaszt() {
     return Math.random() < 0.62 ? 'citrom' : 'eper';
 }
 
-// Garantált 2-es sorozat citrom/eper szimbólummal
+// Első két oszlopba azonos szimbólumot tesz (garantált kis nyeremény),
+// a maradék oszlopokba véletlen szimbólumokat, hogy ne jöjjön ki nagyobb kombináció
 function kisNyeresKeszit(eredmenyek) {
     const nyeroSzimbolum = kisNyeresSzimbolumValaszt();
     eredmenyek[0] = nyeroSzimbolum;
-    eredmenyek[1] = nyeroSzimbolum;
+    eredmenyek[1] = nyeroSzimbolum; // első kettő azonos → 2-es sorozat
 
+    // A harmadik mindenképp különböző legyen, hogy ne legyen 3-as vagy jó sorozat
     let harmadik = sulyozottRandom();
     while (harmadik.nev === nyeroSzimbolum) {
         harmadik = sulyozottRandom();
     }
     eredmenyek[2] = harmadik.nev;
-    eredmenyek[3] = sulyozottRandom().nev;
-    eredmenyek[4] = sulyozottRandom().nev;
+    eredmenyek[3] = sulyozottRandom().nev; // teljesen véletlen
+    eredmenyek[4] = sulyozottRandom().nev; // teljesen véletlen
 }
 
 // Nyerés kiszámítása az eredmények alapján
@@ -239,6 +251,7 @@ function nyeresKiszamol(eredmenyek, tet) {
     return { nyert: true, db: egyezoDb, szimbolum: szimbolum.nev, nyeremeny: nyeremeny };
 }
 
+// GET /api/slot/statisztika – Elméleti RTP, house edge és ROI adatok lekérése
 router.get('/statisztika', (request, response) => {
     if (!request.session.felhasznaloId) {
         return response.status(401).json({ uzenet: 'Nincs bejelentkezve.' });
@@ -252,7 +265,7 @@ router.get('/statisztika', (request, response) => {
     });
 });
 
-//? POST /api/slot/spin - Slot gép pörgetés végpont
+// POST /api/slot/spin - Slot gép pörgetés végpont
 router.post('/spin', async (request, response) => {
     // Bejelentkezés ellenőrzése
     if (!request.session.felhasznaloId) {

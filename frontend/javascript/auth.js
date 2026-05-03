@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const bejelentkezesForm = document.getElementById('loginForm');
     const regisztracioForm = document.getElementById('registerForm');
 
-    //! Tab váltás (bejelentkezés / regisztráció)
+    // Tab váltás (bejelentkezés / regisztráció)
     bejelentkezesBtn.addEventListener('click', function () {
         bejelentkezesBtn.classList.add('active');
         bejelentkezesForm.style.display = 'block';
@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
         regisztracioBtn.classList.remove('active');
         regisztracioForm.style.display = 'none';
 
-        hibaTorles(); //?  Tab váltáskor töröljük a hibaüzenetet
+        hibaTorles();
     });
 
     regisztracioBtn.addEventListener('click', function () {
@@ -25,38 +25,33 @@ document.addEventListener('DOMContentLoaded', function () {
         hibaTorles();
     });
 
-    //! Bejelentkezés
+    // Bejelentkezés
     bejelentkezesForm.querySelector('form').addEventListener('submit', async function (event) {
-        event.preventDefault(); //?  Megakadályozza az oldalfrissítést
+        event.preventDefault();
 
         const email = document.getElementById('loginEmail').value;
         const jelszo = document.getElementById('loginPassword').value;
 
-        //?  fetch() = HTTP kérés küldése a backendnek, async/await-tel várjuk meg a választ
         try {
             const valasz = await fetch('/api/auth/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email: email, jelszo: jelszo })
-                //?  JSON.stringify() = objektumból stringet csinál, hogy el lehessen küldeni
             });
 
-            const adat = await valasz.json(); //?  A szerver válaszát JSON-ból objektummá alakítja
+            const adat = await valasz.json();
 
             if (valasz.ok) {
-                //?  Sikeres bejelentkezés → átirányítás a játékválasztóra
                 window.location.href = 'games.html';
             } else {
-                //?  Hiba esetén alert() helyett inline hibaüzenetet mutatunk
                 hibaMutat(adat.uzenet);
             }
         } catch (hiba) {
-            //?  Ha a szerver nem válaszol (pl. le van állítva)
             hibaMutat('Nem sikerült kapcsolódni a szerverhez. Elindítottad a backendet?');
         }
     });
 
-    //! Regisztráció
+    // Regisztráció
     regisztracioForm.querySelector('form').addEventListener('submit', async function (event) {
         event.preventDefault();
 
@@ -89,18 +84,15 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    //! Hibaüzenet megjelenítése / törlése
+    // Hibaüzenet megjelenítése / törlése
     function hibaMutat(szoveg) {
-        //?  Megkeressük a hibaüzenet dobozt az oldalon
         let hibaElem = document.getElementById('hibaUzenet');
 
-        //?  Ha még nem létezik, létrehozzuk és beillesztjük a form elé
         if (!hibaElem) {
             hibaElem = document.createElement('div');
             hibaElem.id = 'hibaUzenet';
             hibaElem.classList.add('hiba-uzenet');
 
-            //?  A bejelentkezés/regisztráció kártya tetejére szúrjuk be
             const kartya = document.querySelector('.bejelentkezes-kartya');
             kartya.insertBefore(hibaElem, kartya.firstChild);
         }
@@ -116,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    //! Jelszó szem ikon működése
+    // Jelszó szem ikon működése
     const jelszoSzemGombok = document.querySelectorAll('.jelszo-szem-gomb');
     for (let i = 0; i < jelszoSzemGombok.length; i++) {
         jelszoSzemGombok[i].addEventListener('click', function () {

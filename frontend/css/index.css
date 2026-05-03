@@ -24,15 +24,15 @@
     padding: 120px 0 4rem;
 }
 
-.hero-section::before { /* ez a pszeudo elem létrehoz egy réteget a hero szekció "előtt", ami a háttérhatást adja */
-    content: ''; /* ez biztosítsa, hogy üres elem legyen, ami csak a háttérhatást adja */
-    position: absolute; /* ez lehetővé teszi, hogy a háttér a szülő elem teljes területét lefedje */
-    top: 0; /* a háttér a teljes magasságot lefedje */
-    bottom: 0; /* a háttér a teljes magasságot lefedje */
-    left: 0; /* a háttér a teljes szélességet lefedje */
-    right: 0; /* a háttér a teljes szélességet lefedje */
-    background: radial-gradient(ellipse at 50% 50%, rgba(140, 92, 255, 0.25) 0%, transparent 50%); /*radial-gradient azt csinálja, hogy egy kör alakú színátmenetet hoz létre, ami a megadott koordinátáknál kezdődik */
-    pointer-events: none; /* biztosítja, hogy a háttér ne zavarja a kattintásokat */
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: radial-gradient(ellipse at 50% 50%, rgba(140, 92, 255, 0.25) 0%, transparent 50%);
+    pointer-events: none;
 }
 
 .hero-content {
@@ -168,7 +168,7 @@
     border-radius: 34px;
 }
 
-.toggle-slider:before { /* ez a kis kör, ami elmozdul a kapcsolóban */
+.toggle-slider:before {
     position: absolute;
     content: '';
     height: 26px;
@@ -177,15 +177,15 @@
     bottom: 3px;
     background-color: #f0f0f0;
     border-radius: 50%; 
-    transition: 0.3s; /* ez adja a kis kör sima elmozdulását */
+    transition: 0.3s;
 }
 
-input:checked + .toggle-slider { /* input:checked - azt jelenti, hogy a kapcsoló be van kapcsolva */
+input:checked + .toggle-slider {
     background: #8c5cff;
     border-color: #8c5cff;
 }
 
-input:checked + .toggle-slider:before { /* amikor a kapcsoló be van kapcsolva, a kis kör elmozdul jobbra */
+input:checked + .toggle-slider:before {
     transform: translateX(26px);
 }
 
@@ -206,13 +206,6 @@ input:checked + .toggle-slider:before { /* amikor a kapcsoló be van kapcsolva, 
 
 .stat-value {
     color: #8c5cff;
-}
-
-.chart-placeholder {
-    background: rgba(42, 44, 51, 0.5);
-    border: 1px solid #33353a;
-    aspect-ratio: 16 / 10; /* 16/10, hogy egy kicsit magasabb legyen, mint a 16/9-es képarány */
-    color: rgba(240, 240, 240, 0.5);
 }
 
 .stats-info-item {

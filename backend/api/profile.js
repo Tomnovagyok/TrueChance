@@ -60,7 +60,7 @@ function profilValaszOsszeallit(adatok) {
     };
 }
 
-//! Profil adatok lekérése - GET /api/profile/adatok
+// Profil adatok lekérése - GET /api/profile/adatok
 router.get('/adatok', async (request, response) => {
     if (!request.session.felhasznaloId) {
         return response.status(401).json({ uzenet: 'Nincs bejelentkezve.' });
@@ -82,7 +82,7 @@ router.get('/adatok', async (request, response) => {
     }
 });
 
-//! Profil frissítés - PUT /api/profile/frissites (FormData)
+// Profil frissítés - PUT /api/profile/frissites (FormData)
 router.put('/frissites', upload.none(), async (request, response) => {
     if (!request.session.felhasznaloId) {
         return response.status(401).json({ uzenet: 'Nincs bejelentkezve.' });
@@ -111,6 +111,7 @@ router.put('/frissites', upload.none(), async (request, response) => {
 
         await database.felhasznaloProfilFrissit(request.session.felhasznaloId, nev, email);
 
+        // Frissített adatokat lekérjük, hogy a válasz naprakész legyen
         const frissProfilAdatok = await database.felhasznaloProfilAdatokLekerese(request.session.felhasznaloId);
         if (!frissProfilAdatok) {
             return response.status(404).json({ uzenet: 'Felhasználó nem található.' });
@@ -126,7 +127,7 @@ router.put('/frissites', upload.none(), async (request, response) => {
     }
 });
 
-//! Jelszó változtatás - PUT /api/profile/jelszo-valtoztatas (FormData)
+// Jelszó változtatás - PUT /api/profile/jelszo-valtoztatas (FormData)
 router.put('/jelszo-valtoztatas', upload.none(), async (request, response) => {
     if (!request.session.felhasznaloId) {
         return response.status(401).json({ uzenet: 'Nincs bejelentkezve.' });
@@ -144,7 +145,7 @@ router.put('/jelszo-valtoztatas', upload.none(), async (request, response) => {
     }
 
     try {
-        // Lekérjük a felhasználót a jelszó hash-sel
+        // A jelszó hash-t csak ez a lekérés adja vissza, a sima felhasznaloIdAltal nem
         const felhasznalo = await database.felhasznaloIdAltalJelszovel(request.session.felhasznaloId);
         if (!felhasznalo) {
             return response.status(404).json({ uzenet: 'Felhasználó nem található.' });
@@ -156,10 +157,10 @@ router.put('/jelszo-valtoztatas', upload.none(), async (request, response) => {
             return response.status(401).json({ uzenet: 'A jelenlegi jelszó nem helyes.' });
         }
 
-        // Titkosítjuk az új jelszót
+        // Új jelszó titkosítása (10-es bcrypt erősség = jó egyensúly biztonság és sebessség között)
         const ujJelszoHash = await bcrypt.hash(ujJelszo, 10);
 
-        // Frissítjük a jelszót az adatbázisban
+        // Új hash eltárolása az adatbázisban
         await database.felhasznaloJelszoFrissit(request.session.felhasznaloId, ujJelszoHash);
 
         response.status(200).json({ uzenet: 'Jelszó sikeresen megváltoztatva.' });

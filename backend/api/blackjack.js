@@ -1,9 +1,9 @@
-// BLACKJACK BACKEND - TISZTA VERZIÓ
+// Blackjack játék backend logika és API végpontok
 const express = require('express');
 const router = express.Router();
 const database = require('../sql/database.js');
 
-//! ==================== BLACKJACK Függvények ====================
+// BLACKJACK Függvények:
 
 // Kártya adatok
 const szamok = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
@@ -32,7 +32,7 @@ function PakliLetrehozasEsKeveres() {
     return pakli;
 }
 
-// Kéz értékének kiszámítása
+// Kéz értékének kiszámítása (az ász 1 vagy 11 lehet, attol függően, mi jobb)
 function kezErtek(kezek) {
     let osszeg = 0;
     let aszDb = 0;
@@ -40,6 +40,7 @@ function kezErtek(kezek) {
         osszeg += kezek[i].ertek;
         if (kezek[i].szam === 'A') aszDb++;
     }
+    // Ha túl sok lett (21 felett), az ászokat visszaváltjuk 1-re amíg lehet
     while (osszeg > 21 && aszDb > 0) {
         osszeg -= 10;
         aszDb--;
@@ -47,10 +48,10 @@ function kezErtek(kezek) {
     return osszeg;
 }
 
-// Játék inicializálása
+// Egy kör induló állapota; minden mérkőzés elején ezzel törlődik a régi state
 function Játék_Inicializálás() {
     return {
-        deck: PakliLetrehozasEsKeveres(),
+        deck: PakliLetrehozasEsKeveres(), // Minden mérkőzés elején friss paklit hozunk létre
         jatekosKez: [],
         osztoKez: [],
         jatekosKez2: [],
@@ -66,9 +67,9 @@ function Játék_Inicializálás() {
     };
 }
 
-//! ==================== BLACKJACK Végpontok ====================
+// BLACKJACK Végpontok:
 
-//?GET /api/blackjack/user - Felhasználó adatok (egyenleg)
+// GET /api/blackjack/user - Felhasználó adatok (egyenleg)
 router.get('/user', async (request, response) => {
     try {
         if (!request.session.felhasznaloId) {
@@ -87,7 +88,7 @@ router.get('/user', async (request, response) => {
     }
 });
 
-//?POST /api/blackjack/init - Új játék indítása
+// POST /api/blackjack/init - Új játék indítása
 router.post('/init', async (request, response) => {
     try {
         // Ellenőrizzük a bejelentkezést
@@ -164,7 +165,7 @@ router.post('/init', async (request, response) => {
     }
 });
 
-//?POST /api/blackjack/hit - Lap kérés
+// POST /api/blackjack/hit - Lap kérés
 router.post('/hit', (request, response) => {
     try {
         const game = request.session.blackjackGame;
@@ -172,14 +173,18 @@ router.post('/hit', (request, response) => {
             return response.status(400).json({ error: 'Nincs aktív játék' });
         }
 
+        // 1. Az aktális kéz (1. vagy 2., ha split történt) meghatározása
         const aktualKez = game.kezIndex === 1 ? game.jatekosKez : game.jatekosKez2;
+        
+        // 2. Új lap felhúzása a pakliról és hozzáadása a kézhez
         aktualKez.push(game.deck.pop());
 
         const ertek = kezErtek(aktualKez);
-        let canContinue = true;
-        let switchHand = false;
+        let canContinue = true;  // Félbemarad-e a kör, vagy folytatja a játékos
+        let switchHand = false;  // Kez et kell-e váltani (split esetén)
 
         if (ertek === 21 && game.jatekosKez2.length > 0) {
+            // 21 lett split esetén: átváltás a második kézre (vagy vége)
             if (game.kezIndex === 1) {
                 game.jatekosKez_Nyert = true;
                 game.eredmeny = 'Állapot: Első kéz 21 - Második kéz';
@@ -190,6 +195,7 @@ router.post('/hit', (request, response) => {
                 canContinue = false;
             }
         } else if (ertek > 21) {
+            // Besokalt: ha split volt, átváltás, különben vége
             game.eredmeny = 'Állapot: Az aktuális kézzel besokaltál';
             if (game.jatekosKez2.length > 0 && game.kezIndex === 1) {
                 game.kezIndex = 2;
@@ -222,7 +228,8 @@ router.post('/hit', (request, response) => {
     }
 });
 
-//?POST /api/blackjack/double - Dupla tét
+// POST /api/blackjack/double - Duplázás (Double Down)
+// A játékos megduplázza a tétjét, kap pontosan egy lapot, majd kötelezően megáll (Stand).
 router.post('/double', async (request, response) => {
     try {
         const game = request.session.blackjackGame;
@@ -251,7 +258,7 @@ router.post('/double', async (request, response) => {
         await database.egyenlegFrissit(request.session.felhasznaloId, ujEgyenleg);
         game.levontTet += game.tet; // Összes levont tét növelése
 
-        // Jelöljük, hogy ez a kéz double-olt
+        // 3. Jelöljük, hogy ez a kéz double-olt (ez fontos a nyereményszámításnál, mert dupla a tét)
         if (game.kezIndex === 1) {
             game.jatekosKez_Double = true;
         } else {
@@ -318,7 +325,9 @@ router.post('/double', async (request, response) => {
     }
 });
 
-//?POST /api/blackjack/split - Split
+// POST /api/blackjack/split - Kéz kettéosztása (Split)
+// Ha a játékos első két lapja megegyező értékű, kettéválaszthatja őket.
+// A tét megduplázódik, és mindkét kéz kap egy-egy új lapot. A játékos először az egyik, majd a másik kezével játszik.
 router.post('/split', async (request, response) => {
     try {
         const game = request.session.blackjackGame;
@@ -351,9 +360,11 @@ router.post('/split', async (request, response) => {
         game.levontTet += game.tet; // Összes levont tét növelése
         game.isSplit = true; // Jelöljük, hogy split történt
 
+        // 3. Az eredeti 2 lap szétválasztása: az 1. lap marad az 1. kéznél, a 2. lap megy a 2. kézhez
         game.jatekosKez2.push(game.jatekosKez[1]);
         game.jatekosKez.pop();
 
+        // 4. Mindkét kéz kap egy-egy új lapot
         game.jatekosKez.push(game.deck.pop());
         game.jatekosKez2.push(game.deck.pop());
 
@@ -388,7 +399,8 @@ router.post('/split', async (request, response) => {
     }
 });
 
-//?POST /api/blackjack/stand - Megállás és osztó húzása
+// POST /api/blackjack/stand - Megállás és osztó húzása
+// A játékos nem kér több lapot; az osztó 17-ig húz, majd dönt az eredmény
 router.post('/stand', async (request, response) => {
     try {
         const game = request.session.blackjackGame;
@@ -429,7 +441,7 @@ router.post('/stand', async (request, response) => {
         // Osztó felfedi a lapjait
         game.osztoRejtett = false;
 
-        // Osztó húz 17-ig
+        // 2. Osztó húz 17-ig (a szabály szerint az osztónak kötelező megállnia 17-nél)
         while (kezErtek(game.osztoKez) < 17) {
             game.osztoKez.push(game.deck.pop());
         }
@@ -443,12 +455,12 @@ router.post('/stand', async (request, response) => {
         let eredmeny2 = '';
         let nyeremeny = 0;
 
-        // Blackjack ellenőrzés (21 az első 2 lapból, nem split után)
+        // Blackjack csak az első 2 lapból jöhet létre, és split után nem számít annak
         const isBlackjack = jatekosPont === 21 && game.jatekosKez.length === 2 && !game.isSplit;
 
-        // Első kéz tétje (double esetén dupla)
+        // Az első kéz tétje (double esetén dupla)
         const kez1Tet = game.jatekosKez_Double ? game.tet * 2 : game.tet;
-        // Második kéz tétje (ha van, double esetén dupla)
+        // A második kéz tétje (ha van, double esetén dupla)
         const kez2Tet = game.jatekosKez2.length > 0 ? (game.jatekosKez2_Double ? game.tet * 2 : game.tet) : 0;
 
         // Első kéz eredménye

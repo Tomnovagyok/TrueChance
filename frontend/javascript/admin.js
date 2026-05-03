@@ -198,7 +198,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         mentesGomb.innerHTML = '<i class="fas fa-save me-2"></i>Mentés';
     });
 
-    //! Jelszó szem ikon működése
+    // Jelszó szem ikon működése
     const jelszoSzemGombok = document.querySelectorAll('.jelszo-szem-gomb');
     for (let i = 0; i < jelszoSzemGombok.length; i++) {
         jelszoSzemGombok[i].addEventListener('click', function () {

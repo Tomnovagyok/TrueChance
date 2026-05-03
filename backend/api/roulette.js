@@ -16,7 +16,7 @@ const szorzok = {
 const pirosszamok = [32, 19, 21, 25, 34, 27, 36, 30, 23, 5, 16, 1, 14, 9, 18, 7, 12, 3];
 const MAX_SZAM_FOGADAS_DB = 16;
 
-// Ellenőrzi, hogy a kiszorsolt szám nyerő-e a megadott fogadásra
+// Fogadás kiértékelő: megnézi, hogy a kisorsolt szám alapján nyert-e az adott típusú fogadás
 function fogadasEllenorzes(szam, tipus, ertek) {
     // Egyedi szám fogadás
     if (tipus === 'szam') {
@@ -118,6 +118,8 @@ function fogadasEllenorzes(szam, tipus, ertek) {
     return false;
 }
 
+// Bemeneti adatok normalizálása: a usertől érkező adatokat egységes formára hozza (pl. stringbe), 
+// és kiszűri a hibás értékeket (pl. túl nagy szám, vagy érvénytelen tucat)
 function ertekNormalizal(tipus, ertek) {
     if (tipus === 'szam') {
         const szamErtek = parseInt(ertek);
@@ -167,6 +169,8 @@ function ertekNormalizal(tipus, ertek) {
     return null;
 }
 
+// A teljes fogadási lista validálása: megnézi, hogy érvényesek-e a tétek,
+// kiszűri a duplikációkat, és ellenőrzi a maximum limiteket (pl. max 16 számra fogadhat)
 function fogadasokNormalizalasa(fogadasok) {
     if (!Array.isArray(fogadasok) || fogadasok.length === 0) {
         return { hiba: 'Legalább egy fogadást meg kell adni.' };
@@ -218,6 +222,7 @@ function fogadasokNormalizalasa(fogadasok) {
 }
 
 // POST /api/roulette/spin - Rulett pörgetés végpont
+// Fő játéklogika: fogadások ellenőrzése, egyenleg vizsgálat, pörgetés szimulálása (random szám), majd nyeremény kiszámolása és mentés
 router.post('/spin', async (request, response) => {
     // Bejelentkezés ellenőrzése
     if (!request.session.felhasznaloId) {

@@ -1,53 +1,49 @@
+// Központi API router (router): Ide fut be az összes /api/... kérés,
+// és innen irányítjuk tovább őket a megfelelő al-fájlokhoz (controller-ekhez).
 const express = require('express');
 const router = express.Router();
 
-//!Multer - fájlfeltöltéshez (egyelőre nem használjuk, de a template-ben benne volt)
-
-//!Auth router bekötése
-//?  A bejelentkezés, regisztráció, kijelentkezés és session ellenőrzés
-//?  a /api/auth/... útvonalon érhetők el
+// Hitelesítés (bejelentkezés, regisztráció, kijelentkezés)
 const authRouter = require('./auth.js');
 router.use('/auth', authRouter);
 
-//!Slot router bekötése
+// Slot router
 const slotRouter = require('./slot.js');
 router.use('/slot', slotRouter);
 
-//!Roulette router bekötése
+// Roulette router
 const rouletteRouter = require('./roulette.js');
 router.use('/roulette', rouletteRouter);
 
-//!Stats router bekötése
-//?  A statisztikák lekérése a /api/stats/... útvonalon
+// Stats router
 const statsRouter = require('./stats.js');
 router.use('/stats', statsRouter);
 
-//!Profile router bekötése
+// Profile router
 const profileRouter = require('./profile.js');
 router.use('/profile', profileRouter);
 
-//!Admin router bekötése
+// Admin router
 const adminRouter = require('./admin.js');
 router.use('/admin', adminRouter);
 
-//!Ranglista router bekötése
+// Ranglista router
 const ranglistaRouter = require('./ranglista.js');
 router.use('/ranglista', ranglistaRouter);
 
-//!Daily cash router bekötése
+// Daily cash router
 const dailyCashRouter = require('./daily-cash.js');
 router.use('/daily-cash', dailyCashRouter);
 
-//!Blackjack router bekötése
+// Blackjack router
 const blackjackRouter = require('./blackjack.js');
 router.use('/blackjack', blackjackRouter);
 
-//!Poker router bekötése
+// Poker router (itt az útvonalak a fájlon belül is tartalmazzák a /poker/ prefixet, ezért ide a '/' elég)
 const pokerRouter = require('./poker.js');
-router.use('/', pokerRouter); // A poker.js-ben már /poker/ prefix van az útvonalakon
+router.use('/', pokerRouter);
 
-//!Teszt endpoint
-//?GET /api/test - gyors ellenőrzés, hogy a szerver él-e
+// Teszt endpoint
 router.get('/test', (request, response) => {
     response.status(200).json({
         message: 'Ez a végpont működik.'

@@ -398,10 +398,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 db: adat.nyeresInfo.db
             };
 
-            frissitSessionStatisztika(aktualisTet, nyeresInfo.nyeremeny, nyeresInfo.nyert, nearMiss);
-
-            egyenleg = Number(adat.egyenleg) || 0;
+            // Tét levonása azonnal a pörgetés kezdetekor (a nyeremény csak a végén íródik jóvá)
+            egyenleg = egyenleg - aktualisTet;
             frissitEgyenlegKijelzo();
+            
+            const vegsoEgyenleg = Number(adat.egyenleg) || 0;
 
             const celIndexek = [];
             const magassag = getElemMagassag();
@@ -435,7 +436,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     szalagPoroget(aktualisOszlop, celIndexek[aktualisOszlop], function () {
                         befejezettDb = befejezettDb + 1;
                         if (befejezettDb === OSZLOP_SZAM) {
-                            eredmenyFeldolgoz(nyeresInfo, nearMiss);
+                            eredmenyFeldolgoz(nyeresInfo, nearMiss, vegsoEgyenleg);
                         }
                     });
                 })(oszlopIndex);
@@ -448,10 +449,14 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Eredmény feldolgozása és üzenet megjelenítése
-    function eredmenyFeldolgoz(nyeresInfo, nearMiss) {
+    function eredmenyFeldolgoz(nyeresInfo, nearMiss, vegsoEgyenleg) {
+        // Statisztika és végső egyenleg frissítése csak az animáció végén
+        frissitSessionStatisztika(aktualisTet, nyeresInfo.nyeremeny, nyeresInfo.nyert, nearMiss);
+        egyenleg = vegsoEgyenleg;
+        frissitEgyenlegKijelzo();
+
         if (nyeresInfo.nyert) {
             const nyeremeny = Math.floor(nyeresInfo.nyeremeny);
-            infoPanelEgyenleg.innerHTML = '$' + egyenleg;
             infoPanelNyeremeny.innerHTML = '+$' + nyeremeny;
 
             if (nyeresInfo.szimbolum === 'seven' && nyeresInfo.db >= 3) {

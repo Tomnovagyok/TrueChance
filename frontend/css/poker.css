@@ -93,7 +93,7 @@
 .kartya {
     width: 80px;
     height: auto;
-    border-radius: 0.5rem;
+    border-radius: 4px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
     margin-left: -20px;
 }
@@ -476,6 +476,7 @@
     .kartya {
         width: 60px;
         margin-left: -15px;
+        border-radius: 3px;
     }
 
     .jatek-info-panel {
@@ -510,6 +511,7 @@
     .kartya {
         width: 45px;
         margin-left: -10px;
+        border-radius: 2px;
     }
 
     .jatek-info-panel {
@@ -623,6 +625,7 @@
     .kartya {
         width: 44px;
         margin-left: -13px;
+        border-radius: 2px;
     }
 
     .statisztika-panel {

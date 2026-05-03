@@ -228,7 +228,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return '<img src="../img/Kártyák/Backside.png" class="kartya">';
     }
 
-    // ==================== CSÚSZKA SZINKRONIZÁLÁS ====================
+    // Csúszka szinkronizálás:
     function frissitCsuszka() {
         egyenlegMutato.textContent = '$' + jatekosEgyenleg;
 
@@ -276,7 +276,7 @@ document.addEventListener('DOMContentLoaded', function () {
         beallitEmelesErtek(raiseInput.value);
     });
 
-    // ==================== API HÍVÁS ====================
+    // Api hívás:
     function apiHivas(vegpont, callback, adat) {
         var xhr = new XMLHttpRequest();
         xhr.open('POST', vegpont, true);
@@ -309,7 +309,7 @@ document.addEventListener('DOMContentLoaded', function () {
         xhr.send(adat ? JSON.stringify(adat) : null);
     }
 
-    // ==================== GOMBOK ENGEDÉLYEZÉSE ====================
+    // Gombok engedélyezése:
     function gombokBe() {
         // Az aktuális játék állapot lekérése és gombfrissítés
         var xhr = new XMLHttpRequest();
@@ -323,7 +323,7 @@ document.addEventListener('DOMContentLoaded', function () {
         xhr.send();
     }
 
-    // ==================== MEGJELENÍTÉS ====================
+    // Megjelenítés:
     function megjelenit(adat) {
         // Zseton kijelző
         jatekosEgyenleg = parseFloat(adat.jatekosZseton) || 0;
@@ -388,7 +388,7 @@ document.addEventListener('DOMContentLoaded', function () {
         szimulaltStatisztikakBetolt();
     }
 
-    // ==================== GOMBOK KEZELÉSE ====================
+    // Gombok kezelése:
     function gombokKi() {
         checkBtn.disabled = true;
         callBtn.disabled = true;
@@ -424,13 +424,13 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // ==================== HIGHLIGHT ====================
+    // Highlight:
     function highlightKez(divId) {
         var lapok = document.getElementById(divId).querySelectorAll('.kartya');
         for (var i = 0; i < lapok.length; i++) lapok[i].classList.add('nyertes');
     }
 
-    // ==================== JÁTÉKOS DÖNTÉS KIÍRÁSA + KÉSLELTETETT API HÍVÁS ====================
+    // Játékos döntés kiírása + késleltetett api hívás:
     function jatekosDontesKiiras(szoveg, vegpont, callback, adat) {
         var eredmenyDiv = document.getElementById('eredmeny');
         eredmenyDiv.innerHTML = szoveg;
@@ -440,7 +440,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 1000);
     }
 
-    // ==================== GOMB ESEMÉNYEK ====================
+    // Gomb események:
     checkBtn.addEventListener('click', function () {
         gombokKi();
         jatekosDontesKiiras('Te: Passz (Check)', '/api/poker/check', megjelenit);
@@ -475,7 +475,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // ==================== OLDAL BETÖLTÉSKOR ====================
+    // Oldal betöltéskor:
     gombokKi();
     frissitUjJatekGomb();
     setStatisztikaVisible(false);

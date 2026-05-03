@@ -1,22 +1,18 @@
+// Póker játék backend logika: kérkiértékelés, AI ellenfél, API végpontok
 const express = require('express');
 const router = express.Router();
 const database = require('../sql/database.js');
 
 
-// ------------------------------------------------------------
-//!                     PÓKER BACKEND
-//! A teljes játéklogika szerver oldalon fut.
-//! A frontend csak megjelenít, semmilyen érzékeny adatot
-//! (pakli, ellenfél lapjai, kiértékelés) nem kap meg.
-// ------------------------------------------------------------
+// PÓKER BACKEND - A teljes játéklogika szerver oldalon fut.
 
-//?Kártya adatok
+// Kártya adatok
 var SZAMOK = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
 var SZIMBOLUMOK = ['Pikk', 'Treff', 'Káró', 'Kör'];
 var ERTEKEK = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
 var NAGYVAK = 50;
 
-//?Pakli létrehozása és Fisher-Yates keverés
+// Pakli létrehozása és Fisher-Yates keverés
 function pakliLetrehozas() {
     var osszlap = [];
     for (var i = 0; i < SZIMBOLUMOK.length; i++) {
@@ -33,7 +29,9 @@ function pakliLetrehozas() {
     return osszlap;
 }
 
-//?Kéz kiértékelés – az összes lapból (kéz + asztal) a legjobb kombinációt keresi
+// Kéz kíértékelő: meghatározza a legjobb 5 lapos kéz erősségét (0=magas lap, 10=royal flöss)
+// A póker kéz kiértékelő fő függvénye. Megkapja a játékos 2 lapját és az asztalon lévő (akár 5) lapot, majd meghatározza a legerősebb 5 lapos kombinációt.
+// Visszatér egy objektummal, ami tartalmazza a kombináció erejét (ertek: 0-10), nevét és a döntetlen esetén használatos kísérőlapokat.
 function kiert(jatekosKez, asztalLapok) {
     var aktivLapok = [jatekosKez[0], jatekosKez[1]];
     for (var i = 0; i < asztalLapok.length; i++) aktivLapok.push(asztalLapok[i]);
@@ -52,6 +50,8 @@ function kiert(jatekosKez, asztalLapok) {
             return b - a;
         });
 
+    // Segédfüggvény: megkeresi a legmagasabb sorozatot (5 egymást követő lap) az adott értékekből.
+    // Kezeli az ászt (14) alacsonyként is (1), ha A-2-3-4-5 sorról van szó.
     function legmagasabbSor(ertekek) {
         var ertekLista = ertekek.slice();
         if (ertekLista.indexOf(14) !== -1) {
@@ -84,6 +84,8 @@ function kiert(jatekosKez, asztalLapok) {
         return legmagasabb;
     }
 
+    // Segédfüggvény: Kikerüli a már felhasznált lapokat (kizarvaLista), 
+    // és visszaadja a maradék lapokból a legnagyobbakat, amik a "kicker" (kísérő) szerepét töltik be.
     function legmagasabbKiserok(kizarvaLista, darab) {
         var kiserok = [];
         for (var i = 0; i < egyediErtekek.length; i++) {
@@ -99,6 +101,8 @@ function kiert(jatekosKez, asztalLapok) {
         return kiserok;
     }
 
+    // Segédfüggvény: Két kísérőlap-lista (tieBreaker) összehasonlítása azonos erősségű kezek esetén.
+    // Sorban halad végig a lapokon (a legnagyobbtól a legkisebbig), és ha talál különbséget, eldönti a nyertest.
     function tieBreakerOsszehasonlit(elso, masodik) {
         var maxHossz = Math.max(elso.length, masodik.length);
         for (var i = 0; i < maxHossz; i++) {
@@ -116,6 +120,7 @@ function kiert(jatekosKez, asztalLapok) {
         return 0;
     }
 
+    // 1. LÉPÉS: Megszámoljuk a párokat, drill-eket (3 azonos) és póker-eket (4 azonos)
     var negyesek = [];
     var harmasok = [];
     var parok = [];
@@ -131,6 +136,8 @@ function kiert(jatekosKez, asztalLapok) {
         }
     }
 
+    // 2. LÉPÉS: Flöss (szín) ellenőrzése
+    // Csoportosítjuk a lapokat szín (szimbolum) szerint.
     var szinSzerintiErtekek = {};
     for (var i = 0; i < aktivLapok.length; i++) {
         var lap = aktivLapok[i];
@@ -161,6 +168,10 @@ function kiert(jatekosKez, asztalLapok) {
         }
     }
 
+    // 3. LÉPÉS: A kezek kiértékelése a legerősebbtől a leggyengébbig haladva.
+    
+    // Royal Flöss / Színsor
+    // Ha van egy sorunk, ami egyben flöss is (legerosebbSzinSor):
     if (legerosebbSzinSor >= 14) {
         return {
             ertek: 10,
@@ -181,6 +192,7 @@ function kiert(jatekosKez, asztalLapok) {
         };
     }
 
+    // Póker (4 azonos lap)
     if (negyesek.length > 0) {
         var pokerErtek = negyesek[0];
         var pokerKisero = legmagasabbKiserok([pokerErtek], 1);
@@ -193,6 +205,7 @@ function kiert(jatekosKez, asztalLapok) {
         };
     }
 
+    // Full House (1 drill + 1 pár)
     if (harmasok.length > 0) {
         var fullHarom = harmasok[0];
         var fullParJeloltek = [];
@@ -220,6 +233,7 @@ function kiert(jatekosKez, asztalLapok) {
         }
     }
 
+    // Flöss (5 egyszínű lap)
     if (legerosebbFloss.length > 0) {
         return {
             ertek: 6,
@@ -230,6 +244,7 @@ function kiert(jatekosKez, asztalLapok) {
         };
     }
 
+    // Sor (5 egymást követő lap, nem egyező szín)
     var sorMagasLap = legmagasabbSor(egyediErtekek);
     if (sorMagasLap > 0) {
         return {
@@ -241,6 +256,7 @@ function kiert(jatekosKez, asztalLapok) {
         };
     }
 
+    // Drill (3 azonos lap)
     if (harmasok.length > 0) {
         var drillErtek = harmasok[0];
         var drillKiserok = legmagasabbKiserok([drillErtek], 2);
@@ -253,6 +269,7 @@ function kiert(jatekosKez, asztalLapok) {
         };
     }
 
+    // Két Pár
     if (parok.length >= 2) {
         var ketParMagas = parok[0];
         var ketParAlacsony = parok[1];
@@ -266,6 +283,7 @@ function kiert(jatekosKez, asztalLapok) {
         };
     }
 
+    // Egy Pár
     if (parok.length === 1) {
         var parErtek = parok[0];
         var parKiserok = legmagasabbKiserok([parErtek], 3);
@@ -278,6 +296,7 @@ function kiert(jatekosKez, asztalLapok) {
         };
     }
 
+    // Magas Lap (ha semmi sem jött be, a legmagasabb lap dönt)
     var magasLapok = egyediErtekek.slice(0, 5);
     return {
         ertek: 0,
@@ -288,6 +307,7 @@ function kiert(jatekosKez, asztalLapok) {
     };
 }
 
+// Két kez kiértékelési eredmény összehasonlítása; holtverseny esetén kísérők döntenek
 function nyertesMeghatarozas(jatekosEredmeny, ellenfelEredmeny) {
     if (jatekosEredmeny.ertek > ellenfelEredmeny.ertek) {
         return 'jatekos';
@@ -315,6 +335,7 @@ function nyertesMeghatarozas(jatekosEredmeny, ellenfelEredmeny) {
     return 'dontetlen';
 }
 
+// Monte Carlo-stílusú szimulációval kíszámolja a játék statikus nyerési arányát és ROI-ját
 function pokerStatikusMutatokSzimulacioval(mintaDb) {
     var korokSzama = Math.max(2000, Number(mintaDb) || 12000);
     var nyeresDb = 0;
@@ -352,16 +373,18 @@ function pokerStatikusMutatokSzimulacioval(mintaDb) {
     };
 }
 
+// Az eredményt cachelni (elment) egyszer számolja ki; szerver újtíndításig érvényes
 var pokerStatikaCache = null;
 
 function statikusPokerAdatok() {
+    // Csak első hiváskor számolja ki, utána a cachet adja vissza
     if (!pokerStatikaCache) {
         pokerStatikaCache = pokerStatikusMutatokSzimulacioval(8000);
     }
     return pokerStatikaCache;
 }
 
-//?Ellenfél döntés
+// Ellenfél döntés
 function ellenfelAI(
     kez2,
     oszto,
@@ -480,36 +503,37 @@ function ellenfelAI(
     }
 }
 
-//?Session-ből játékállapot lekérése / alapértelmezés
+// Session-ből visszaadja az aktív játékállapotot; ha még nincs, egy üres alapstruktúrát hoz létre
 function getJatek(session) {
     if (!session.poker) {
+        // Alapértelmezett játékállapot – minden új sessioniés játékélesnél ezzel indul
         session.poker = {
-            jatekosZseton: 0,
-            pot: 0,
-            aktualisTet: 0,
-            kez: [],
-            kez2: [],
-            oszto: [],
-            pakli: [],
-            felforditottDb: 0,
+            jatekosZseton: 0,      // játékos egyenlege a körben
+            pot: 0,                // a közepre betétett penz
+            aktualisTet: 0,       // az aktíu, válaszra váró tét
+            kez: [],              // játékos két lapja
+            kez2: [],             // ellenfél két lapja
+            oszto: [],            // asztali 5 lap
+            pakli: [],            // maradék pakli
+            felforditottDb: 0,    // hány asztali lap van felfordítva (0, 3, 4 vagy 5)
             jatekVege: false,
             varakozikDontesre: false,
-            bloff: false,
+            bloff: false,         // az ellenfél blöff módban van-e
             uzenet: '',
             uzenetTipus: '',
-            jatekosOsszesBetje: 0,
+            jatekosOsszesBetje: 0, // a játékos ebben a körben összes betete
             aktiv: false,
-            ellenfelTartottMar: false,
-            ellenfelEmeltMar: false,
-            utolsoJatekosEmelesArany: 0,
-            jatekosAllIn: false,
-            riverCheckDb: 0
+            ellenfelTartottMar: false,  // tartott-e már az ellenfél
+            ellenfelEmeltMar: false,    // emelt-e már az ellenfél
+            utolsoJatekosEmelesArany: 0, // az utolsó emelés aránya az egyenleghez képest
+            jatekosAllIn: false,         // elfogyott a játékos pénze
+            riverCheckDb: 0              // egymás utáni checkek száma a riveren
         };
     }
     return session.poker;
 }
 
-//?Csak a frontendnek szükséges (biztonságos) adatok visszaadása
+// Csak a frontendnek szükséges adatok visszaadása
 function biztonsagosAllapot(jatek) {
     // Az ellenfél lapjait és a paklit SOHA nem küldjük el, csak játék végén
     var ellenfelLapok = jatek.jatekVege ? jatek.kez2 : null;
@@ -560,11 +584,9 @@ function biztonsagosAllapot(jatek) {
     };
 }
 
-// ----------------------------------------------------------
-//!                  PÓKER API VÉGPONTOK
-// ----------------------------------------------------------
+// Póker api végpontok:
 
-//?GET /api/poker/statisztika – Sztatikus szimulált mutatók
+// GET /api/poker/statisztika – Sztatikus szimulált mutatók
 router.get('/poker/statisztika', (req, res) => {
     if (!req.session.felhasznaloId) {
         return res.status(401).json({ error: 'Nincs bejelentkezve' });
@@ -578,7 +600,7 @@ router.get('/poker/statisztika', (req, res) => {
     });
 });
 
-//?POST /api/poker/uj – Új leosztás indítása
+// POST /api/poker/uj – Új leosztás indítása
 router.post('/poker/uj', async (req, res) => {
     try {
         // Ha nincs bejelentkezve, hibaüzenet
@@ -647,13 +669,13 @@ router.post('/poker/uj', async (req, res) => {
     }
 });
 
-//?GET /api/poker/allapot – Aktuális állapot lekérdezése
+// GET /api/poker/allapot – Aktuális állapot lekérdezése
 router.get('/poker/allapot', (req, res) => {
     var jatek = getJatek(req.session);
     res.json(biztonsagosAllapot(jatek));
 });
 
-//?POST /api/poker/check – Játékos passzol
+// POST /api/poker/check – Játékos passzol
 router.post('/poker/check', async (req, res) => {
     var jatek = getJatek(req.session);
     if (jatek.jatekVege || !jatek.varakozikDontesre) {
@@ -704,7 +726,7 @@ router.post('/poker/check', async (req, res) => {
     res.json(biztonsagosAllapot(jatek));
 });
 
-//?POST /api/poker/call – Játékos tartja a tétet
+// POST /api/poker/call – Játékos tartja a tétet
 router.post('/poker/call', async (req, res) => {
     try {
         var jatek = getJatek(req.session);
@@ -782,7 +804,7 @@ router.post('/poker/call', async (req, res) => {
     }
 });
 
-//?POST /api/poker/raise – Játékos emel
+// POST /api/poker/raise – Játékos emel
 router.post('/poker/raise', async (req, res) => {
     var jatek = getJatek(req.session);
     if (jatek.jatekVege || !jatek.varakozikDontesre) {
@@ -869,26 +891,28 @@ router.post('/poker/raise', async (req, res) => {
     res.json(biztonsagosAllapot(jatek));
 });
 
-//?POST /api/poker/fold – Játékos bedobja
+// POST /api/poker/fold – Játékos bedobja a lapjait
 router.post('/poker/fold', async (req, res) => {
     var jatek = getJatek(req.session);
     if (jatek.jatekVege || !jatek.varakozikDontesre) {
         return res.status(400).json({ hiba: 'Nem lehet most bedobni.' });
     }
 
+    // A pot nullázódik, mert az ellenfél nem volt bedobva, de következőt vonjuk
     jatek.jatekVege = true;
     jatek.varakozikDontesre = false;
-    jatek.pot = 0;
+    jatek.pot = 0; // az ellenfél nyeri a potot, mi semmit nem kapunk vissza
     jatek.uzenet = '❌ Bedobtad a lapjaid!';
     jatek.uzenetTipus = 'vesztett';
 
-    // Adatbázis frissítés és játékmenet naplózása
+    // Adatbázis frissítés: egyenleg és játékmenet naplózása
     if (req.session.felhasznaloId) {
         try {
             await database.egyenlegFrissit(req.session.felhasznaloId, jatek.jatekosZseton);
 
             var jatekosOsszesBet = jatek.jatekosOsszesBetje;
-            jatek.jatekosOsszesBetje = 0;
+            jatek.jatekosOsszesBetje = 0; // kör végén nullazás
+            // A nyerémény és bet megegyeznek negativan: -jatekosOsszesBet jelent a teljes vesztéseget
             await database.jatekmentNaploz(req.session.felhasznaloId, 'poker', jatekosOsszesBet, -jatekosOsszesBet, jatek.jatekosZseton);
         } catch (error) {
             console.error('Poker fold hiba:', error);
@@ -898,11 +922,9 @@ router.post('/poker/fold', async (req, res) => {
     res.json(biztonsagosAllapot(jatek));
 });
 
-// ----------------------------------------------------------
-//!               PÓKER BELSŐ SEGÉDFÜGGVÉNYEK
-// ----------------------------------------------------------
+// Póker belső segédfüggvények:
 
-//?Ellenfél AI döntés végrehajtása
+// Ellenfél AI döntés végrehajtása
 function vegrehajtEllenfelet(jatek, dontes) {
     if (dontes === 'check') {
         jatek.uzenet = 'Ellenfél: Passz (Check)';
@@ -948,7 +970,7 @@ function vegrehajtEllenfelet(jatek, dontes) {
     }
 }
 
-//?Következő fázis (flop/turn/river/showdown)
+// Következő fázis (flop/turn/river/showdown)
 async function kovetkezoFazis(jatek, felhasznaloId) {
     if (jatek.jatekVege) return;
 
@@ -982,7 +1004,7 @@ async function allInAzonnaliShowdown(jatek, felhasznaloId) {
     await showdown(jatek, felhasznaloId);
 }
 
-//?Showdown – nyertes meghatározása és pot kiosztása
+// Showdown – nyertes meghatározása és pot kiosztása
 async function showdown(jatek, felhasznaloId) {
     var jatekosEredmeny = kiert(jatek.kez, jatek.oszto);
     var ellenfelEredmeny = kiert(jatek.kez2, jatek.oszto);
@@ -998,12 +1020,14 @@ async function showdown(jatek, felhasznaloId) {
         jatek.uzenetTipus = 'nyert';
         jatek.jatekosZseton += jatek.pot;
         ujEgyenleg = jatek.jatekosZseton;
-        nyeremeny = jatek.pot;
+        // Nettó nyeremény: a pot mínusz amit a játékos maga fizetett be
+        nyeremeny = jatek.pot - jatekosOsszesBet;
     } else if (nyertes === 'ellenfel') {
         jatek.uzenet = '❌ Az ellenfél nyert! -' + jatek.pot + ' 💰';
         jatek.uzenetTipus = 'vesztett';
         ujEgyenleg = jatek.jatekosZseton;
-        nyeremeny = -jatek.pot;
+        // Nettó veszteség: csak annyi, amit a játékos befizetett
+        nyeremeny = -jatekosOsszesBet;
     } else {
         jatek.uzenet = '🤝 Döntetlen! Tét visszaosztva.';
         jatek.uzenetTipus = 'dontetlen';

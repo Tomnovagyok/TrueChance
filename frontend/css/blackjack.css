@@ -93,7 +93,7 @@
 .kartya {
     width: 90px;
     height: auto;
-    border-radius: 0.5rem;
+    border-radius: 4px;
     box-shadow: 0 8px 12px rgba(0, 0, 0, 0.5);
     margin-left: -36px; /* 60% átfedés (90px * 0.4 = 36px látszik) */
 }
@@ -451,6 +451,7 @@
 
     .kartya {
         width: 55px;
+        border-radius: 3px;
     }
 
     .kartya-kozep {
@@ -585,6 +586,7 @@
     .kartya {
         width: 48px;
         margin-left: -19px;
+        border-radius: 2px;
     }
 
     .statisztika-panel {
@@ -628,6 +630,7 @@
 
     .kartya {
         width: 38px;
+        border-radius: 2px;
     }
 
     .oszto-kartyak,

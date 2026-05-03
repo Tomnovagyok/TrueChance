@@ -1,10 +1,13 @@
+// Napi ingyenes nyeremény rendszer (24 óránként egyszer pöröghető)
 const express = require('express');
 const router = express.Router();
 const database = require('../sql/database.js');
 
+// 24 óra másodpercben és milliszekundumban
 const DAILY_COOLDOWN_MASODPERC = 24 * 60 * 60;
 const DAILY_COOLDOWN_MS = DAILY_COOLDOWN_MASODPERC * 1000;
 
+// Megmondja, hány másodperc van még hátra a következő pörgetésig
 function hatralevoMasodpercSzamol(utolsoPorgetesDatum) {
     const utolsoPorgetes = new Date(utolsoPorgetesDatum).getTime();
     if (isNaN(utolsoPorgetes)) {
@@ -20,6 +23,7 @@ function hatralevoMasodpercSzamol(utolsoPorgetesDatum) {
     return Math.ceil(kulonbseg / 1000);
 }
 
+// Összerakja a frontendnek szükséges állapotadatokat (pöröghető-e, következő időpont)
 function dailyAllapotValaszOsszeallit(felhasznalo) {
     const hatralevoMasodperc = hatralevoMasodpercSzamol(felhasznalo.daily_cash_utolso_porgetes);
     const porgetheto = hatralevoMasodperc === 0;
@@ -35,6 +39,7 @@ function dailyAllapotValaszOsszeallit(felhasznalo) {
     };
 }
 
+// Véletlenszerű nyereményt sorsol: 25% eséllyel 500, 30% → 1000, 30% → 2000, 15% → 5000
 function dailyNyeremenySorsolas() {
     const veletlen = Math.random() * 100;
 
@@ -50,7 +55,8 @@ function dailyNyeremenySorsolas() {
     return 5000;
 }
 
-//! Daily cash állapot - GET /api/daily-cash/allapot
+// Daily cash állapot - GET /api/daily-cash/allapot
+// A frontend ezt hívja meg, hogy megtudja, aktív-e a gomb, vagy hány óra/perc/másodperc van hátra
 router.get('/allapot', async (request, response) => {
     if (!request.session.felhasznaloId) {
         return response.status(401).json({ uzenet: 'Nincs bejelentkezve.' });
@@ -69,7 +75,8 @@ router.get('/allapot', async (request, response) => {
     }
 });
 
-//! Daily cash pörgetés - POST /api/daily-cash/porgetes
+// Daily cash pörgetés - POST /api/daily-cash/porgetes
+// Lekéri a jelenlegi állapotot. Ha letelt a 24 óra, sorsol egy nyereményt, és frissíti a játékos egyenlegét.
 router.post('/porgetes', async (request, response) => {
     if (!request.session.felhasznaloId) {
         return response.status(401).json({ uzenet: 'Nincs bejelentkezve.' });
@@ -93,6 +100,7 @@ router.post('/porgetes', async (request, response) => {
         const nyeremeny = dailyNyeremenySorsolas();
         const frissFelhasznalo = await database.dailyCashPorgetesJovairas(request.session.felhasznaloId, nyeremeny);
 
+        // Ha a DB frissítés nem futott le (például versenyhelyzet miatt), lekérdezzük az aktuális állapotot
         if (!frissFelhasznalo) {
             const aktualisAllapot = await database.dailyCashAllapotLekeres(request.session.felhasznaloId);
             if (!aktualisAllapot) {

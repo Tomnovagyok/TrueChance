@@ -298,9 +298,7 @@
     font-size: 0.8rem;
 }
 
-/* 12 oszlop, 3 sor grid a számokhoz + 1 extra oszlop a sor gomboknak.
-   A sorok fix 28px magasak, hogy a gombok nagyjából négyzet alakúak legyenek.
-   minmax(0, 1fr) biztosítja, hogy az oszlopok ne lépjék túl a rendelkezésre álló szélességet. */
+/* 12 oszlopos, 3 soros grid a számoknak + 1 oszlop a sor gomboknak. */
 .szamok-grid {
     display: grid;
     grid-template-columns: repeat(12, minmax(0, 1fr)) auto;

@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', async function () {
 
-    //!FORMDATA-s FETCH - a "Magyarország városai" projektből átvett stílus
+    // FormData-s fetch
     async function meghiv(url, method = 'GET', body = null) {
         try {
             const options = { method };
@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         'poker': '#8c5cff'
     };
 
-    //! Profil adatok betöltése
+    // Profil adatok betöltése
     try {
         const adat = await meghiv('/api/profile/adatok');
         const profil = adat.profil;
@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         document.querySelector('.container').appendChild(hibaDiv);
     }
 
-    //! Profil adatok kitöltése a DOM-ba
+    // Profil adatok kitöltése a DOM-ba
     function profilKitolt(profil) {
         // Személyes adatok
         profilNev.value = profil.nev;
@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         jatekEselyekKirajzol(profil.jatekNyeresiEselyek);
     }
 
-    //! Játékonkénti nyerési esélyek kirajzolása
+    // Játékonkénti nyerési esélyek kirajzolása
     function jatekEselyekKirajzol(eselyek) {
         jatekEselyekKontener.innerHTML = '';
 
@@ -193,7 +193,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
     }
 
-    //! Mentés gomb - FormData-val küldi az adatokat
+    // Mentés gomb - FormData-val küldi az adatokat
     mentesGomb.addEventListener('click', async function () {
         const formData = new FormData();
         formData.append('nev', profilNev.value);
@@ -226,7 +226,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         mentesGomb.innerHTML = '<i class="fas fa-save me-2"></i>Mentés';
     });
 
-    //! Üzenet megjelenítése
+    // Üzenet megjelenítése
     function uzenetMutat(szoveg, tipus) {
         profilUzenet.style.display = 'block';
         profilUzenet.textContent = szoveg;
@@ -244,7 +244,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         }, 4000);
     }
 
-    //! Jelszó mentés gomb
+    // Jelszó mentés gomb
     const jelszoMentesGomb = document.getElementById('jelszoMentesGomb');
     const jelenlegiJelszo = document.getElementById('jelenlegiJelszo');
     const ujJelszo = document.getElementById('ujJelszo');
@@ -293,7 +293,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         jelszoMentesGomb.innerHTML = '<i class="fas fa-key me-2"></i>Jelszó mentése';
     });
 
-    //! Jelszó szem ikon működése
+    // Jelszó szem ikon működése
     const jelszoSzemGombok = document.querySelectorAll('.jelszo-szem-gomb');
     for (let i = 0; i < jelszoSzemGombok.length; i++) {
         jelszoSzemGombok[i].addEventListener('click', function () {

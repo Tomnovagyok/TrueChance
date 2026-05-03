@@ -1,10 +1,12 @@
+// Admin panel műveletek: felhasználók listázása és módosítása
 const express = require('express');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt'); // Jelszavak titkosítására
 const router = express.Router();
 const database = require('../sql/database.js');
 
-const emailMinta = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const emailMinta = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Egyszerű email formátum ellenőrző
 
+// Megnézi, hogy a bejelentkezett felhasználó admin-e; ha nem, azonnal elküld hibaválaszt
 async function adminJogEllenorzes(request, response) {
     if (!request.session.felhasznaloId) {
         response.status(401).json({ uzenet: 'Nincs bejelentkezve.' });
@@ -13,7 +15,7 @@ async function adminJogEllenorzes(request, response) {
 
     const felhasznalo = await database.felhasznaloIdAltal(request.session.felhasznaloId);
     if (!felhasznalo) {
-        request.session.destroy(() => {});
+        request.session.destroy(() => { });
         response.status(401).json({ uzenet: 'Érvénytelen session.' });
         return null;
     }
@@ -26,6 +28,7 @@ async function adminJogEllenorzes(request, response) {
     return felhasznalo;
 }
 
+// Csak a frontendnek szükséges mezőket adja vissza (jelszavat soha ne küldjünk!)
 function adminFelhasznaloValasz(felhasznalo) {
     return {
         id: felhasznalo.id,
@@ -37,7 +40,7 @@ function adminFelhasznaloValasz(felhasznalo) {
     };
 }
 
-//! Felhasználók listázása - GET /api/admin/felhasznalok
+// Felhasználók listázása - GET /api/admin/felhasznalok
 router.get('/felhasznalok', async (request, response) => {
     try {
         const adminFelhasznalo = await adminJogEllenorzes(request, response);
@@ -55,7 +58,7 @@ router.get('/felhasznalok', async (request, response) => {
     }
 });
 
-//! Felhasználó módosítása - PUT /api/admin/felhasznalo/:id
+// Felhasználó módosítása - PUT /api/admin/felhasznalo/:id
 router.put('/felhasznalo/:id', async (request, response) => {
     const felhasznaloId = Number(request.params.id);
     const nev = request.body.nev ? request.body.nev.trim() : '';
@@ -99,6 +102,7 @@ router.put('/felhasznalo/:id', async (request, response) => {
             return response.status(409).json({ uzenet: 'Ez az email cím már használatban van.' });
         }
 
+        // Admin nem módosíthatja saját admin jogosultságát (csak más adminja állíthatja át)
         let vegalsoAdminE = adminE;
         if (felhasznaloId === adminFelhasznalo.id) {
             vegalsoAdminE = !!celFelhasznalo.admin_e;
