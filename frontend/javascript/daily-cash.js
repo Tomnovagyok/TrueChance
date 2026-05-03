@@ -1,3 +1,5 @@
+// Napi ingyenes pörgetés (Daily Cash) kliens logikája.
+// Kezeli a visszaszámlálót és az animált szerencsekerék/pörgetés hatást.
 document.addEventListener('DOMContentLoaded', function () {
     const Fetch = async (url, method = 'GET', body = null) => {
         const options = { method: method };
@@ -89,6 +91,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    // Visszaszámláló indítása: másodpercenként frissíti az időt,
+    // és ha eléri a nullát, engedélyezi a pörgetés gombot.
     function visszaszamlaloIndit(masodperc) {
         visszaszamlaloLeallit();
         visszaszamlaloMasodperc = Math.max(0, Number(masodperc) || 0);
@@ -155,6 +159,8 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Pörgetés gomb kattintás: API-t hív, lekéri a nyereményt,
+    // megvárja az animációt, majd frissíti az egyenleget.
     dailyPorgetesBtn.addEventListener('click', async function () {
         if (forogMost || !porgetheto) {
             return;

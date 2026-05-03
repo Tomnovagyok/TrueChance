@@ -18,6 +18,8 @@ document.addEventListener('DOMContentLoaded', function () {
         statikusRoi: '0.0%'
     };
 
+    // A session alatti statisztikát (hány kört nyert, mennyi profitot termelt) a frontend
+    // a backend válaszaiból maga is számolja és frissíti a UI-n.
     var sessionStatisztika = {
         korok: 0,
         nyertKorok: 0,

@@ -1,3 +1,5 @@
+// Admin felület kliens oldali logikája: betölti a felhasználók listáját,
+// és kezeli a szerkesztési (modal) ablakot, illetve az adatok mentését.
 document.addEventListener('DOMContentLoaded', async function () {
     async function meghiv(url, method = 'GET', body = null) {
         try {
@@ -48,6 +50,8 @@ document.addEventListener('DOMContentLoaded', async function () {
         }, 4000);
     }
 
+    // Táblázat dinamikus felépítése: végigmegy a felhasználókon,
+    // és mindenkihez legenerál egy táblázat sort (tr).
     function tablazatKirajzol() {
         felhasznaloTablaBody.innerHTML = '';
 
@@ -158,6 +162,8 @@ document.addEventListener('DOMContentLoaded', async function () {
         szerkesztesModal.show();
     });
 
+    // Mentés gomb kattintás: begyűjti a modalból a módosított adatokat,
+    // majd egy PUT kéréssel elküldi a backendnek.
     mentesGomb.addEventListener('click', async function () {
         const felhasznaloId = Number(modalFelhasznaloId.value);
         const szerkesztettFelhasznalo = felhasznalok.find(function (sor) {

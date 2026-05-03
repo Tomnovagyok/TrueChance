@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', async function () {
+    // Általános fetch segédfüggvény: küld egy kérést, hibát dob ha sikertelen
     async function meghiv(url, method = 'GET', body = null) {
         try {
             const options = { method: method };
@@ -25,6 +26,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     const uresAllapot = document.getElementById('uresAllapot');
     const ranglistaTablaBody = document.getElementById('ranglistaTablaBody');
 
+    // A felhasználók listájából dinamikusan építi fel a táblázat sorait
     function ranglistaKirajzol(felhasznalok) {
         ranglistaTablaBody.innerHTML = '';
 

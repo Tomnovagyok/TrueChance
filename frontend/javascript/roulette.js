@@ -1,3 +1,5 @@
+// Rulett játék (roulette.html) kliens logikája.
+// Fogadások összeállítása, táblán lévő chipek kezelése és a pörgetési animáció kirajzolása.
 document.addEventListener('DOMContentLoaded', function () {
 
     // Szerver kommunikációs függvény
@@ -196,7 +198,8 @@ document.addEventListener('DOMContentLoaded', function () {
         elozoTetElment(kivalasztottFogadasok, aktualisTet);
         forogMost = true;
 
-        // Frontenden a tétet már spin indításkor levonjuk.
+        // Frontenden a tétet már spin indításkor levonjuk (megelőlegezzük),
+        // így a felhasználó azonnal látja a csökkenést.
         egyenleg = spinElottiEgyenleg - elozetesOsszTet;
         frissitEgyenlegKijelzo();
         kijelzesFrissites();

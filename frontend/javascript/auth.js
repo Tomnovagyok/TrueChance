@@ -51,7 +51,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Regisztráció
+    // Regisztrációs form beküldése
+    // Bekéri az adatokat, leellenőrzi a jelszó egyezést, és hívja a /api/auth/register-t
     regisztracioForm.querySelector('form').addEventListener('submit', async function (event) {
         event.preventDefault();
 

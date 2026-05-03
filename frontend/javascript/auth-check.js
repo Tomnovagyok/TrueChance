@@ -1,3 +1,5 @@
+// Azonnali függvény (IIFE), amely oldalbetöltéskor lefut.
+// Ellenőrzi a /api/auth/me végponton, hogy a felhasználó be van-e jelentkezve.
 (function () {
     fetch('/api/auth/me')
         .then(function (valasz) {
@@ -40,11 +42,13 @@
                 }
             }
 
+            // Ha az admin panelen van, de nincs admin joga, visszadobja a játékokhoz
             if (window.location.pathname === '/html/admin.html' && !felhasznalo.adminE) {
                 window.location.replace('/html/games.html');
             }
         })
         .catch(function () {
+            // Hiba esetén (pl. nincs szerverkapcsolat) is irányítsuk át a bejelentkezésre
             window.location.replace('/html/auth.html');
         });
 

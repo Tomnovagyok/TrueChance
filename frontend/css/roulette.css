@@ -65,7 +65,7 @@
     padding: 5% 7% 5% 10%; /* bal oldal több, mert az asztalkép bal széle vastagabb */
 }
 
-/* ---- BAL OLDAL: kerék szekció ---- */
+/* BAL OLDAL: kerék szekció */
 .kerek-szekcio {
     display: flex;
     flex-direction: column;
@@ -169,7 +169,7 @@
     box-shadow: 0 0 20px rgba(39, 174, 96, 0.5);
 }
 
-/* ---- JOBB OLDAL: tét szekció ---- */
+/* JOBB OLDAL: tét szekció */
 .tet-szekcio {
     flex: 1;
     display: flex;

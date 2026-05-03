@@ -1,4 +1,8 @@
-/*megosztott css fajl*/
+/* 
+  Közös (shared) CSS fájl:
+  Ide kerülnek az oldalakat átívelő globális stílusok (színek, betűtípusok, navbar, gombok).
+  Ezzel biztosítjuk az egységes kinézetet minden aloldalon. 
+*/
 
 * {
   margin: 0;

@@ -77,6 +77,8 @@ document.addEventListener('DOMContentLoaded', async function () {
         statsTable.style.display = 'block';
     }
 
+    // A játékmeneteket napok szerint csoportosítva jeleníti meg a felületen.
+    // Létrehozza a dátum-fejléceket és a hozzájuk tartozó játék sorokat.
     function renderJatekmenetek(jatekmenetek) {
         const csoportok = {};
 

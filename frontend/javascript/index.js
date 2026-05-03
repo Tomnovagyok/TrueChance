@@ -1,3 +1,5 @@
+// Főoldal (index) kliens oldali szkriptje.
+// Csak a demó statisztika számlálót (szimuláció) és a horgony (anchor) linkeket kezeli.
 document.addEventListener('DOMContentLoaded', function () {
     var szimulacioIdozito = null;
 

@@ -1,3 +1,5 @@
+// Játékválasztó oldal (games.html) szkriptje.
+// Csak a statisztikák be/ki kapcsolását végzi.
 document.addEventListener('DOMContentLoaded', function () {
     var statisztikaGomb = document.getElementById('statsToggleBtn');
 

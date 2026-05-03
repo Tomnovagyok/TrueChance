@@ -1,5 +1,5 @@
-// Ui & api kommunikáció:
-
+// Kliens oldali (frontend) logika a Blackjack játékhoz.
+// Itt kezeljük az UI elemeket, az animációkat és a backend felé menő API hívásokat.
 const PostMethodFetch = {
     post: async (url, data = {}) => {
         try {
@@ -31,7 +31,8 @@ const PostMethodFetch = {
     }
 };
 
-// Játék state
+// Játék globális állapota (state) - ebben tartjuk nyilván, hogy mi történik épp a játékban
+// Ezt az állapotot szinkronizáljuk a backendről jövő válaszokkal
 let gameState = {
     jatekosKez: [],
     osztoKez: [],

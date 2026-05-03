@@ -1,3 +1,5 @@
+// Nyerőgép (slot.html) kliens oldali vezérlése.
+// Pörgetés indítása, tárcsák (oszlopok) animálása és a szimbólumok megállítása a backend eredményei alapján.
 document.addEventListener('DOMContentLoaded', function () {
 
     // Szerver kommunikációs függvény

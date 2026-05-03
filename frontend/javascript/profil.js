@@ -1,3 +1,5 @@
+// Profil oldal (profil.html) frontend logikája.
+// Adatok betöltése, form validálás, jelszócsere és adatmódosítás küldése a backend felé.
 document.addEventListener('DOMContentLoaded', async function () {
 
     // FormData-s fetch
