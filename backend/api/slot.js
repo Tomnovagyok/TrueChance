@@ -243,6 +243,10 @@ router.post('/spin', async (request, response) => {
         return response.status(401).json({ uzenet: 'Nincs bejelentkezve.' });
     }
 
+    if (request.session.slotForog) {
+        return response.status(400).json({ uzenet: 'Már folyamatban van egy pörgetés.' });
+    }
+
     const tet = request.body.tet;
 
     if (!tet || typeof tet !== 'number' || tet <= 0) {
@@ -250,6 +254,8 @@ router.post('/spin', async (request, response) => {
     }
 
     try {
+        request.session.slotForog = true;
+
         const felhasznalo = await database.felhasznaloIdAltal(request.session.felhasznaloId);
 
         if (!felhasznalo) {
@@ -300,9 +306,18 @@ router.post('/spin', async (request, response) => {
             nyeresInfo: nyeresInfo
         });
     } catch (hiba) {
+        request.session.slotForog = false;
         console.error('Slot spin hiba:', hiba);
-        response.status(500).json({ uzenet: 'Szerverhiba.' });
+        response.status(500).json({ uzenet: 'Belső szerverhiba történt a pörgetés során.' });
     }
+});
+
+//? POST /api/slot/spin-finish - Jelzi a backendnek, hogy az animáció lefutott
+router.post('/spin-finish', (request, response) => {
+    if (request.session) {
+        request.session.slotForog = false;
+    }
+    return response.status(200).json({ uzenet: 'Ok' });
 });
 
 module.exports = router;

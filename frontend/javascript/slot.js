@@ -78,6 +78,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const infoPanelNyeremeny = document.getElementById('infoPanelNyeremeny');
     const infoPanelEgyenleg = document.getElementById('infoPanelEgyenleg');
     const statsToggleBtn = document.getElementById('statsToggleBtn');
+    const gyorsGombok = document.querySelectorAll('.tet-gyors-gomb');
 
     // Inicializálás
     egyenlegBetolt();
@@ -380,6 +381,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         forogMost = true;
         spinGomb.disabled = true;
+        tetBemenetekLetiltasa(true);
 
         spinGombKep.parentElement.classList.add('lenyomva');
         setTimeout(function () {
@@ -389,7 +391,8 @@ document.addEventListener('DOMContentLoaded', function () {
         infoPanelNyeremeny.innerHTML = '-';
 
         try {
-            const adat = await Fetch('/api/slot/spin', 'POST', { tet: aktualisTet });
+            const inditottTet = aktualisTet;
+            const adat = await Fetch('/api/slot/spin', 'POST', { tet: inditottTet });
             const eredmenyek = adat.eredmenyek;
             const nearMiss = adat.nearMiss || { volt: false, tipus: null };
             const nyeresInfo = {
@@ -400,7 +403,7 @@ document.addEventListener('DOMContentLoaded', function () {
             };
 
             // Tét levonása azonnal a pörgetés kezdetekor (a nyeremény csak a végén íródik jóvá)
-            egyenleg = egyenleg - aktualisTet;
+            egyenleg = egyenleg - inditottTet;
             frissitEgyenlegKijelzo();
             
             const vegsoEgyenleg = Number(adat.egyenleg) || 0;
@@ -437,7 +440,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     szalagPoroget(aktualisOszlop, celIndexek[aktualisOszlop], function () {
                         befejezettDb = befejezettDb + 1;
                         if (befejezettDb === OSZLOP_SZAM) {
-                            eredmenyFeldolgoz(nyeresInfo, nearMiss, vegsoEgyenleg);
+                            eredmenyFeldolgoz(nyeresInfo, nearMiss, vegsoEgyenleg, inditottTet);
                         }
                     });
                 })(oszlopIndex);
@@ -446,13 +449,14 @@ document.addEventListener('DOMContentLoaded', function () {
             uzenetMutat(error.message, 'vesztett');
             forogMost = false;
             spinGomb.disabled = false;
+            tetBemenetekLetiltasa(false);
         }
     });
 
     // Eredmény feldolgozása és üzenet megjelenítése
-    function eredmenyFeldolgoz(nyeresInfo, nearMiss, vegsoEgyenleg) {
+    async function eredmenyFeldolgoz(nyeresInfo, nearMiss, vegsoEgyenleg, felhasznaltTet) {
         // Statisztika és végső egyenleg frissítése csak az animáció végén
-        frissitSessionStatisztika(aktualisTet, nyeresInfo.nyeremeny, nyeresInfo.nyert, nearMiss);
+        frissitSessionStatisztika(felhasznaltTet, nyeresInfo.nyeremeny, nyeresInfo.nyert, nearMiss);
         egyenleg = vegsoEgyenleg;
         frissitEgyenlegKijelzo();
 
@@ -470,11 +474,18 @@ document.addEventListener('DOMContentLoaded', function () {
         } else if (nearMiss.volt && nearMiss.tipus === 'kozel') {
             uzenetMutat('Majdnem! Próbáld újra!', 'kozel');
         } else {
-            uzenetMutat('Vesztettél! -$' + aktualisTet, 'vesztett');
+            uzenetMutat('Vesztettél! -$' + felhasznaltTet, 'vesztett');
+        }
+
+        try {
+            await Fetch('/api/slot/spin-finish', 'POST');
+        } catch (error) {
+            console.error('Hiba az animáció lezárása során:', error);
         }
 
         forogMost = false;
         spinGomb.disabled = false;
+        tetBemenetekLetiltasa(false);
     }
 
     function setStatisztikaVisible(visible) {
@@ -504,10 +515,19 @@ document.addEventListener('DOMContentLoaded', function () {
         setStatisztikaVisible(!aktiv);
     }
 
-    const gyorsGombok = document.querySelectorAll('.tet-gyors-gomb');
+    function tetBemenetekLetiltasa(letiltva) {
+        tetOsszegInput.disabled = letiltva;
+        for (let index = 0; index < gyorsGombok.length; index++) {
+            gyorsGombok[index].disabled = letiltva;
+        }
+    }
+
     for (let gombIndex = 0; gombIndex < gyorsGombok.length; gombIndex++) {
         const gomb = gyorsGombok[gombIndex];
         gomb.addEventListener('click', function () {
+            if (this.disabled || forogMost) {
+                return;
+            }
             aktualisTet = parseInt(this.dataset.ertek);
             tetOsszegInput.value = aktualisTet;
             infoPanelTet.innerHTML = '$' + aktualisTet;
@@ -515,6 +535,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     tetOsszegInput.addEventListener('input', function () {
+        if (this.disabled || forogMost) {
+            return;
+        }
         const ertek = parseInt(this.value);
         if (!isNaN(ertek) && ertek > 0) {
             aktualisTet = ertek;

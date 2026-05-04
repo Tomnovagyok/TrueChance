@@ -355,10 +355,21 @@
     transition: all 0.15s ease;
 }
 
-.tet-gyors-gomb:hover {
+.tet-gyors-gomb:hover:not(:disabled) {
     background: rgba(140, 92, 255, 0.2);
     border-color: #8c5cff;
     color: #f0f0f0;
+}
+
+.tet-gyors-gomb:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.tet-input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: rgba(30, 31, 35, 0.5);
 }
 
 .tet-input {

@@ -115,6 +115,13 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    function tetOsszegBemenetekLetiltasa(letiltva) {
+        tetOsszegInput.disabled = letiltva;
+        for (let index = 0; index < gyorsGombok.length; index++) {
+            gyorsGombok[index].disabled = letiltva;
+        }
+    }
+
     const osszesGomb = tetSzekcio.querySelectorAll('.szam-gomb, .sor-gomb, .also-gomb');
 
     for (let gombIndex = 0; gombIndex < osszesGomb.length; gombIndex++) {
@@ -191,6 +198,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         elozoTetElment(kivalasztottFogadasok, aktualisTet);
         forogMost = true;
+        tetOsszegBemenetekLetiltasa(true);
 
         // Frontenden a tétet már spin indításkor levonjuk (megelőlegezzük),
         // így a felhasználó azonnal látja a csökkenést.
@@ -268,6 +276,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Minden spin után minden tét levétele
                 osszesTetLevetel();
                 forogMost = false;
+                tetOsszegBemenetekLetiltasa(false);
                 kijelzesFrissites();
             }, 4000);
         } catch (error) {
@@ -276,6 +285,7 @@ document.addEventListener('DOMContentLoaded', function () {
             frissitEgyenlegKijelzo();
             eredmenyUzenetMutat(error.message, 'vesztett');
             forogMost = false;
+            tetOsszegBemenetekLetiltasa(false);
             kijelzesFrissites();
         }
     });
