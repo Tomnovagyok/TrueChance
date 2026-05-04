@@ -1,33 +1,20 @@
 // Kliens oldali (frontend) logika a Blackjack játékhoz.
 // Itt kezeljük az UI elemeket, az animációkat és a backend felé menő API hívásokat.
-const PostMethodFetch = {
-    post: async (url, data = {}) => {
-        try {
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
-            if (!response.ok) {
-                throw new Error(`API Hiba: ${response.status}`);
-            }
-            return await response.json();
-        } catch (error) {
-            console.error('API hiba:', error);
-            throw error;
+const Fetch = async (url, method = 'GET', body = null) => {
+    try {
+        const response = await fetch(url, {
+            method: method,
+            headers: { 'Content-type': 'application/json' },
+            body: body ? JSON.stringify(body) : null
+        });
+
+        if (!response.ok) {
+            throw new Error('Hiba: ' + response.statusText);
         }
-    },
-    get: async (url) => {
-        try {
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`API Hiba: ${response.status}`);
-            }
-            return await response.json();
-        } catch (error) {
-            console.error('API hiba:', error);
-            throw error;
-        }
+
+        return await response.json();
+    } catch (error) {
+        throw new Error('Hiba: ' + error.message);
     }
 };
 
@@ -114,7 +101,7 @@ function frissitTetBeallitasok() {
 // Egyenleg betöltése
 async function loadEgyenleg() {
     try {
-        const data = await PostMethodFetch.get('/api/blackjack/user');
+        const data = await Fetch('/api/blackjack/user');
         if (data && data.egyenleg !== undefined) {
             gameState.egyenleg = Number(data.egyenleg);
             updateEgyenlegDisplay(gameState.egyenleg);
@@ -382,7 +369,7 @@ async function initGame() {
         if (tetInputElem) tetInputElem.disabled = true;
         if (startGameBtn) startGameBtn.disabled = true;
 
-        const state = await PostMethodFetch.post('/api/blackjack/init', { tet });
+        const state = await Fetch('/api/blackjack/init', 'POST', { tet });
         state.status = 'ongoing';
         updateUI(state);
 
@@ -413,7 +400,7 @@ async function initGame() {
 
 async function hit() {
     try {
-        const state = await PostMethodFetch.post('/api/blackjack/hit');
+        const state = await Fetch('/api/blackjack/hit', 'POST', {});
         updateUI(state);
 
         if (autoStandMasodikKezHa21(state) || autoLezarKortHaKell(state)) {
@@ -434,7 +421,7 @@ async function hit() {
 
 async function double() {
     try {
-        const state = await PostMethodFetch.post('/api/blackjack/double');
+        const state = await Fetch('/api/blackjack/double', 'POST', {});
         updateUI(state);
 
         // Egyenleg frissítése a backend válaszából (plusz tét levonva)
@@ -461,7 +448,7 @@ async function double() {
 
 async function split() {
     try {
-        const state = await PostMethodFetch.post('/api/blackjack/split');
+        const state = await Fetch('/api/blackjack/split', 'POST', {});
         updateUI(state);
 
         // Egyenleg frissítése a backend válaszából (plusz tét levonva)
@@ -483,7 +470,7 @@ async function split() {
 
 async function stand() {
     try {
-        const state = await PostMethodFetch.post('/api/blackjack/stand');
+        const state = await Fetch('/api/blackjack/stand', 'POST', {});
         updateUI(state);
 
         if (autoStandMasodikKezHa21(state)) {

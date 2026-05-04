@@ -1,14 +1,14 @@
 // Főoldal (index) kliens oldali szkriptje.
 // Csak a demó statisztika számlálót (szimuláció) és a horgony (anchor) linkeket kezeli.
 document.addEventListener('DOMContentLoaded', function () {
-    var szimulacioIdozito = null;
+    let szimulacioIdozito = null;
 
     beallitStatisztikaKapcsolo();
     beallitSimaGorgetest();
 
     function beallitStatisztikaKapcsolo() {
-        var kapcsoloElem = document.getElementById('statsToggle');
-        var tartalomElem = document.getElementById('statsContent');
+        const kapcsoloElem = document.getElementById('statsToggle');
+        const tartalomElem = document.getElementById('statsContent');
 
         kapcsoloElem.addEventListener('change', function () {
             if (this.checked) {
@@ -24,9 +24,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function statisztikaFrissites() {
-        var nyeresiEselyElem = document.getElementById('stat-win-chance');
-        var atlagosVesztesegElem = document.getElementById('stat-avg-loss');
-        var hazElonyElem = document.getElementById('stat-house-edge');
+        const nyeresiEselyElem = document.getElementById('stat-win-chance');
+        const atlagosVesztesegElem = document.getElementById('stat-avg-loss');
+        const hazElonyElem = document.getElementById('stat-house-edge');
 
         if (nyeresiEselyElem) {
             nyeresiEselyElem.innerHTML = (Math.random() * 15 + 35).toFixed(1) + '%';
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Egyszerű anchor linkek működnek böngészőben alapértelmezésből
     function beallitSimaGorgetest() {
-        var osszecsukhato = document.getElementById('navbarNav');
+        const osszecsukhato = document.getElementById('navbarNav');
 
         document.querySelectorAll('a[href^="#"]').forEach(function (link) {
             link.addEventListener('click', function () {

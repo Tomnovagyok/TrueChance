@@ -1,26 +1,26 @@
 document.addEventListener('DOMContentLoaded', function () {
     // DOM elemek
-    var checkBtn = document.getElementById('checkBtn');
-    var callBtn = document.getElementById('callBtn');
-    var raiseBtn = document.getElementById('raiseBtn');
-    var foldBtn = document.getElementById('foldBtn');
-    var resetBtn = document.getElementById('resetBtn');
-    var raiseSlider = document.getElementById('raiseSlider');
-    var raiseInput = document.getElementById('raiseInput');
-    var egyenlegMutato = document.getElementById('egyenlegMutato');
-    var statsToggleBtn = document.getElementById('statsToggleBtn');
+    const checkBtn = document.getElementById('checkBtn');
+    const callBtn = document.getElementById('callBtn');
+    const raiseBtn = document.getElementById('raiseBtn');
+    const foldBtn = document.getElementById('foldBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const raiseSlider = document.getElementById('raiseSlider');
+    const raiseInput = document.getElementById('raiseInput');
+    const egyenlegMutato = document.getElementById('egyenlegMutato');
+    const statsToggleBtn = document.getElementById('statsToggleBtn');
 
     // Játékos egyenleg – kezdetben betöltődik az adatbázisból
-    var jatekosEgyenleg = 0;
+    let jatekosEgyenleg = 0;
 
-    var statisztikaAdatok = {
+    const statisztikaAdatok = {
         statikusHouseEdge: '0.0%',
         statikusRoi: '0.0%'
     };
 
     // A session alatti statisztikát (hány kört nyert, mennyi profitot termelt) a frontend
     // a backend válaszaiból maga is számolja és frissíti a UI-n.
-    var sessionStatisztika = {
+    const sessionStatisztika = {
         korok: 0,
         nyertKorok: 0,
         vesztettKorok: 0,
@@ -30,8 +30,27 @@ document.addEventListener('DOMContentLoaded', function () {
         elozoJatekVege: null
     };
 
-    var statisztikaKeresFolyamatban = false;
-    var statisztikaUjraKereseSzukseges = false;
+    let statisztikaKeresFolyamatban = false;
+    let statisztikaUjraKereseSzukseges = false;
+
+    // Szerver kommunikációs függvény
+    const Fetch = async (url, method = 'GET', body = null) => {
+        try {
+            const response = await fetch(url, {
+                method: method,
+                headers: { 'Content-type': 'application/json' },
+                body: body ? JSON.stringify(body) : null
+            });
+
+            if (!response.ok) {
+                throw new Error('Hiba: ' + response.statusText);
+            }
+
+            return await response.json();
+        } catch (error) {
+            throw new Error('Hiba: ' + error.message);
+        }
+    };
 
     function formatSzazalek(ertek) {
         if (ertek === null || ertek === undefined || isNaN(ertek)) {
@@ -45,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return '$0.00';
         }
 
-        var abs = Math.abs(Number(ertek)).toFixed(2);
+        const abs = Math.abs(Number(ertek)).toFixed(2);
         if (ertek > 0) {
             return '+$' + abs;
         }
@@ -63,12 +82,12 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function frissitPokerStatisztikak() {
-        var sessionWinLossEl = document.getElementById('stat-session-winloss');
-        var sessionWinrateEl = document.getElementById('stat-session-winrate');
-        var sessionRoundsEl = document.getElementById('stat-session-rounds');
-        var sessionProfitEl = document.getElementById('stat-session-profit');
-        var houseEdgeEl = document.getElementById('stat-house-edge');
-        var roiEl = document.getElementById('stat-roi');
+        const sessionWinLossEl = document.getElementById('stat-session-winloss');
+        const sessionWinrateEl = document.getElementById('stat-session-winrate');
+        const sessionRoundsEl = document.getElementById('stat-session-rounds');
+        const sessionProfitEl = document.getElementById('stat-session-profit');
+        const houseEdgeEl = document.getElementById('stat-house-edge');
+        const roiEl = document.getElementById('stat-roi');
 
         if (sessionWinLossEl) {
             sessionWinLossEl.textContent =
@@ -97,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function frissitSessionStatisztika(adat) {
-        var aktualisEgyenleg = Number(adat.jatekosZseton);
+        let aktualisEgyenleg = Number(adat.jatekosZseton);
         if (isNaN(aktualisEgyenleg)) {
             aktualisEgyenleg = 0;
         }
@@ -107,7 +126,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         sessionStatisztika.sessionProfit = aktualisEgyenleg - sessionStatisztika.kezdoEgyenleg;
 
-        var jatekVegeMost = !!adat.jatekVege;
+        const jatekVegeMost = !!adat.jatekVege;
         if (sessionStatisztika.elozoJatekVege === null) {
             sessionStatisztika.elozoJatekVege = jatekVegeMost;
             return;
@@ -136,14 +155,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         statisztikaKeresFolyamatban = true;
         try {
-            var response = await fetch('/api/poker/statisztika', {
-                method: 'GET',
-                headers: { 'Content-type': 'application/json' }
-            });
-            if (!response.ok) {
-                throw new Error('Hiba: ' + response.statusText);
-            }
-            var adat = await response.json();
+            const adat = await Fetch('/api/poker/statisztika');
 
             if (!isNaN(Number(adat.statikusHouseEdgeSzazalek))) {
                 statisztikaAdatok.statikusHouseEdge = formatSzazalek(Number(adat.statikusHouseEdgeSzazalek));
@@ -165,8 +177,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function setStatisztikaVisible(visible) {
-        var panel = document.getElementById('statisztikaPanel');
-        var jatekTerulet = document.querySelector('.jatek-terulet');
+        const panel = document.getElementById('statisztikaPanel');
+        const jatekTerulet = document.querySelector('.jatek-terulet');
         if (!panel || !jatekTerulet || !statsToggleBtn) {
             return;
         }
@@ -183,41 +195,33 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function toggleStatisztika() {
-        var jatekTerulet = document.querySelector('.jatek-terulet');
+        const jatekTerulet = document.querySelector('.jatek-terulet');
         if (!jatekTerulet) {
             return;
         }
 
-        var aktiv = jatekTerulet.classList.contains('statisztika-aktiv');
+        const aktiv = jatekTerulet.classList.contains('statisztika-aktiv');
         setStatisztikaVisible(!aktiv);
     }
 
     // Az oldal betöltésekor töltsd be az egyenleget az adatbázisból
-    function betoltEgyenleg() {
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', '/api/blackjack/user', true);
-        xhr.onload = function () {
-            if (xhr.status === 200) {
-                var adat = JSON.parse(xhr.responseText);
-                if (adat.egyenleg !== undefined && adat.egyenleg !== null) {
-                    jatekosEgyenleg = parseFloat(adat.egyenleg) || 0;
-                    if (sessionStatisztika.kezdoEgyenleg === null) {
-                        sessionStatisztika.kezdoEgyenleg = jatekosEgyenleg;
-                    }
-                    sessionStatisztika.sessionProfit = jatekosEgyenleg - sessionStatisztika.kezdoEgyenleg;
-                    document.getElementById('navbarEgyenleg').innerHTML = '$' + jatekosEgyenleg;
-                    frissitCsuszka();
-                    frissitUjJatekGomb();
-                    frissitPokerStatisztikak();
+    async function betoltEgyenleg() {
+        try {
+            const adat = await Fetch('/api/blackjack/user');
+            if (adat.egyenleg !== undefined && adat.egyenleg !== null) {
+                jatekosEgyenleg = parseFloat(adat.egyenleg) || 0;
+                if (sessionStatisztika.kezdoEgyenleg === null) {
+                    sessionStatisztika.kezdoEgyenleg = jatekosEgyenleg;
                 }
-            } else {
-                console.error('Egyenleg betöltés hiba:', xhr.status);
+                sessionStatisztika.sessionProfit = jatekosEgyenleg - sessionStatisztika.kezdoEgyenleg;
+                document.getElementById('navbarEgyenleg').innerHTML = '$' + jatekosEgyenleg;
+                frissitCsuszka();
+                frissitUjJatekGomb();
+                frissitPokerStatisztikak();
             }
-        };
-        xhr.onerror = function () {
-            console.error('Hálózati hiba az egyenleg betöltésénél');
-        };
-        xhr.send();
+        } catch (error) {
+            console.error('Egyenleg betöltési hiba:', error);
+        }
     }
 
     betoltEgyenleg();
@@ -234,8 +238,8 @@ document.addEventListener('DOMContentLoaded', function () {
     function frissitCsuszka() {
         egyenlegMutato.textContent = '$' + jatekosEgyenleg;
 
-        var maxErtek = Math.max(0, Math.floor(jatekosEgyenleg));
-        var lepeskoz = maxErtek >= 50 ? 50 : 1;
+        const maxErtek = Math.max(0, Math.floor(jatekosEgyenleg));
+        const lepeskoz = maxErtek >= 50 ? 50 : 1;
 
         raiseSlider.min = 0;
         raiseInput.min = 0;
@@ -249,7 +253,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        var aktualisErtek = parseInt(raiseInput.value);
+        let aktualisErtek = parseInt(raiseInput.value);
         if (isNaN(aktualisErtek) || aktualisErtek <= 0) {
             aktualisErtek = Math.min(50, maxErtek);
         }
@@ -258,9 +262,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function beallitEmelesErtek(ertek) {
-        var minErtek = parseInt(raiseSlider.min) || 0;
-        var maxErtek = parseInt(raiseSlider.max) || 0;
-        var celErtek = parseInt(ertek);
+        const minErtek = parseInt(raiseSlider.min) || 0;
+        const maxErtek = parseInt(raiseSlider.max) || 0;
+        let celErtek = parseInt(ertek);
 
         if (isNaN(celErtek)) celErtek = minErtek;
         if (celErtek < minErtek) celErtek = minErtek;
@@ -279,50 +283,28 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Api hívás:
-    function apiHivas(vegpont, callback, adat) {
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', vegpont, true);
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.onload = function () {
-            if (xhr.status === 200) {
-                var valasz = JSON.parse(xhr.responseText);
-                callback(valasz);
-            } else {
-                try {
-                    var errorObj = JSON.parse(xhr.responseText);
-                    console.error('API hiba:', xhr.status, errorObj);
-                    document.getElementById('eredmeny').innerHTML = '❌ Hiba: ' + (errorObj.hiba || errorObj.error || 'Ismeretlen hiba');
-                    document.getElementById('eredmeny').className = 'hiba';
-                } catch (e) {
-                    console.error('API hiba:', xhr.status, xhr.responseText);
-                    document.getElementById('eredmeny').innerHTML = '❌ Hiba: ' + xhr.status;
-                    document.getElementById('eredmeny').className = 'hiba';
-                }
-                // Gombok vissza engedélyezése az error után
-                gombokBe();
-            }
-        };
-        xhr.onerror = function () {
-            console.error('Hálózati hiba');
-            document.getElementById('eredmeny').innerHTML = '❌ Hálózati hiba';
+    async function apiHivas(vegpont, callback, adat) {
+        try {
+            const valasz = await Fetch(vegpont, 'POST', adat || null);
+            callback(valasz);
+        } catch (error) {
+            console.error('API hiba:', error);
+            document.getElementById('eredmeny').innerHTML = '❌ ' + (error.message || 'Ismeretlen hiba');
             document.getElementById('eredmeny').className = 'hiba';
+            // Gombok vissza engedélyezése az error után
             gombokBe();
-        };
-        xhr.send(adat ? JSON.stringify(adat) : null);
+        }
     }
 
     // Gombok engedélyezése:
-    function gombokBe() {
+    async function gombokBe() {
         // Az aktuális játék állapot lekérése és gombfrissítés
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', '/api/poker/allapot', true);
-        xhr.onload = function () {
-            if (xhr.status === 200) {
-                var adat = JSON.parse(xhr.responseText);
-                gombokFrissit(adat);
-            }
-        };
-        xhr.send();
+        try {
+            const adat = await Fetch('/api/poker/allapot');
+            gombokFrissit(adat);
+        } catch (error) {
+            console.error('Játékállapot lekérési hiba:', error);
+        }
     }
 
     // Megjelenítés:
@@ -338,10 +320,10 @@ document.addEventListener('DOMContentLoaded', function () {
         frissitCsuszka();
 
         // Ellenfél lapjai
-        var ellenfelDiv = document.getElementById('ellenfel');
+        const ellenfelDiv = document.getElementById('ellenfel');
         ellenfelDiv.innerHTML = '';
         if (adat.ellenfelLapok) {
-            for (var i = 0; i < adat.ellenfelLapok.length; i++) {
+            for (let i = 0; i < adat.ellenfelLapok.length; i++) {
                 ellenfelDiv.innerHTML += kartyakep(adat.ellenfelLapok[i]);
             }
         } else {
@@ -349,9 +331,9 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         // Asztal lapjai
-        var osztoDiv = document.getElementById('oszto');
+        const osztoDiv = document.getElementById('oszto');
         osztoDiv.innerHTML = '';
-        for (var j = 0; j < 5; j++) {
+        for (let j = 0; j < 5; j++) {
             if (j < adat.asztalLapok.length) {
                 osztoDiv.innerHTML += kartyakep(adat.asztalLapok[j]);
             } else {
@@ -360,9 +342,9 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         // Játékos lapjai
-        var kezDiv = document.getElementById('kez');
+        const kezDiv = document.getElementById('kez');
         kezDiv.innerHTML = '';
-        for (var i = 0; i < adat.kez.length; i++) {
+        for (let i = 0; i < adat.kez.length; i++) {
             kezDiv.innerHTML += kartyakep(adat.kez[i]);
         }
 
@@ -371,7 +353,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('ellenfel_pont').innerHTML = adat.ellenfelKez || '-';
 
         // Eredmény / üzenet
-        var eredmenyDiv = document.getElementById('eredmeny');
+        const eredmenyDiv = document.getElementById('eredmeny');
         eredmenyDiv.innerHTML = adat.uzenet || '';
         eredmenyDiv.className = adat.uzenetTipus || '';
 
@@ -410,10 +392,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         foldBtn.disabled = false;
 
-        var egyenlegUres = jatekosEgyenleg <= 0;
-        var nincsElégCallra = jatekosEgyenleg < adat.aktualisTet;
-        var emelesErtek = parseInt(raiseInput.value) || 0;
-        var nincsElégEmelesre = emelesErtek <= 0 || emelesErtek > jatekosEgyenleg;
+        const egyenlegUres = jatekosEgyenleg <= 0;
+        const nincsElégCallra = jatekosEgyenleg < adat.aktualisTet;
+        const emelesErtek = parseInt(raiseInput.value) || 0;
+        const nincsElégEmelesre = emelesErtek <= 0 || emelesErtek > jatekosEgyenleg;
 
         if (adat.aktualisTet === 0) {
             checkBtn.disabled = false;
@@ -428,13 +410,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Highlight:
     function highlightKez(divId) {
-        var lapok = document.getElementById(divId).querySelectorAll('.kartya');
-        for (var i = 0; i < lapok.length; i++) lapok[i].classList.add('nyertes');
+        const lapok = document.getElementById(divId).querySelectorAll('.kartya');
+        for (let i = 0; i < lapok.length; i++) lapok[i].classList.add('nyertes');
     }
 
     // Játékos döntés kiírása + késleltetett api hívás:
     function jatekosDontesKiiras(szoveg, vegpont, callback, adat) {
-        var eredmenyDiv = document.getElementById('eredmeny');
+        const eredmenyDiv = document.getElementById('eredmeny');
         eredmenyDiv.innerHTML = szoveg;
         eredmenyDiv.className = '';
         setTimeout(function () {
@@ -454,7 +436,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     raiseBtn.addEventListener('click', function () {
-        var osszeg = parseInt(raiseInput.value) || 0;
+        const osszeg = parseInt(raiseInput.value) || 0;
         if (osszeg <= 0) return;
         gombokKi();
         jatekosDontesKiiras('Te: Emelés (Raise) +$' + osszeg, '/api/poker/raise', megjelenit, { osszeg: osszeg });

@@ -1,14 +1,14 @@
 // Játékválasztó oldal (games.html) szkriptje.
 // Csak a statisztikák be/ki kapcsolását végzi.
 document.addEventListener('DOMContentLoaded', function () {
-    var statisztikaGomb = document.getElementById('statsToggleBtn');
+    const statisztikaGomb = document.getElementById('statsToggleBtn');
 
     if (statisztikaGomb) {
         // alapból off
         document.body.classList.add('stats-hidden');
         
         statisztikaGomb.addEventListener('click', function () {
-            var aktiv = this.classList.toggle('active');
+            const aktiv = this.classList.toggle('active');
 
             if (aktiv) {
                 document.body.classList.remove('stats-hidden');
