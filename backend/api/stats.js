@@ -2,9 +2,7 @@ const express = require('express');
 const router = express.Router();
 const database = require('../sql/database.js');
 
-// Statisztikák lekérése - GET /api/stats/jatekmenetek
-// Visszaadja a felhasználó összes korábbi játékmenetét (pl. póker, rulett, slot körök), 
-// hogy a frontend megjeleníthesse a részletes játéktörténetet.
+// Játékmenetek lekérése - GET /api/stats/jatekmenetek
 router.get('/jatekmenetek', async (request, response) => {
     if (!request.session.felhasznaloId) {
         return response.status(401).json({ uzenet: 'Jelentkezz be a statisztikák megtekintéséhez.' });

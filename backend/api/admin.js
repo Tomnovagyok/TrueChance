@@ -1,10 +1,9 @@
-// Admin panel műveletek: felhasználók listázása és módosítása
 const express = require('express');
-const bcrypt = require('bcrypt'); // Jelszavak titkosítására
+const bcrypt = require('bcrypt');
 const router = express.Router();
 const database = require('../sql/database.js');
 
-const emailMinta = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Egyszerű email formátum ellenőrző
+const emailMinta = /^[^\s@]+@gmail\.[a-z]{2,}$/i;
 
 // Megnézi, hogy a bejelentkezett felhasználó admin-e; ha nem, azonnal elküld hibaválaszt
 async function adminJogEllenorzes(request, response) {
@@ -77,7 +76,7 @@ router.put('/felhasznalo/:id', async (request, response) => {
         return response.status(400).json({ uzenet: 'A név 2 és 100 karakter között lehet.' });
     }
     if (email.length > 150 || !emailMinta.test(email)) {
-        return response.status(400).json({ uzenet: 'Érvénytelen email cím.' });
+        return response.status(400).json({ uzenet: 'Érvénytelen email cím. Kötelező formátum: valami@gmail.domain' });
     }
     if (!Number.isFinite(egyenleg) || egyenleg < 0) {
         return response.status(400).json({ uzenet: 'Az egyenleg csak 0 vagy pozitív szám lehet.' });
@@ -102,7 +101,6 @@ router.put('/felhasznalo/:id', async (request, response) => {
             return response.status(409).json({ uzenet: 'Ez az email cím már használatban van.' });
         }
 
-        // Admin nem módosíthatja saját admin jogosultságát (csak más adminja állíthatja át)
         let vegalsoAdminE = adminE;
         if (felhasznaloId === adminFelhasznalo.id) {
             vegalsoAdminE = !!celFelhasznalo.admin_e;
@@ -110,7 +108,6 @@ router.put('/felhasznalo/:id', async (request, response) => {
 
         await database.felhasznaloAdminFrissit(felhasznaloId, nev, email, egyenleg, vegalsoAdminE);
 
-        // Ha van új jelszó, frissítjük azt is
         if (ujJelszo) {
             const ujJelszoHash = await bcrypt.hash(ujJelszo, 10);
             await database.felhasznaloJelszoFrissit(felhasznaloId, ujJelszoHash);

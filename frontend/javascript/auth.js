@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const bejelentkezesForm = document.getElementById('loginForm');
     const regisztracioForm = document.getElementById('registerForm');
 
-    // Tab váltás (bejelentkezés / regisztráció)
     bejelentkezesBtn.addEventListener('click', function () {
         bejelentkezesBtn.classList.add('active');
         bejelentkezesForm.style.display = 'block';
@@ -25,7 +24,6 @@ document.addEventListener('DOMContentLoaded', function () {
         hibaTorles();
     });
 
-    // Bejelentkezés
     bejelentkezesForm.querySelector('form').addEventListener('submit', async function (event) {
         event.preventDefault();
 
@@ -51,8 +49,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Regisztrációs form beküldése
-    // Bekéri az adatokat, leellenőrzi a jelszó egyezést, és hívja a /api/auth/register-t
     regisztracioForm.querySelector('form').addEventListener('submit', async function (event) {
         event.preventDefault();
 
@@ -85,7 +81,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Hibaüzenet megjelenítése / törlése
     function hibaMutat(szoveg) {
         let hibaElem = document.getElementById('hibaUzenet');
 
@@ -109,7 +104,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Jelszó szem ikon működése
     const jelszoSzemGombok = document.querySelectorAll('.jelszo-szem-gomb');
     for (let i = 0; i < jelszoSzemGombok.length; i++) {
         jelszoSzemGombok[i].addEventListener('click', function () {

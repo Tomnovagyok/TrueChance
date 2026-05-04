@@ -60,12 +60,11 @@
 
             frissitFelhasznaloAdatokat(felhasznalo);
 
-            // Ha az admin panelen van, de nincs admin joga, visszadobja a játékokhoz
+
             if (window.location.pathname === '/html/admin.html' && !felhasznalo.adminE) {
                 window.location.replace('/html/games.html');
             }
         } catch (error) {
-            // Hiba esetén (pl. nincs szerverkapcsolat) is irányítsuk át a bejelentkezésre
             window.location.replace('/html/auth.html');
         }
     }
@@ -82,7 +81,6 @@
             try {
                 await Fetch('/api/auth/logout', 'POST', {});
             } catch (error) {
-                // Kilépés után mindenképp visszairányítás a főoldalra.
             } finally {
                 window.location.href = '/html/index.html';
             }

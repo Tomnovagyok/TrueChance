@@ -1,5 +1,3 @@
-// Főoldal (index) kliens oldali szkriptje.
-// Csak a demó statisztika számlálót (szimuláció) és a horgony (anchor) linkeket kezeli.
 document.addEventListener('DOMContentLoaded', function () {
     let szimulacioIdozito = null;
 
@@ -41,7 +39,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Egyszerű anchor linkek működnek böngészőben alapértelmezésből
     function beallitSimaGorgetest() {
         const osszecsukhato = document.getElementById('navbarNav');
 

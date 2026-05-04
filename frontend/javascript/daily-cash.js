@@ -1,5 +1,3 @@
-// Napi ingyenes pörgetés (Daily Cash) kliens logikája.
-// Kezeli a visszaszámlálót és az animált szerencsekerék/pörgetés hatást.
 document.addEventListener('DOMContentLoaded', function () {
     const Fetch = async (url, method = 'GET', body = null) => {
         const options = { method: method };

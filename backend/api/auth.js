@@ -1,15 +1,18 @@
-// Bejelentkezés, regisztráció és session kezelés
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcrypt'); // Jelszavak biztonságos titkosítására és ellenőrzésére
+const bcrypt = require('bcrypt');
 const database = require('../sql/database.js');
+
+const emailMinta = /^[^\s@]+@gmail\.[a-z]{2,}$/i;
 
 // Regisztráció - POST /api/auth/register
 // 1. Megnézi, létezik-e már az email
 // 2. Ha nem, jelszót hashel, lementi az adatbázisba
 // 3. Automatikusan be is jelentkezteti a felhasználót (session ID beállításával)
 router.post('/register', async (request, response) => {
-    const { nev, email, jelszo } = request.body;
+    const nev = request.body.nev ? request.body.nev.trim() : '';
+    const email = request.body.email ? request.body.email.trim() : '';
+    const jelszo = request.body.jelszo || '';
 
     if (!nev || !email || !jelszo) {
         return response.status(400).json({ uzenet: 'Minden mező kitöltése kötelező.' });
@@ -17,6 +20,10 @@ router.post('/register', async (request, response) => {
 
     if (jelszo.length < 6) {
         return response.status(400).json({ uzenet: 'A jelszónak legalább 6 karakter hosszúnak kell lennie.' });
+    }
+
+    if (email.length > 150 || !emailMinta.test(email)) {
+        return response.status(400).json({ uzenet: 'Érvénytelen email cím. Kötelező formátum: valami@gmail.domain' });
     }
 
     try {
@@ -45,10 +52,15 @@ router.post('/register', async (request, response) => {
 // 2. Bcrypt.compare segítségével a megadott jelszó és a hashelt jelszó összehasonlítása
 // 3. Ha helyes, session létrehozása
 router.post('/login', async (request, response) => {
-    const { email, jelszo } = request.body;
+    const email = request.body.email ? request.body.email.trim() : '';
+    const jelszo = request.body.jelszo || '';
 
     if (!email || !jelszo) {
         return response.status(400).json({ uzenet: 'Email és jelszó megadása kötelező.' });
+    }
+
+    if (email.length > 150 || !emailMinta.test(email)) {
+        return response.status(400).json({ uzenet: 'Érvénytelen email cím. Kötelező formátum: valami@gmail.domain' });
     }
 
     try {
@@ -58,14 +70,12 @@ router.post('/login', async (request, response) => {
             return response.status(401).json({ uzenet: 'Hibás email cím vagy jelszó.' });
         }
 
-        // A beírt jelszót összehasonlítjuk az adatbázisban tárolt titkosított változatával
         const jelszoHelyes = await bcrypt.compare(jelszo, felhasznalo.jelszo_hash);
 
         if (!jelszoHelyes) {
             return response.status(401).json({ uzenet: 'Hibás email cím vagy jelszó.' });
         }
 
-        // A felhasználó azonosítóját eltároljuk a session-ben (így marad bejelentkezve)
         request.session.felhasznaloId = felhasznalo.id;
 
         response.status(200).json({ uzenet: 'Sikeres bejelentkezés!', nev: felhasznalo.nev });
@@ -78,7 +88,6 @@ router.post('/login', async (request, response) => {
 
 // Kijelentkezés - POST /api/auth/logout
 router.post('/logout', (request, response) => {
-    // A session teljes törlése zárja le a bejelentkezést
     request.session.destroy((hiba) => {
         if (hiba) {
             return response.status(500).json({ uzenet: 'Kijelentkezési hiba.' });

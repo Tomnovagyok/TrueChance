@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const database = require('../sql/database.js');
 
-// Slot gép szimbólumai szorzóval és súllyal
 const szimbolumok = [
     { nev: 'citrom', szorzo: 1.5, suly: 580 },
     { nev: 'eper', szorzo: 2, suly: 250 },
@@ -17,19 +16,15 @@ const KIS_NYERES_ESELY = 0.125; // plusz esély alacsony (0.6x / 0.8x) nyerésre
 const NEAR_MISS_ESELY = 0.3;
 const KIS_NYERES_CITROM_ARANY = 0.62;
 
-// Súlyozott véletlen szimbólum választás
 function sulyozottRandom() {
-    // Összes súly kiszámítása
     let osszesSuly = 0;
     for (let index = 0; index < szimbolumok.length; index++) {
         osszesSuly = osszesSuly + szimbolumok[index].suly;
     }
 
-    // Véletlen szám generálása
     const veletlen = Math.random() * osszesSuly;
     let folyoOsszeg = 0;
 
-    // Szimbólum kiválasztása súly alapján
     for (let index = 0; index < szimbolumok.length; index++) {
         folyoOsszeg = folyoOsszeg + szimbolumok[index].suly;
         if (veletlen < folyoOsszeg) {
@@ -40,7 +35,6 @@ function sulyozottRandom() {
     return szimbolumok[0];
 }
 
-// Szimbólum keresése név alapján
 function getSzimbolumByNev(nev) {
     for (let index = 0; index < szimbolumok.length; index++) {
         if (szimbolumok[index].nev === nev) {
@@ -63,41 +57,35 @@ function szimbolumValoszinusegek() {
         valoszinusegek.push({
             nev: szimbolum.nev,
             szorzo: szimbolum.szorzo,
-            valoszinuseg: szimbolum.suly / osszesSuly // arány 0 és 1 között
+            valoszinuseg: szimbolum.suly / osszesSuly
         });
     }
 
     return valoszinusegek;
 }
 
-// Megadja a nyeremény szorzóját az egyező szimbólumok száma alapján
-// (pl. 2 egyező = 0.4x, 3 = 1x, 4 = 2x, 5 = 4x általánosan)
 function szorzoEgyezesDbAlapjan(szimbolum, egyezoDb) {
     if (egyezoDb < 2) {
-        return 0; // 0 vagy 1 egyező szimbólum: nincs nyeremény
+        return 0;
     }
 
     if (szimbolum.nev === 'seven' && egyezoDb === 2) {
-        return 15; // 2 hetes kivételes szorzja: 15x
+        return 15;
     }
 
-    // Általános szorzó tábla: index = egyező szimbólumok száma
     const szorzatSzamal = [0, 0, 0.4, 1, 2, 4];
     return szimbolum.szorzo * szorzatSzamal[egyezoDb];
 }
 
-// Az elméleti RTP-t (Return to Player), house edge-et és ROI-t számolja ki matematikai úton
-// Ez nem szimuláció, hanem közvetlen valószínűség-számítás a szimbólumok súlya alapján
 function slotElmeletiAdatokSzamol() {
     const valoszinusegek = szimbolumValoszinusegek();
-    let alapRtpSzoro = 0;      // Várható nyeremény szorzó (1.0 = nullszaldós)
-    let alapNyeresiEsely = 0;  // Valószinűsége annak, hogy legalább 2 egyező szimbólum lesz
+    let alapRtpSzoro = 0;
+    let alapNyeresiEsely = 0;
 
     for (let szimbolumIndex = 0; szimbolumIndex < valoszinusegek.length; szimbolumIndex++) {
         const szimbolum = valoszinusegek[szimbolumIndex];
-        const p = szimbolum.valoszinuseg; // az adott szimbólum megelőfordulási aránya
+        const p = szimbolum.valoszinuseg;
 
-        // Végigmegyünk 2-től 5 egyező szimbólumig
         for (let egyezoDb = 2; egyezoDb <= OSZLOP_SZAM; egyezoDb++) {
             // p^egyezoDb = pontosan ennyi azonos szimbólum valószínűsége egymás után
             let valoszinuseg = Math.pow(p, egyezoDb);
@@ -109,10 +97,8 @@ function slotElmeletiAdatokSzamol() {
             alapRtpSzoro = alapRtpSzoro + valoszinuseg * szorzoEgyezesDbAlapjan(szimbolum, egyezoDb);
         }
 
-        alapNyeresiEsely = alapNyeresiEsely + p * p; // P(legalább 2 egyező) becsült értéke
+        alapNyeresiEsely = alapNyeresiEsely + p * p;
     }
-
-    // A kis nyeresek (citrom/eper) hatása a teljes RTP-re
     const alapVesztesEsely = Math.max(0, 1 - alapNyeresiEsely);
     const citromSzimbolum = getSzimbolumByNev('citrom');
     const eperSzimbolum = getSzimbolumByNev('eper');
@@ -120,9 +106,9 @@ function slotElmeletiAdatokSzamol() {
     const eperSzorzo = eperSzimbolum ? szorzoEgyezesDbAlapjan(eperSzimbolum, 2) : 0;
     const kisNyeresAtlagSzorzo = KIS_NYERES_CITROM_ARANY * citromSzorzo + (1 - KIS_NYERES_CITROM_ARANY) * eperSzorzo;
     const kisNyeresRtpSzoro = alapVesztesEsely * KIS_NYERES_ESELY * kisNyeresAtlagSzorzo;
-    const sessionRtpSzazalek = (alapRtpSzoro + kisNyeresRtpSzoro) * 100; // százalékos formára alakítjuk
-    const statikusHouseEdgeSzazalek = 100 - sessionRtpSzazalek; // ház hátrány = 100% - RTP%
-    const statikusRoiSzazalek = -statikusHouseEdgeSzazalek;     // ROI a játékos szemszögéből negatív
+    const sessionRtpSzazalek = (alapRtpSzoro + kisNyeresRtpSzoro) * 100;
+    const statikusHouseEdgeSzazalek = 100 - sessionRtpSzazalek;
+    const statikusRoiSzazalek = -statikusHouseEdgeSzazalek;
 
     return {
         sessionRtpSzazalek: Number(sessionRtpSzazalek.toFixed(2)),
@@ -131,18 +117,15 @@ function slotElmeletiAdatokSzamol() {
     };
 }
 
-// "Near miss" eredmény generálása (majdnem nyerés)
 function nearMissKeszit(eredmenyek) {
     const tipusok = ['kozepen-tor-meg', 'negyediken-tor-meg', 'majdnem-jackpot'];
     const veletlen = Math.floor(Math.random() * tipusok.length);
     const valasztottTipus = tipusok[veletlen];
 
-    // Középen törik meg a sorozat
     if (valasztottTipus === 'kozepen-tor-meg') {
         const celSzimbolum = sulyozottRandom();
         eredmenyek[0] = celSzimbolum.nev;
 
-        // Másik szimbólum választása
         let masSzimbolum = sulyozottRandom();
         while (masSzimbolum.nev === celSzimbolum.nev) {
             masSzimbolum = sulyozottRandom();
@@ -156,11 +139,9 @@ function nearMissKeszit(eredmenyek) {
         return { volt: true, tipus: 'kozel' };
     }
 
-    // Negyediken törik meg a sorozat
     if (valasztottTipus === 'negyediken-tor-meg') {
         const celSzimbolum = sulyozottRandom();
 
-        // Másik szimbólum választása
         let masSzimbolum = sulyozottRandom();
         while (masSzimbolum.nev === celSzimbolum.nev) {
             masSzimbolum = sulyozottRandom();
@@ -175,9 +156,7 @@ function nearMissKeszit(eredmenyek) {
         return { volt: true, tipus: 'kozel' };
     }
 
-    // Majdnem jackpot (4 hetes)
     if (valasztottTipus === 'majdnem-jackpot') {
-        // Nem hetes szimbólum választása
         let masSzimbolum = sulyozottRandom();
         while (masSzimbolum.nev === 'seven') {
             masSzimbolum = sulyozottRandom();
@@ -195,7 +174,6 @@ function nearMissKeszit(eredmenyek) {
     return { volt: false, tipus: null };
 }
 
-// Alacsony nyerés szimbólum választás (0.6x / 0.8x)
 function kisNyeresSzimbolumValaszt() {
     return Math.random() < 0.62 ? 'citrom' : 'eper';
 }
@@ -205,24 +183,21 @@ function kisNyeresSzimbolumValaszt() {
 function kisNyeresKeszit(eredmenyek) {
     const nyeroSzimbolum = kisNyeresSzimbolumValaszt();
     eredmenyek[0] = nyeroSzimbolum;
-    eredmenyek[1] = nyeroSzimbolum; // első kettő azonos → 2-es sorozat
+    eredmenyek[1] = nyeroSzimbolum;
 
-    // A harmadik mindenképp különböző legyen, hogy ne legyen 3-as vagy jó sorozat
     let harmadik = sulyozottRandom();
     while (harmadik.nev === nyeroSzimbolum) {
         harmadik = sulyozottRandom();
     }
     eredmenyek[2] = harmadik.nev;
-    eredmenyek[3] = sulyozottRandom().nev; // teljesen véletlen
-    eredmenyek[4] = sulyozottRandom().nev; // teljesen véletlen
+    eredmenyek[3] = sulyozottRandom().nev;
+    eredmenyek[4] = sulyozottRandom().nev;
 }
 
-// Nyerés kiszámítása az eredmények alapján
 function nyeresKiszamol(eredmenyek, tet) {
     const elsoSzimbolum = eredmenyek[0];
     let egyezoDb = 1;
 
-    // Egymás melletti egyező szimbólumok számolása
     for (let index = 1; index < OSZLOP_SZAM; index++) {
         if (eredmenyek[index] === elsoSzimbolum) {
             egyezoDb = egyezoDb + 1;
@@ -231,19 +206,16 @@ function nyeresKiszamol(eredmenyek, tet) {
         }
     }
 
-    // Minimum 2 egyező szimbólum kell a nyeréshez
     if (egyezoDb < 2) {
         return { nyert: false, db: 0, szimbolum: null, nyeremeny: 0 };
     }
 
     const szimbolum = getSzimbolumByNev(elsoSzimbolum);
 
-    // Speciális eset: 2 hetes külön kezelése
     if (szimbolum.nev === 'seven' && egyezoDb === 2) {
         return { nyert: true, db: 2, szimbolum: szimbolum.nev, nyeremeny: tet * 15 };
     }
 
-    // Szorzó tábla az egyező szimbólumok száma alapján
     const szorzatSzamal = [0, 0, 0.4, 1, 2, 4];
     const vegsoSzorzo = szimbolum.szorzo * szorzatSzamal[egyezoDb];
     const nyeremeny = tet * vegsoSzorzo;
@@ -251,7 +223,7 @@ function nyeresKiszamol(eredmenyek, tet) {
     return { nyert: true, db: egyezoDb, szimbolum: szimbolum.nev, nyeremeny: nyeremeny };
 }
 
-// GET /api/slot/statisztika – Elméleti RTP, house edge és ROI adatok lekérése
+//? GET /api/slot/statisztika – Elméleti RTP, house edge és ROI adatok lekérése
 router.get('/statisztika', (request, response) => {
     if (!request.session.felhasznaloId) {
         return response.status(401).json({ uzenet: 'Nincs bejelentkezve.' });
@@ -265,44 +237,37 @@ router.get('/statisztika', (request, response) => {
     });
 });
 
-// POST /api/slot/spin - Slot gép pörgetés végpont
+//? POST /api/slot/spin - Slot gép pörgetés végpont
 router.post('/spin', async (request, response) => {
-    // Bejelentkezés ellenőrzése
     if (!request.session.felhasznaloId) {
         return response.status(401).json({ uzenet: 'Nincs bejelentkezve.' });
     }
 
     const tet = request.body.tet;
 
-    // Tét ellenőrzése
     if (!tet || typeof tet !== 'number' || tet <= 0) {
         return response.status(400).json({ uzenet: 'Érvénytelen tét.' });
     }
 
     try {
-        // Felhasználó adatainak lekérése
         const felhasznalo = await database.felhasznaloIdAltal(request.session.felhasznaloId);
 
         if (!felhasznalo) {
             return response.status(404).json({ uzenet: 'Felhasználó nem található.' });
         }
 
-        // Egyenleg ellenőrzése
         if (felhasznalo.egyenleg < tet) {
             return response.status(400).json({ uzenet: 'Nincs elég egyenleged!' });
         }
 
-        // Véletlen szimbólumok generálása minden oszlopra
         let eredmenyek = [];
         for (let index = 0; index < OSZLOP_SZAM; index++) {
             const szimbolum = sulyozottRandom();
             eredmenyek.push(szimbolum.nev);
         }
 
-        // Nyerés kiszámítása
         let nyeresInfo = nyeresKiszamol(eredmenyek, tet);
 
-        // Near miss generálása vesztés esetén 30% eséllyel
         let nearMiss = { volt: false, tipus: null };
         if (!nyeresInfo.nyert) {
             const veletlenSzam = Math.random();
@@ -315,22 +280,17 @@ router.post('/spin', async (request, response) => {
             }
         }
 
-        // Nyeremény kerekítése
         let nyeremeny = 0;
         if (nyeresInfo.nyert) {
             nyeremeny = Math.floor(nyeresInfo.nyeremeny);
         }
 
-        // Új egyenleg kiszámítása
         const ujEgyenleg = felhasznalo.egyenleg - tet + nyeremeny;
 
-        // Egyenleg frissítése az adatbázisban
         await database.egyenlegFrissit(request.session.felhasznaloId, ujEgyenleg);
 
-        // Játékmenet naplózása
         await database.jatekmentNaploz(request.session.felhasznaloId, 'slot', tet, nyeremeny, ujEgyenleg);
 
-        // Eredmény visszaküldése
         response.status(200).json({
             eredmenyek: eredmenyek,
             nyert: nyeresInfo.nyert,

@@ -5,7 +5,7 @@ const router = express.Router();
 const database = require('../sql/database.js');
 
 const upload = multer();
-const emailMinta = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const emailMinta = /^[^\s@]+@gmail\.[a-z]{2,}$/i;
 
 function jatekEselyekKiszamol(jatekonkentiSorok) {
     const alap = {
@@ -77,7 +77,6 @@ router.get('/adatok', async (request, response) => {
             profil: profilValaszOsszeallit(profilAdatok)
         });
     } catch (hiba) {
-        console.error('Profil adatok lekérési hiba:', hiba);
         response.status(500).json({ uzenet: 'Szerverhiba. Próbáld újra később.' });
     }
 });
@@ -100,7 +99,7 @@ router.put('/frissites', upload.none(), async (request, response) => {
     }
 
     if (email.length > 150 || !emailMinta.test(email)) {
-        return response.status(400).json({ uzenet: 'Érvénytelen email cím.' });
+        return response.status(400).json({ uzenet: 'Érvénytelen email cím. Kötelező formátum: valami@gmail.domain' });
     }
 
     try {
@@ -111,7 +110,6 @@ router.put('/frissites', upload.none(), async (request, response) => {
 
         await database.felhasznaloProfilFrissit(request.session.felhasznaloId, nev, email);
 
-        // Frissített adatokat lekérjük, hogy a válasz naprakész legyen
         const frissProfilAdatok = await database.felhasznaloProfilAdatokLekerese(request.session.felhasznaloId);
         if (!frissProfilAdatok) {
             return response.status(404).json({ uzenet: 'Felhasználó nem található.' });
@@ -145,22 +143,18 @@ router.put('/jelszo-valtoztatas', upload.none(), async (request, response) => {
     }
 
     try {
-        // A jelszó hash-t csak ez a lekérés adja vissza, a sima felhasznaloIdAltal nem
         const felhasznalo = await database.felhasznaloIdAltalJelszovel(request.session.felhasznaloId);
         if (!felhasznalo) {
             return response.status(404).json({ uzenet: 'Felhasználó nem található.' });
         }
 
-        // Ellenőrizzük a jelenlegi jelszót bcrypt-tel
         const jelszoHelyes = await bcrypt.compare(jelenlegiJelszo, felhasznalo.jelszo_hash);
         if (!jelszoHelyes) {
             return response.status(401).json({ uzenet: 'A jelenlegi jelszó nem helyes.' });
         }
 
-        // Új jelszó titkosítása (10-es bcrypt erősség = jó egyensúly biztonság és sebessség között)
         const ujJelszoHash = await bcrypt.hash(ujJelszo, 10);
 
-        // Új hash eltárolása az adatbázisban
         await database.felhasznaloJelszoFrissit(request.session.felhasznaloId, ujJelszoHash);
 
         response.status(200).json({ uzenet: 'Jelszó sikeresen megváltoztatva.' });

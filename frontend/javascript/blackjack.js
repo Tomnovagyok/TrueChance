@@ -1,5 +1,3 @@
-// Kliens oldali (frontend) logika a Blackjack játékhoz.
-// Itt kezeljük az UI elemeket, az animációkat és a backend felé menő API hívásokat.
 const Fetch = async (url, method = 'GET', body = null) => {
     try {
         const response = await fetch(url, {

@@ -368,7 +368,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Spin gomb eseménykezelő
     spinGomb.addEventListener('click', async function () {
         if (forogMost) {
             return;
@@ -462,14 +461,14 @@ document.addEventListener('DOMContentLoaded', function () {
             infoPanelNyeremeny.innerHTML = '+$' + nyeremeny;
 
             if (nyeresInfo.szimbolum === 'seven' && nyeresInfo.db >= 3) {
-                uzenetMutat('🎰 JACKPOT! +$' + nyeremeny, 'jackpot-uzenet');
+                uzenetMutat('JACKPOT! +$' + nyeremeny, 'jackpot-uzenet');
             } else {
                 uzenetMutat('Nyertél! +$' + nyeremeny, 'nyert');
             }
         } else if (nearMiss.volt && nearMiss.tipus === 'majdnem-jackpot') {
-            uzenetMutat('😱 A 7-es majdnem kijött!', 'kozel');
+            uzenetMutat('A 7-es majdnem kijött!', 'kozel');
         } else if (nearMiss.volt && nearMiss.tipus === 'kozel') {
-            uzenetMutat('😤 Majdnem! Próbáld újra!', 'kozel');
+            uzenetMutat('Majdnem! Próbáld újra!', 'kozel');
         } else {
             uzenetMutat('Vesztettél! -$' + aktualisTet, 'vesztett');
         }
@@ -505,7 +504,6 @@ document.addEventListener('DOMContentLoaded', function () {
         setStatisztikaVisible(!aktiv);
     }
 
-    // Gyors tét gombok eseménykezelői
     const gyorsGombok = document.querySelectorAll('.tet-gyors-gomb');
     for (let gombIndex = 0; gombIndex < gyorsGombok.length; gombIndex++) {
         const gomb = gyorsGombok[gombIndex];
@@ -516,7 +514,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Tét összeg input eseménykezelő
     tetOsszegInput.addEventListener('input', function () {
         const ertek = parseInt(this.value);
         if (!isNaN(ertek) && ertek > 0) {

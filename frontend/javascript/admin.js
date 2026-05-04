@@ -1,5 +1,3 @@
-// Admin felület kliens oldali logikája: betölti a felhasználók listáját,
-// és kezeli a szerkesztési (modal) ablakot, illetve az adatok mentését.
 document.addEventListener('DOMContentLoaded', async function () {
     async function meghiv(url, method = 'GET', body = null) {
         try {

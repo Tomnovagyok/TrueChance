@@ -289,7 +289,7 @@ document.addEventListener('DOMContentLoaded', function () {
             callback(valasz);
         } catch (error) {
             console.error('API hiba:', error);
-            document.getElementById('eredmeny').innerHTML = '❌ ' + (error.message || 'Ismeretlen hiba');
+            document.getElementById('eredmeny').innerHTML = (error.message || 'Ismeretlen hiba');
             document.getElementById('eredmeny').className = 'hiba';
             // Gombok vissza engedélyezése az error után
             gombokBe();

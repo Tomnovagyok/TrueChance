@@ -10,7 +10,6 @@ function ranglistaFelhasznaloValasz(felhasznalo) {
     };
 }
 
-// Ranglista lekérése - GET /api/ranglista/felhasznalok
 router.get('/felhasznalok', async (request, response) => {
     if (!request.session.felhasznaloId) {
         return response.status(401).json({ uzenet: 'Nincs bejelentkezve.' });

@@ -1,5 +1,3 @@
-// Rulett játék (roulette.html) kliens logikája.
-// Fogadások összeállítása, táblán lévő chipek kezelése és a pörgetési animáció kirajzolása.
 document.addEventListener('DOMContentLoaded', function () {
 
     // Szerver kommunikációs függvény
@@ -99,7 +97,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Gyors tét gombok eseménykezelői
     const gyorsGombok = document.querySelectorAll('.tet-gyors-gomb');
     for (let gombIndex = 0; gombIndex < gyorsGombok.length; gombIndex++) {
         const gomb = gyorsGombok[gombIndex];
@@ -110,7 +107,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Tét összeg input eseménykezelő
     tetOsszegInput.addEventListener('input', function () {
         const ertek = parseInt(this.value);
         if (!isNaN(ertek) && ertek > 0) {
@@ -119,7 +115,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Fogadási gombok eseménykezelői
     const osszesGomb = tetSzekcio.querySelectorAll('.szam-gomb, .sor-gomb, .also-gomb');
 
     for (let gombIndex = 0; gombIndex < osszesGomb.length; gombIndex++) {
@@ -177,7 +172,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Pörgetés gomb eseménykezelő
     porgetesBtnElem.addEventListener('click', async function () {
         const kivalasztottFogadasok = getKivalasztottFogadasok();
         const spinElottiEgyenleg = egyenleg;
@@ -244,13 +238,6 @@ document.addEventListener('DOMContentLoaded', function () {
             // Teljes körök száma (3-5 között)
             const teljesKorok = Math.floor(Math.random() * 3) + 3;
             const celFok = aktualisRotacio + teljesKorok * 360 + szuksegesElfordulas;
-
-            console.log('--- Pörgetés ---');
-            console.log('Kiszorsolt szám:', kiszorsoltSzam);
-            console.log('Szám indexe a keréken:', szamIndex);
-            console.log('Szelet közepe:', szamKozepFok.toFixed(2) + '°');
-            console.log('Teljes körök:', teljesKorok);
-            console.log('Végső celFok:', celFok.toFixed(2) + '°');
 
             // Kerék forgatása
             kerekElem.classList.add('forog');
