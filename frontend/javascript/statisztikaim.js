@@ -153,16 +153,17 @@ document.addEventListener('DOMContentLoaded', async function () {
                 let megjelenitetNyeremeny;
 
                 if (menet.jatek_tipus === 'poker') {
-                    const nyertAKor = nyeremeny > 0;
+                    // Pókernél a nyeremeny mező nettó eredmény (profit/veszteség),
+                    // ezért az "egyenleg előtte" mindig a körindításkori egyenleg.
+                    eredmeny = nyeremeny;
+                    egyenlegElotte = egyenlegUtan - eredmeny;
 
-                    if (nyertAKor) {
-                        egyenlegElotte = egyenlegUtan - nyeremeny + tet;
-                        eredmeny = tet;
-                        megjelenitetNyeremeny = nyeremeny; // pot
+                    if (eredmeny > 0) {
+                        megjelenitetNyeremeny = tet + eredmeny;
+                    } else if (eredmeny === 0) {
+                        megjelenitetNyeremeny = tet;
                     } else {
-                        egyenlegElotte = egyenlegUtan + tet;
-                        eredmeny = -tet;
-                        megjelenitetNyeremeny = '-'; // veszteségnél csak szimpla -
+                        megjelenitetNyeremeny = '-';
                     }
                 } else {
                     egyenlegElotte = egyenlegUtan + tet - nyeremeny;

@@ -522,6 +522,7 @@ function getJatek(session) {
             uzenet: '',
             uzenetTipus: '',
             jatekosOsszesBetje: 0, // a játékos ebben a körben összes betete
+            utolsoNyertPot: 0,   // ha az ellenfél dob, ide mentjük a kiosztott potot a naplózáshoz
             aktiv: false,
             ellenfelTartottMar: false,  // tartott-e már az ellenfél
             ellenfelEmeltMar: false,    // emelt-e már az ellenfél
@@ -621,6 +622,7 @@ router.post('/poker/uj', async (req, res) => {
         // Minden új leosztás előtt az adatbázisból vesszük az aktuális egyenleget,
         // így nem maradhat bent régi session érték.
         jatek.jatekosZseton = dbEgyenleg;
+        jatek.utolsoNyertPot = 0;
         jatek.aktiv = true;
 
         // Pakli keverés és kártyák kiosztása
@@ -706,10 +708,13 @@ router.post('/poker/check', async (req, res) => {
     // Ha az ellenfél fold-ot csinál, rögzítsd az adatbázisba
     if (jatek.jatekVege && jatek.uzenetTipus === 'nyert' && req.session.felhasznaloId) {
         try {
-            var alaptét = NAGYVAK + NAGYVAK / 2; // Vakok az elején betett összege
-            var nyeremeny = jatek.pot; // Az ellenfél fold-ja miatt nyert pot
+            var jatekosOsszesBet = jatek.jatekosOsszesBetje;
+            var nyertPot = Number.isFinite(jatek.utolsoNyertPot) ? jatek.utolsoNyertPot : jatek.pot;
+            var nyeremeny = nyertPot - jatekosOsszesBet;
             await database.egyenlegFrissit(req.session.felhasznaloId, jatek.jatekosZseton);
-            await database.jatekmentNaploz(req.session.felhasznaloId, 'poker', alaptét, nyeremeny, jatek.jatekosZseton);
+            await database.jatekmentNaploz(req.session.felhasznaloId, 'poker', jatekosOsszesBet, nyeremeny, jatek.jatekosZseton);
+            jatek.jatekosOsszesBetje = 0;
+            jatek.utolsoNyertPot = 0;
         } catch (error) {
             console.error('Poker ellenfél fold rögzítés hiba:', error);
         }
@@ -780,10 +785,12 @@ router.post('/poker/call', async (req, res) => {
         if (jatek.jatekVege && jatek.uzenetTipus === 'nyert' && req.session.felhasznaloId) {
             try {
                 var jatekosOsszesBet = jatek.jatekosOsszesBetje;
-                var nyeremeny = jatek.pot;
+                var nyertPot = Number.isFinite(jatek.utolsoNyertPot) ? jatek.utolsoNyertPot : jatek.pot;
+                var nyeremeny = nyertPot - jatekosOsszesBet;
                 await database.egyenlegFrissit(req.session.felhasznaloId, jatek.jatekosZseton);
                 await database.jatekmentNaploz(req.session.felhasznaloId, 'poker', jatekosOsszesBet, nyeremeny, jatek.jatekosZseton);
                 jatek.jatekosOsszesBetje = 0;
+                jatek.utolsoNyertPot = 0;
             } catch (error) {
                 console.error('Poker ellenfél fold rögzítés hiba:', error);
             }
@@ -871,10 +878,12 @@ router.post('/poker/raise', async (req, res) => {
     if (jatek.jatekVege && jatek.uzenetTipus === 'nyert' && req.session.felhasznaloId) {
         try {
             var jatekosOsszesBet = jatek.jatekosOsszesBetje;
-            var nyeremeny = jatek.pot;
+            var nyertPot = Number.isFinite(jatek.utolsoNyertPot) ? jatek.utolsoNyertPot : jatek.pot;
+            var nyeremeny = nyertPot - jatekosOsszesBet;
             await database.egyenlegFrissit(req.session.felhasznaloId, jatek.jatekosZseton);
             await database.jatekmentNaploz(req.session.felhasznaloId, 'poker', jatekosOsszesBet, nyeremeny, jatek.jatekosZseton);
             jatek.jatekosOsszesBetje = 0;
+            jatek.utolsoNyertPot = 0;
         } catch (error) {
             console.error('Poker ellenfél fold rögzítés hiba:', error);
         }
@@ -904,6 +913,7 @@ router.post('/poker/fold', async (req, res) => {
     jatek.pot = 0; // az ellenfél nyeri a potot, mi semmit nem kapunk vissza
     jatek.uzenet = '❌ Bedobtad a lapjaid!';
     jatek.uzenetTipus = 'vesztett';
+    jatek.utolsoNyertPot = 0;
 
     // Adatbázis frissítés: egyenleg és játékmenet naplózása
     if (req.session.felhasznaloId) {
@@ -961,7 +971,9 @@ function vegrehajtEllenfelet(jatek, dontes) {
         // Játékosnak kell válaszolnia az emelésre
         jatek.varakozikDontesre = true;
     } else if (dontes === 'fold') {
-        jatek.jatekosZseton += jatek.pot;
+        var nyertPot = jatek.pot;
+        jatek.jatekosZseton += nyertPot;
+        jatek.utolsoNyertPot = nyertPot;
         jatek.pot = 0;
         jatek.jatekVege = true;
         jatek.uzenet = '🏆 Az ellenfél bedobta!';
@@ -1006,6 +1018,7 @@ async function allInAzonnaliShowdown(jatek, felhasznaloId) {
 
 // Showdown – nyertes meghatározása és pot kiosztása
 async function showdown(jatek, felhasznaloId) {
+    jatek.utolsoNyertPot = 0;
     var jatekosEredmeny = kiert(jatek.kez, jatek.oszto);
     var ellenfelEredmeny = kiert(jatek.kez2, jatek.oszto);
 
