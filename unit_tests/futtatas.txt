@@ -1,0 +1,2 @@
+1. Jest telepítése: npm install jest
+2. Unit tesztek futtatása: npx jest
