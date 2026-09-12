@@ -34,11 +34,11 @@ jobs:
         working-directory: backend
         run: npm run build --if-present
 
-      - name: Upload backend artifact
+      - name: Upload application artifact
         uses: actions/upload-artifact@v4
         with:
           name: node-app
-          path: backend
+          path: .
 
   deploy:
     runs-on: ubuntu-latest
