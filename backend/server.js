@@ -6,8 +6,8 @@ const database = require('./sql/database.js');
 const app = express();
 const router = express.Router();
 
-const ip = '127.0.0.1';
-const port = 3000;
+const ip = '0.0.0.0';
+const port = process.env.PORT || 3000;
 
 app.use(express.json()); //?Middleware JSON - kell ahhoz, hogy a request.body-ból olvasni tudjunk
 app.set('trust proxy', 1); //?Middleware Proxy
